@@ -15,7 +15,7 @@ export default function UpdateProfileInformation({
     const { data, setData, patch, errors, processing, recentlySuccessful } =
         useForm({
             name: user.name,
-            email: user.email,
+            nip: user.nip,
         });
 
     const submit = (e) => {
@@ -28,17 +28,17 @@ export default function UpdateProfileInformation({
         <section className={className}>
             <header>
                 <h2 className="text-lg font-medium text-gray-900">
-                    Profile Information
+                    Informasi Profil
                 </h2>
 
                 <p className="mt-1 text-sm text-gray-600">
-                    Update your account's profile information and email address.
+                    Perbarui informasi profil akun Anda.
                 </p>
             </header>
 
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                    <InputLabel htmlFor="name" value="Nama" />
 
                     <TextInput
                         id="name"
@@ -54,19 +54,19 @@ export default function UpdateProfileInformation({
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="nip" value="NIP" />
 
                     <TextInput
-                        id="email"
-                        type="email"
+                        id="nip"
+                        type="number"
                         className="mt-1 block w-full"
-                        value={data.email}
-                        onChange={(e) => setData('email', e.target.value)}
+                        value={data.nip}
+                        onChange={(e) => setData('nip', e.target.value)}
                         required
                         autoComplete="username"
                     />
 
-                    <InputError className="mt-2" message={errors.email} />
+                    <InputError className="mt-2" message={errors.nip} />
                 </div>
 
                 {mustVerifyEmail && user.email_verified_at === null && (
@@ -93,7 +93,7 @@ export default function UpdateProfileInformation({
                 )}
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+                    <PrimaryButton disabled={processing}>Simpan</PrimaryButton>
 
                     <Transition
                         show={recentlySuccessful}

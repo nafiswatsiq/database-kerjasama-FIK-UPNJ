@@ -17,14 +17,14 @@ export default forwardRef(function TextInput(
     }, [isFocused]);
 
     return (
-        <input
+        <textarea
             {...props}
             type={type}
             className={
-                'border-gray-300 focus:border-gray-500 focus:ring-gray-500 rounded-full shadow-md ' +
+                'rounded-xl border-gray-300 focus:border-gray-500 focus:ring-gray-500 shadow-md ' +
                 className
             }
             ref={localRef}
-        />
+        ></textarea>
     );
 });
