@@ -4,7 +4,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { format } from 'date-fns';
 
-export default function Dashboard() {
+export default function Dashboard({ totalAgreement, activeAgreement, userRegistered, seriesKriteriaMitra, seriesBidangKerjasama, seriesAsalMitra, galleries }) {
     const date = new Date();
 
     return (
@@ -24,7 +24,7 @@ export default function Dashboard() {
                                 <div className="flex">
                                     <div className="flex-auto">
                                         <p>Total Agreement</p>
-                                        <p className="font-semibold text-3xl mt-3">4</p>
+                                        <p className="font-semibold text-3xl mt-3">{totalAgreement}</p>
                                     </div>
                                     <div>
                                         <div className="bg-[#E5E4FF] p-3 rounded-3xl">
@@ -46,7 +46,7 @@ export default function Dashboard() {
                                 <div className="flex">
                                     <div className="flex-auto">
                                         <p>Active Agreement</p>
-                                        <p className="font-semibold text-3xl mt-3">23</p>
+                                        <p className="font-semibold text-3xl mt-3">{activeAgreement}</p>
                                     </div>
                                     <div>
                                         <div className="bg-[#D9F7E8] p-3 rounded-3xl">
@@ -69,7 +69,7 @@ export default function Dashboard() {
                                 <div className="flex">
                                     <div className="flex-auto">
                                         <p>User Registered</p>
-                                        <p className="font-semibold text-3xl mt-3">65</p>
+                                        <p className="font-semibold text-3xl mt-3">{userRegistered}</p>
                                     </div>
                                     <div>
                                         <div className="bg-[#FFF3D6] p-3 rounded-3xl">
@@ -97,17 +97,26 @@ export default function Dashboard() {
                     <div className="grid grid-cols-3 gap-6">
                         <div className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
                             <div className="p-4 text-gray-900">
-                                <Chart />
+                                <Chart 
+                                    label={['PTN', 'PTS', 'DuDi', 'Pemerintahan']} 
+                                    series={Object.values(seriesKriteriaMitra)}
+                                    />
                             </div>
                         </div>
                         <div className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
                             <div className="p-4 text-gray-900">
-                                <Chart />
+                                <Chart 
+                                    label={['Pendidikan', 'Pelatihan', 'Abdimas']} 
+                                    series={Object.values(seriesBidangKerjasama)}
+                                    />
                             </div>
                         </div>
                         <div className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
                             <div className="p-4 text-gray-900">
-                                <Chart />
+                                <Chart 
+                                    label={['Domestik', 'Internasional']} 
+                                    series={Object.values(seriesAsalMitra)}
+                                    />
                             </div>
                         </div>
                     </div>
@@ -118,7 +127,7 @@ export default function Dashboard() {
                         </div>
                     </div>
                     <div>
-                        <Gallery />
+                        <Gallery data={galleries}/>
                     </div>
                 </div>
             </div>

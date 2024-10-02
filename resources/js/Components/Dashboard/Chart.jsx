@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
-export function Chart() {
+export function Chart({ label, series}) {
   const chartOptions = {
     chart: {
       type: 'donut',
     },
-    labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni'],
+    labels: label,
     responsive: [{
       breakpoint: 480,
       options: {
@@ -20,7 +20,7 @@ export function Chart() {
     }]
   };
 
-  const chartSeries = [65, 59, 80, 81, 56, 55];
+  const chartSeries = series;
 
   return (
     <div>

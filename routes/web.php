@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Dashboard\UsersController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Dashboard\AgreementArchivesController;
 
 // Route::get('/', function () {
@@ -17,12 +18,13 @@ use App\Http\Controllers\Dashboard\AgreementArchivesController;
 //     ]);
 // });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return Inertia::render('Dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::prefix('dashboard')->group(function () {
+        Route::get('/', [Dashboard::class, 'index'])->name('dashboard');
         Route::get('/agreement-archives', [AgreementArchivesController::class, 'index'])->name('agreementarchives.index');
         Route::get('/agreement-archives/create', [AgreementArchivesController::class, 'create'])->name('agreementarchives.create');
         Route::post('/agreement-archives', [AgreementArchivesController::class, 'store'])->name('agreementarchives.store');
