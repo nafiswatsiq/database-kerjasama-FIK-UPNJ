@@ -12,10 +12,19 @@ class AgreementArchivesController extends Controller
 {
     public function index(Request $request)
     {
-        $agreementArchives = AgreementArchives::with('documentations')->orderBy('id', 'desc')->paginate(10);
+        $agreementArchives = AgreementArchives::query();
+
+        if ($request->get('search'))
+        {
+            $agreementArchives->where('nama_instansi', 'like', '%'.$request->get('search').'%')
+                ->orWhere('deskripsi_kerjasama', 'like', '%'.$request->get('search').'%')
+                ->orWhere('bidang_kerjasama', 'like', '%'.$request->get('search').'%')
+                ->orWhere('kriteria_mitra', 'like', '%'.$request->get('search').'%')
+                ->orWhere('asal_mitra', 'like', '%'.$request->get('search').'%');
+        }
 
         return Inertia::render('AgreementArchives/Index', [
-            'agreementArchives' => $agreementArchives,
+            'agreementArchives' => $agreementArchives->orderBy('id', 'desc')->paginate(10),
         ]);
     }
 

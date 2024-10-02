@@ -23,7 +23,7 @@ export default function Index({ users }) {
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <div className="p-6 flex justify-between">
                           <div>
-                            <Select 
+                            {/* <Select 
                               label="Entry per page"
                               name="perPage" 
                               selected={data.perPage}
@@ -33,7 +33,7 @@ export default function Index({ users }) {
                               <Option value='20'>20</Option>
                               <Option value='50'>50</Option>
                               <Option value='100'>100</Option>
-                            </Select>
+                            </Select> */}
                           </div>
                           <Link href={route('users.create')}>
                             <Button color="green" className="flex items-center gap-x-2">

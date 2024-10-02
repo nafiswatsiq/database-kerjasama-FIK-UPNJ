@@ -1,14 +1,30 @@
+import React, { useState, useEffect } from "react";
 import { Button, Card, Input, Typography } from "@material-tailwind/react";
 import { MagnifyingGlassIcon, DocumentPlusIcon, PencilSquareIcon, TrashIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
 import { Link, useForm } from "@inertiajs/react";
 import { format } from "date-fns";
 import { Pagination } from "../Pagination";
+import { router } from '@inertiajs/react'
  
 export function Table({ agreementArchives}) {
   const TABLE_HEAD = ["No","Nama Instansi", "Bidang Kerja Sama", "Bidang Mitra", "Kurun Waktu", "Waktu Mulai", "Waktu Berakhir", "Status", "Action"];
   const { data, setData } = useForm({
     page: agreementArchives.current_page
   })
+
+  const [query, setQuery] = useState('');
+
+  useEffect(() => {
+      router.get(
+          route(route().current()),
+          { search: query },
+          {
+              preserveState: true,
+              replace: true,
+          }
+      );
+  }, [query]);
+
 
   return (
     <Card className="h-full w-full px-6 overflow-x-scroll max-w-screen-xl shadow-none">
@@ -18,7 +34,11 @@ export function Table({ agreementArchives}) {
         <div className="w-6/12">
           <div className="flex gap-x-4">
             <div className="w-full">
-              <Input label="Search" icon={<MagnifyingGlassIcon className="h-6 w-6 text-gray-500" />} />
+              <Input label="Search" 
+                name="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                icon={<MagnifyingGlassIcon className="h-6 w-6 text-gray-500" />} />
             </div>
             <div className="w-fit">
               <Link href={route('agreementarchives.create')}>
