@@ -18,21 +18,37 @@ export function Table({ agreementArchives}) {
   const handleSearch = (e) => {
     setQuery(e);
     setData('page', 1);
+
+    router.get(
+      route(route().current()),
+      { 
+        search: e,
+        page: data.page
+      },
+      {
+        preserveState: true,
+        replace: true,
+      }
+    );
   }
 
   useEffect(() => {
+    const currentUrl = route().params;
+
+    if (!currentUrl) {
       router.get(
-          route(route().current()),
-          { 
-            search: query,
-            page: data.page
-          },
-          {
-              preserveState: true,
-              replace: true,
-          }
+        route(route().current()),
+        { 
+          search: query,
+          page: data.page
+        },
+        {
+          preserveState: true,
+          replace: true,
+        }
       );
-  }, [query]);
+    }
+  }, [query, data.page]);
 
   const handleView = (id) => {
     router.get(route('agreementarchives.view', id));
