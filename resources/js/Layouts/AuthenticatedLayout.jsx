@@ -76,7 +76,7 @@ export default function Authenticated({ header, children }) {
                 <hr className="my-2 border-gray-200" />
                 <List>
                     <Link href={route('profile.edit')}>
-                        <ListItem className={LIST_ITEM_STYLES}>
+                        <ListItem className={`${LIST_ITEM_STYLES} ${route().current('profile.edit') ? 'bg-orange-700 text-white' : ''}`}>
                             <ListItemPrefix>
                                 <UserCircleIcon className="h-6 w-6" />
                             </ListItemPrefix>
