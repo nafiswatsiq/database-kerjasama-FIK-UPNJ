@@ -9,18 +9,13 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Dashboard\AgreementArchivesController;
 
-// Route::get('/', function () {
-//     return Inertia::render('Welcome', [
-//         'canLogin' => Route::has('login'),
-//         'canRegister' => Route::has('register'),
-//         'laravelVersion' => Application::VERSION,
-//         'phpVersion' => PHP_VERSION,
-//     ]);
-// });
+Route::get('/', [AuthenticatedSessionController::class, 'create'])
+    ->name('login')
+    ->middleware('guest');
 
-// Route::get('/dashboard', function () {
-//     return Inertia::render('Dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+Route::post('/login', [AuthenticatedSessionController::class, 'login'])
+    ->name('login')
+    ->middleware('guest');
 
 Route::middleware('auth')->group(function () {
     Route::prefix('dashboard')->group(function () {
@@ -32,6 +27,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/agreement-archives/{id}', [AgreementArchivesController::class, 'destroy'])->name('agreementarchives.destroy');
         Route::get('/agreement-archives/{id}/edit', [AgreementArchivesController::class, 'edit'])->name('agreementarchives.edit');
         Route::patch('/agreement-archives/{id}', [AgreementArchivesController::class, 'update'])->name('agreementarchives.update');
+        Route::get('/agreement-archives/{id}', [AgreementArchivesController::class, 'view'])->name('agreementarchives.view');
         
         Route::get('/users', [UsersController::class, 'index'])->name('users.index');
         Route::get('/users/create', [UsersController::class, 'create'])->name('users.create');
@@ -43,7 +39,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+        Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
     });
 });
 
-require __DIR__.'/auth.php';
+// require __DIR__.'/auth.php';

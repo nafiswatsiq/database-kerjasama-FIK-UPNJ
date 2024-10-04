@@ -4,28 +4,18 @@ import { useState } from 'react';
 import {
   List,
   Card,
-  Alert,
-  Avatar,
   ListItem,
-  Accordion,
   Typography,
-  AccordionBody,
   ListItemPrefix,
-  AccordionHeader,
 } from "@material-tailwind/react";
 import {
-  TicketIcon,
   UserGroupIcon,
-  Square2StackIcon,
-  RectangleGroupIcon,
-  ChatBubbleLeftEllipsisIcon,
   UserCircleIcon,
   DocumentPlusIcon,
   ArchiveBoxArrowDownIcon,
   HomeIcon,
 } from "@heroicons/react/24/solid";
 import {
-  ChevronDownIcon,
   ArrowLeftStartOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import ApplicationLogo from "@/Components/ApplicationLogo";
@@ -33,16 +23,6 @@ import { NavbarDashboard } from "@/Components/Dashboard/NavbarDashboard";
 
 export default function Authenticated({ header, children }) {
     const user = usePage().props.auth.user;
-
-    const [showingNavigationDropdown, setShowingNavigationDropdown] =
-    useState(false);
-
-    const [open, setOpen] = React.useState(0);
-    const [openAlert, setOpenAlert] = React.useState(true);
-
-    const handleOpen = (value) => {
-      setOpen(open === value ? 0 : value);
-    };
 
     const LIST_ITEM_STYLES = "select-none hover:bg-orange-700 focus:bg-orange-700 active:bg-orange-700 hover:text-white focus:text-white active:text-white data-[selected=true]:text-white";
 
@@ -65,13 +45,14 @@ export default function Authenticated({ header, children }) {
                         </ListItem>
                     </Link>
                     <Link href={route('agreementarchives.index')}>
-                        <ListItem className={`${LIST_ITEM_STYLES} ${route().current('agreementarchives.index') ? 'bg-orange-700 text-white' : ''}`}>
+                        <ListItem className={`${LIST_ITEM_STYLES} ${route().current('agreementarchives.index') || route().current('agreementarchives.view') ? 'bg-orange-700 text-white' : ''}`}>
                             <ListItemPrefix>
                                 <ArchiveBoxArrowDownIcon className="h-5 w-5" />
                             </ListItemPrefix>
                             Agreement Archives
                         </ListItem>
                     </Link>
+                    {user.is_admin ? (
                     <Link href={route('agreementarchives.create')}>
                         <ListItem className={`${LIST_ITEM_STYLES} ${route().current('agreementarchives.create') ? 'bg-orange-700 text-white' : ''}`}>
                             <ListItemPrefix>
@@ -80,6 +61,8 @@ export default function Authenticated({ header, children }) {
                             New Entry
                         </ListItem>
                     </Link>
+                    ) : null}
+                    {user.is_admin ? (
                     <Link href={route('users.index')}>
                         <ListItem className={`${LIST_ITEM_STYLES} ${route().current('users.index') ? 'bg-orange-700 text-white' : ''}`}>
                             <ListItemPrefix>
@@ -88,6 +71,7 @@ export default function Authenticated({ header, children }) {
                             User Management
                         </ListItem>
                     </Link>
+                    ): null}
                 </List>
                 <hr className="my-2 border-gray-200" />
                 <List>

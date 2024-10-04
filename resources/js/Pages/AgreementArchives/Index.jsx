@@ -3,7 +3,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 
 export default function Index({ agreementArchives}) {
-
     return (
         <AuthenticatedLayout>
             <Head title="Agreement Archives" />

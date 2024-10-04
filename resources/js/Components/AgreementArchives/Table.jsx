@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Button, Card, Input, Typography } from "@material-tailwind/react";
 import { MagnifyingGlassIcon, DocumentPlusIcon, PencilSquareIcon, TrashIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
-import { Link, useForm } from "@inertiajs/react";
-import { format } from "date-fns";
+import { Link, useForm, usePage } from "@inertiajs/react";
+import { format, set } from "date-fns";
 import { Pagination } from "../Pagination";
 import { router } from '@inertiajs/react'
  
 export function Table({ agreementArchives}) {
+  const user = usePage().props.auth.user;
   const TABLE_HEAD = ["No","Nama Instansi", "Bidang Kerja Sama", "Bidang Mitra", "Kurun Waktu", "Waktu Mulai", "Waktu Berakhir", "Status", "Action"];
   const { data, setData } = useForm({
     page: agreementArchives.current_page
@@ -14,16 +15,28 @@ export function Table({ agreementArchives}) {
 
   const [query, setQuery] = useState('');
 
+  const handleSearch = (e) => {
+    setQuery(e);
+    setData('page', 1);
+  }
+
   useEffect(() => {
       router.get(
           route(route().current()),
-          { search: query },
+          { 
+            search: query,
+            page: data.page
+          },
           {
               preserveState: true,
               replace: true,
           }
       );
   }, [query]);
+
+  const handleView = (id) => {
+    router.get(route('agreementarchives.view', id));
+  }
 
 
   return (
@@ -37,9 +50,10 @@ export function Table({ agreementArchives}) {
               <Input label="Search" 
                 name="search"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => handleSearch(e.target.value)}
                 icon={<MagnifyingGlassIcon className="h-6 w-6 text-gray-500" />} />
             </div>
+            {user.is_admin ? (
             <div className="w-fit">
               <Link href={route('agreementarchives.create')}>
                 <Button color="green" className="flex items-center gap-x-2 py-2 text-nowrap ">
@@ -48,6 +62,7 @@ export function Table({ agreementArchives}) {
                 </Button>
               </Link>
             </div>
+            ): null}
           </div>
         </div>
       </div>
@@ -74,7 +89,7 @@ export function Table({ agreementArchives}) {
  
             return (
               <tr key={index} className="hover:bg-gray-50">
-                <td className={classes}>
+                <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>
                   <Typography
                     variant="small"
                     color="blue-gray"
@@ -83,7 +98,7 @@ export function Table({ agreementArchives}) {
                     {index + 1}
                   </Typography>
                 </td>
-                <td className={classes}>
+                <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>
                   <Typography
                     variant="small"
                     color="blue-gray"
@@ -92,7 +107,7 @@ export function Table({ agreementArchives}) {
                     {nama_instansi}
                   </Typography>
                 </td>
-                <td className={classes}>
+                <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>
                   <Typography
                     variant="small"
                     className="font-normal text-gray-600"
@@ -110,7 +125,7 @@ export function Table({ agreementArchives}) {
                     }
                   </Typography>
                 </td>
-                <td className={classes}>
+                <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>
                   <Typography
                     variant="small"
                     className="font-normal text-gray-600"
@@ -131,7 +146,7 @@ export function Table({ agreementArchives}) {
                     }
                   </Typography>
                 </td>
-                <td className={classes}>
+                <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>
                   <Typography
                     variant="small"
                     className="font-normal text-gray-600"
@@ -139,7 +154,7 @@ export function Table({ agreementArchives}) {
                     {durasi_kerjasama}
                   </Typography>
                 </td>
-                <td className={classes}>
+                <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>
                   <Typography
                     variant="small"
                     className="font-normal text-gray-600"
@@ -147,7 +162,7 @@ export function Table({ agreementArchives}) {
                     {format(waktu_kerjasama_mulai, 'dd MMMM yyyy')}
                   </Typography>
                 </td>
-                <td className={classes}>
+                <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>
                   <Typography
                     variant="small"
                     className="font-normal text-gray-600"
@@ -155,7 +170,7 @@ export function Table({ agreementArchives}) {
                     {format(waktu_kerjasama_selesai, 'dd MMMM yyyy')}
                   </Typography>
                 </td>
-                <td className={classes}>
+                <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>
                   <Typography
                     variant="small"
                     className="font-normal text-gray-600"
@@ -176,12 +191,16 @@ export function Table({ agreementArchives}) {
                     <a href={route('agreementarchives.download', dokumen_kerjasama)}>
                       <DocumentArrowDownIcon className="h-5 w-5 text-green-500" />
                     </a>
+                    {user.is_admin ? (
                     <Link href={route('agreementarchives.edit', id)} className="text-blue-500 flex">
                       <PencilSquareIcon className="h-5 w-5" />
                     </Link>
+                    ) : null}
+                    {user.is_admin ? (
                     <Link href={route('agreementarchives.destroy', id)} method="delete" as="button" className="text-red-500 flex">
                       <TrashIcon className="h-5 w-5" />
                     </Link>
+                    ) : null}
                   </div>
                 </td>
               </tr>

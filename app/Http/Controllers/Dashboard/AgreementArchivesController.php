@@ -82,7 +82,6 @@ class AgreementArchivesController extends Controller
 
     public function download($file)
     {
-        // dd('storage/' . $file);
         $check = Storage::disk('public')->get($file);
         
         return response()->download('storage/'.$file);
@@ -151,5 +150,14 @@ class AgreementArchivesController extends Controller
         }
 
         return redirect()->route('agreementarchives.index');
+    }
+
+    public function view($id)
+    {
+        $agreementArchive = AgreementArchives::with('documentations')->findOrFail($id);
+
+        return Inertia::render('AgreementArchives/View', [
+            'agreementArchive' => $agreementArchive,
+        ]);
     }
 }

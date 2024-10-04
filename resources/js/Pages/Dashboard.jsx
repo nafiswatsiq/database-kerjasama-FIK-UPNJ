@@ -1,10 +1,11 @@
 import { Chart } from '@/Components/Dashboard/Chart';
 import { Gallery } from '@/Components/Dashboard/Gallery';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import { format } from 'date-fns';
 
 export default function Dashboard({ totalAgreement, activeAgreement, userRegistered, seriesKriteriaMitra, seriesBidangKerjasama, seriesAsalMitra, galleries }) {
+    const user = usePage().props.auth.user;
     const date = new Date();
 
     return (
@@ -60,33 +61,35 @@ export default function Dashboard({ totalAgreement, activeAgreement, userRegiste
                                     </div>
                                 </div>
                                 <div className="mt-4">
-                                    <p className="">From a total of 45 </p>
+                                    <p className="">From a total of {totalAgreement}</p>
                                 </div>
                             </div>
                         </div>
-                        <div className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
-                            <div className="p-4 text-gray-900">
-                                <div className="flex">
-                                    <div className="flex-auto">
-                                        <p>User Registered</p>
-                                        <p className="font-semibold text-3xl mt-3">{userRegistered}</p>
-                                    </div>
-                                    <div>
-                                        <div className="bg-[#FFF3D6] p-3 rounded-3xl">
-                                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path opacity="0.4" d="M14.9999 3.33334C10.6333 3.33334 7.08325 6.88334 7.08325 11.25C7.08325 15.5333 10.4333 19 14.7999 19.15C14.9333 19.1333 15.0666 19.1333 15.1666 19.15C15.1999 19.15 15.2166 19.15 15.2499 19.15C15.2666 19.15 15.2666 19.15 15.2833 19.15C19.5499 19 22.8999 15.5333 22.9166 11.25C22.9166 6.88334 19.3666 3.33334 14.9999 3.33334Z" fill="#FEC53D"/>
-                                                <path d="M23.4666 23.5833C18.8166 20.4833 11.2333 20.4833 6.54994 23.5833C4.43327 25 3.2666 26.9167 3.2666 28.9667C3.2666 31.0167 4.43327 32.9167 6.53327 34.3167C8.8666 35.8833 11.9333 36.6667 14.9999 36.6667C18.0666 36.6667 21.1333 35.8833 23.4666 34.3167C25.5666 32.9 26.7333 31 26.7333 28.9333C26.7166 26.8833 25.5666 24.9833 23.4666 23.5833Z" fill="#FEC53D"/>
-                                                <path opacity="0.4" d="M33.3166 12.2333C33.5833 15.4667 31.2833 18.3 28.0999 18.6833C28.0833 18.6833 28.0833 18.6833 28.0666 18.6833H28.0166C27.9166 18.6833 27.8166 18.6833 27.7333 18.7167C26.1166 18.8 24.6333 18.2833 23.5166 17.3333C25.2333 15.8 26.2166 13.5 26.0166 11C25.8999 9.65 25.4333 8.41667 24.7333 7.36667C25.3666 7.05 26.0999 6.85 26.8499 6.78333C30.1166 6.5 33.0333 8.93333 33.3166 12.2333Z" fill="#FEC53D"/>
-                                                <path d="M36.65 27.65C36.5166 29.2667 35.4833 30.6667 33.75 31.6167C32.0833 32.5333 29.9833 32.9667 27.9 32.9167C29.1 31.8333 29.8 30.4833 29.9333 29.05C30.1 26.9833 29.1167 25 27.15 23.4167C26.0333 22.5333 24.7333 21.8333 23.3167 21.3167C27 20.25 31.6333 20.9667 34.4833 23.2667C36.0167 24.5 36.8 26.05 36.65 27.65Z" fill="#FEC53D"/>
-                                            </svg>
+                        {user.is_admin ? (
+                            <div className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
+                                <div className="p-4 text-gray-900">
+                                    <div className="flex">
+                                        <div className="flex-auto">
+                                            <p>User Registered</p>
+                                            <p className="font-semibold text-3xl mt-3">{userRegistered}</p>
+                                        </div>
+                                        <div>
+                                            <div className="bg-[#FFF3D6] p-3 rounded-3xl">
+                                                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path opacity="0.4" d="M14.9999 3.33334C10.6333 3.33334 7.08325 6.88334 7.08325 11.25C7.08325 15.5333 10.4333 19 14.7999 19.15C14.9333 19.1333 15.0666 19.1333 15.1666 19.15C15.1999 19.15 15.2166 19.15 15.2499 19.15C15.2666 19.15 15.2666 19.15 15.2833 19.15C19.5499 19 22.8999 15.5333 22.9166 11.25C22.9166 6.88334 19.3666 3.33334 14.9999 3.33334Z" fill="#FEC53D"/>
+                                                    <path d="M23.4666 23.5833C18.8166 20.4833 11.2333 20.4833 6.54994 23.5833C4.43327 25 3.2666 26.9167 3.2666 28.9667C3.2666 31.0167 4.43327 32.9167 6.53327 34.3167C8.8666 35.8833 11.9333 36.6667 14.9999 36.6667C18.0666 36.6667 21.1333 35.8833 23.4666 34.3167C25.5666 32.9 26.7333 31 26.7333 28.9333C26.7166 26.8833 25.5666 24.9833 23.4666 23.5833Z" fill="#FEC53D"/>
+                                                    <path opacity="0.4" d="M33.3166 12.2333C33.5833 15.4667 31.2833 18.3 28.0999 18.6833C28.0833 18.6833 28.0833 18.6833 28.0666 18.6833H28.0166C27.9166 18.6833 27.8166 18.6833 27.7333 18.7167C26.1166 18.8 24.6333 18.2833 23.5166 17.3333C25.2333 15.8 26.2166 13.5 26.0166 11C25.8999 9.65 25.4333 8.41667 24.7333 7.36667C25.3666 7.05 26.0999 6.85 26.8499 6.78333C30.1166 6.5 33.0333 8.93333 33.3166 12.2333Z" fill="#FEC53D"/>
+                                                    <path d="M36.65 27.65C36.5166 29.2667 35.4833 30.6667 33.75 31.6167C32.0833 32.5333 29.9833 32.9667 27.9 32.9167C29.1 31.8333 29.8 30.4833 29.9333 29.05C30.1 26.9833 29.1167 25 27.15 23.4167C26.0333 22.5333 24.7333 21.8333 23.3167 21.3167C27 20.25 31.6333 20.9667 34.4833 23.2667C36.0167 24.5 36.8 26.05 36.65 27.65Z" fill="#FEC53D"/>
+                                                </svg>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="mt-4">
-                                    <p className="">Last Updated {format(date, 'dd MMMM yyyy')}</p>
+                                    <div className="mt-4">
+                                        <p className="">Last Updated {format(date, 'dd MMMM yyyy')}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        ) : null}
                     </div>
 
                     <div className="overflow-hidden">

@@ -21,20 +21,7 @@ export default function Index({ users }) {
                         </div>
                     </div>
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                        <div className="p-6 flex justify-between">
-                          <div>
-                            {/* <Select 
-                              label="Entry per page"
-                              name="perPage" 
-                              selected={data.perPage}
-                              onChange={(e) => setData('perPage', e.target.selected)}
-                              >
-                              <Option value='10'>10</Option>
-                              <Option value='20'>20</Option>
-                              <Option value='50'>50</Option>
-                              <Option value='100'>100</Option>
-                            </Select> */}
-                          </div>
+                        <div className="p-6 flex justify-end">
                           <Link href={route('users.create')}>
                             <Button color="green" className="flex items-center gap-x-2">
                               <UserPlusIcon className="h-5 w-5" />

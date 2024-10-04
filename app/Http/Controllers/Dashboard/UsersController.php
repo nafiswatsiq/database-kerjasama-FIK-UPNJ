@@ -29,9 +29,8 @@ class UsersController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            // 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'jabatan' => ['required', 'string', 'max:255'],
-            'nip' => ['required', 'string', 'max:255'],
+            'nip' => ['required', 'string', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
             'is_admin' => ['nullable']
         ]);
