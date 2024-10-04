@@ -24,7 +24,7 @@ class AgreementArchivesController extends Controller
         }
 
         return Inertia::render('AgreementArchives/Index', [
-            'agreementArchives' => $agreementArchives->orderBy('id', 'desc')->paginate(10),
+            'agreementArchives' => $agreementArchives->orderBy('id', 'desc')->paginate(1),
         ]);
     }
 

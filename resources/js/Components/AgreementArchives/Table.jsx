@@ -33,22 +33,11 @@ export function Table({ agreementArchives}) {
   }
 
   useEffect(() => {
-    const currentUrl = route().params;
-
-    if (!currentUrl) {
-      router.get(
-        route(route().current()),
-        { 
-          search: query,
-          page: data.page
-        },
-        {
-          preserveState: true,
-          replace: true,
-        }
-      );
+    const currentParam = route().params['search'];
+    if (currentParam) {
+      setQuery(currentParam)
     }
-  }, [query, data.page]);
+  }, []);
 
   const handleView = (id) => {
     router.get(route('agreementarchives.view', id));
@@ -227,6 +216,7 @@ export function Table({ agreementArchives}) {
 
       <div className="w-full flex justify-end py-5">
         <Pagination 
+          search={route().params['search'] ?? null}
           links={agreementArchives.links}
           currentPage={agreementArchives.current_page}
           setCurrentPage={(page) => setData('page', page)}
