@@ -45,7 +45,7 @@ class AgreementArchivesController extends Controller
             'waktuKerjasamaMulai' => 'required',
             'waktuKerjasamaSelesai' => 'required',
             'dokumenKerjasama' => 'required|mimes:pdf,doc,docx',
-            'dokumentasi.*' => 'required|mimes:jepg,png,jpg',
+            'dokumentasi.*' => 'nullable|mimes:jepg,png,jpg',
         ]);
 
         $pathDokumenKerjasama = $request->file('dokumenKerjasama')->store('/', 'public');
@@ -62,12 +62,14 @@ class AgreementArchivesController extends Controller
             'dokumen_kerjasama' => $pathDokumenKerjasama,
         ]);
 
-        foreach ($request->file('dokumentasi') as $file) {
-            $path = $file->store('/', 'public');
-            $agreementArchive->documentations()->create([
-                'path' => $path,
-            ]);
-        }
+        if ($request->file('dokumentasi')) {
+            foreach ($request->file('dokumentasi') as $file) {
+                $path = $file->store('/', 'public');
+                $agreementArchive->documentations()->create([
+                    'path' => $path,
+                ]);
+            }
+        };
 
         return redirect()->route('agreementarchives.index');
     }
