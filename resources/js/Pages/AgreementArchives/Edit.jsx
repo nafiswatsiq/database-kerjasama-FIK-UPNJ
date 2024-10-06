@@ -8,7 +8,7 @@ import { Head, useForm } from '@inertiajs/react';
 import { Button, Input, Textarea, Typography } from '@material-tailwind/react';
 
 export default function Edit({ agreementArchive }) {
-    const { data, setData, patch, processing, errors, reset, progress } = useForm({
+    const { data, setData, post, processing, errors, reset, progress } = useForm({
         namaInstansi: agreementArchive.nama_instansi,
         deskripsiKerjasama: agreementArchive.deskripsi_kerjasama,
         bidangKerjasama: agreementArchive.bidang_kerjasama,
@@ -28,7 +28,7 @@ export default function Edit({ agreementArchive }) {
     const submit = (e) => {
         e.preventDefault();
 
-        patch(route('agreementarchives.update', agreementArchive.id));
+        post(route('agreementarchives.update', agreementArchive.id));
     }
 
     return (
@@ -189,7 +189,7 @@ export default function Edit({ agreementArchive }) {
                                 <div className="flex-auto">
                                     <label htmlFor="dokumenKerjasama">
                                         <p className="text-sm text-gray-500 p-4 border border-dashed rounded-lg border-gray-500">
-                                            {data.dokumenKerjasama ? data.dokumenKerjasama.name : 'upload dokumen kerjasama'}
+                                            {agreementArchive.dokumen_kerjasama ? agreementArchive.dokumen_kerjasama : 'upload dokumen kerjasama'}
                                         </p>
                                     </label>
                                   <TextInput

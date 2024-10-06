@@ -48,7 +48,9 @@ class AgreementArchivesController extends Controller
             'dokumentasi.*' => 'nullable|mimes:jepg,png,jpg',
         ]);
 
-        $pathDokumenKerjasama = $request->file('dokumenKerjasama')->store('/', 'public');
+        $fileDokumenKerjasama = $request->file('dokumenKerjasama');
+        $nameDokumenKerjasama = $fileDokumenKerjasama->getClientOriginalName();
+        $pathDokumenKerjasama = $fileDokumenKerjasama->storeAs('/', $nameDokumenKerjasama, 'public');
         
         $agreementArchive = AgreementArchives::create([
             'nama_instansi' => $request->namaInstansi,
@@ -126,11 +128,14 @@ class AgreementArchivesController extends Controller
 
         if ($request->file('dokumenKerjasama')) {
             $request->validate([
-                'dokumenKerjasama' => 'required|mimes:pdf,doc,docx',
+                'dokumenKerjasama' => 'nullable|mimes:pdf,doc,docx',
             ]);
 
             Storage::disk('public')->delete($agreementArchive->dokumen_kerjasama);
-            $pathDokumenKerjasama = $request->file('dokumenKerjasama')->store('/', 'public');
+            $fileDokumenKerjasama = $request->file('dokumenKerjasama');
+            $nameDokumenKerjasama = $fileDokumenKerjasama->getClientOriginalName();
+            $pathDokumenKerjasama = $fileDokumenKerjasama->storeAs('/', $nameDokumenKerjasama, 'public');
+
             $agreementArchive->update([
                 'dokumen_kerjasama' => $pathDokumenKerjasama,
             ]);
@@ -138,7 +143,7 @@ class AgreementArchivesController extends Controller
 
         if ($request->file('dokumentasi')) {
             $request->validate([
-                'dokumentasi.*' => 'required|mimes:jepg,png,jpg',
+                'dokumentasi.*' => 'nullable|mimes:jepg,png,jpg',
             ]);
             
             $agreementArchive->documentations()->delete();

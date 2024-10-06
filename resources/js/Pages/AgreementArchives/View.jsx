@@ -176,7 +176,7 @@ export default function Edit({ agreementArchive }) {
                                     <label htmlFor="dokumenKerjasama">
                                         <a href={route('agreementarchives.download', data.dokumenKerjasama)} >
                                           <p className="text-sm text-gray-500 p-4 border border-dashed rounded-lg border-gray-500 flex justify-between">
-                                              Download Dokumen Kerjasama <DocumentArrowDownIcon className="h-6 w-6 text-gray-500" />
+                                              Download Dokumen {data.dokumenKerjasama} <DocumentArrowDownIcon className="h-6 w-6 text-gray-500" />
                                           </p>
                                         </a>
                                     </label>

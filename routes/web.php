@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/agreement-archives/download/{file}', [AgreementArchivesController::class, 'download'])->name('agreementarchives.download');
         Route::delete('/agreement-archives/{id}', [AgreementArchivesController::class, 'destroy'])->name('agreementarchives.destroy');
         Route::get('/agreement-archives/{id}/edit', [AgreementArchivesController::class, 'edit'])->name('agreementarchives.edit');
-        Route::patch('/agreement-archives/{id}', [AgreementArchivesController::class, 'update'])->name('agreementarchives.update');
+        Route::post('/agreement-archives/{id}', [AgreementArchivesController::class, 'update'])->name('agreementarchives.update');
         Route::get('/agreement-archives/{id}', [AgreementArchivesController::class, 'view'])->name('agreementarchives.view');
         
         Route::get('/users', [UsersController::class, 'index'])->name('users.index');
