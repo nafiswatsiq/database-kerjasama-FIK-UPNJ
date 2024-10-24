@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Button, Card, Input, Typography } from "@material-tailwind/react";
-import { MagnifyingGlassIcon, DocumentPlusIcon, PencilSquareIcon, TrashIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, DocumentPlusIcon, PencilSquareIcon, TrashIcon, DocumentArrowDownIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import { format, set } from "date-fns";
 import { Pagination } from "../Pagination";
 import { router } from '@inertiajs/react'
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import SelectInput from "../SelectInput";
  
 export function Table({ agreementArchives}) {
   const user = usePage().props.auth.user;
@@ -13,6 +16,7 @@ export function Table({ agreementArchives}) {
     page: agreementArchives.current_page
   })
 
+  const [filter, setFilter] = useState('');
   const [query, setQuery] = useState('');
 
   const handleSearch = (e) => {
@@ -32,6 +36,44 @@ export function Table({ agreementArchives}) {
     );
   }
 
+  const handleSort = () => {
+    const newSortOrder = data.sort === 'asc' ? 'desc' : 'asc';
+    setData(prevData => ({
+      ...prevData,
+      sort: newSortOrder,
+      page: 1,
+    }));
+
+    router.get(
+      route(route().current()),
+      {
+        sort: newSortOrder,
+        page: 1,
+      },
+      {
+        preserveState: true,
+        replace: true,
+      }
+    );
+  }
+
+  const handleFilter = (e) => {
+    setFilter(e);
+    setData('page', 1);
+
+    router.get(
+      route(route().current()),
+      {
+        filter: e,
+        page: 1,
+      },
+      {
+        preserveState: true,
+        replace: true,
+      }
+    );
+  }
+
   useEffect(() => {
     const currentParam = route().params['search'];
     if (currentParam) {
@@ -43,11 +85,55 @@ export function Table({ agreementArchives}) {
     router.get(route('agreementarchives.view', id));
   }
 
+  const [inputValue, setInputValue] = useState('')
+  const deleteSwal = (id) => {
+    withReactContent(Swal).fire({
+      title: 'Kamu yakin?',
+      text: 'Anda tidak akan dapat memulihkan data ini!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, hapus!',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      cancelButtonText: 'Batal',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Deleted!',
+          text: 'Your data has been deleted.',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+
+        router.delete(route('agreementarchives.destroy', id), {
+          preserveState: true,
+          onSuccess: () => {
+            setData('page', 1);
+          }
+        })
+      }
+    })
+  }
 
   return (
     <Card className="h-full w-full px-6 overflow-x-scroll max-w-screen-xl shadow-none">
       <div className="flex justify-between pt-6">
         <div className="">
+        <SelectInput
+            name="filter"
+            className="mt-1 block w-full rounded-md"
+            autoComplete="off"
+            onChange={(e) => handleFilter(e.target.value)}
+            options={[
+                { value: 'all', label: 'Semua' },
+                { value: 'active', label: 'Aktif' },
+                { value: 'inactive', label: 'Non-aktif' },
+                { value: 'terbaru', label: 'Terbaru' },
+                { value: 'terlama', label: 'Terlama' },
+                { value: 'no-document', label: 'Tidak ada dokumen' },
+            ]}
+        />
         </div>
         <div className="w-6/12">
           <div className="flex gap-x-4">
@@ -74,7 +160,7 @@ export function Table({ agreementArchives}) {
       <table className="w-full min-w-max table-auto text-left">
         <thead>
           <tr>
-            {TABLE_HEAD.map((head) => (
+            {TABLE_HEAD.map((head, index) => (
               <th key={head} className="border-b border-gray-300 pb-4 pt-10">
                 <Typography
                   variant="small"
@@ -85,6 +171,16 @@ export function Table({ agreementArchives}) {
                 </Typography>
               </th>
             ))}
+            <th className="border-b border-gray-300 pb-4 pt-10">
+                <Typography
+                  onClick={() => handleSort()}
+                  variant="small"
+                  color="blue-gray"
+                  className="font-bold leading-none flex items-center gap-x-1 cursor-pointer"
+                >
+                  Created At <ChevronUpDownIcon strokeWidth={2} className="h-4 w-4" />
+                </Typography>
+              </th>
           </tr>
         </thead>
         <tbody>
@@ -147,7 +243,10 @@ export function Table({ agreementArchives}) {
                       </span> : kriteria_mitra === 'Pemerintahan' ? 
                       <span className="border px-3 py-0.5 rounded-md bg-teal-50 text-teal-500">
                         {kriteria_mitra}
-                      </span> : null
+                      </span> : 
+                      <span className="border px-3 py-0.5 rounded-md bg-red-50 text-red-500">
+                        {kriteria_mitra}
+                      </span>
                     }
                   </Typography>
                 </td>
@@ -193,20 +292,30 @@ export function Table({ agreementArchives}) {
                 </td>
                 <td className={`${classes} w-16`}>
                   <div className="flex justify-start gap-x-3">
-                    <a href={route('agreementarchives.download', dokumen_kerjasama)}>
-                      <DocumentArrowDownIcon className="h-5 w-5 text-green-500" />
-                    </a>
+                    {dokumen_kerjasama ? 
+                      <a href={route('agreementarchives.download', dokumen_kerjasama)}>
+                        <DocumentArrowDownIcon className="h-5 w-5 text-green-500" />
+                      </a> : null
+                    }
                     {user.is_admin ? (
                     <Link href={route('agreementarchives.edit', id)} className="text-blue-500 flex">
                       <PencilSquareIcon className="h-5 w-5" />
                     </Link>
                     ) : null}
                     {user.is_admin ? (
-                    <Link href={route('agreementarchives.destroy', id)} method="delete" as="button" className="text-red-500 flex">
+                    <Link onClick={() => deleteSwal(id)} as="button" className="text-red-500 flex">
                       <TrashIcon className="h-5 w-5" />
                     </Link>
                     ) : null}
                   </div>
+                </td>
+                <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>
+                  <Typography
+                    variant="small"
+                    className="font-normal text-gray-600"
+                  >
+                    {format(new Date(), 'dd/M/yyyy')}
+                  </Typography>
                 </td>
               </tr>
             );

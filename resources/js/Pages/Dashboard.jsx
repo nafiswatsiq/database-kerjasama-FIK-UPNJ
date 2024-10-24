@@ -1,10 +1,10 @@
 import { Chart } from '@/Components/Dashboard/Chart';
 import { Gallery } from '@/Components/Dashboard/Gallery';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { format } from 'date-fns';
 
-export default function Dashboard({ totalAgreement, activeAgreement, userRegistered, seriesKriteriaMitra, seriesBidangKerjasama, seriesAsalMitra, galleries }) {
+export default function Dashboard({ totalAgreement, activeAgreement, inactiveAgreement, documentNull, userRegistered, seriesKriteriaMitra, seriesBidangKerjasama, seriesAsalMitra, galleries }) {
     const user = usePage().props.auth.user;
     const date = new Date();
 
@@ -46,8 +46,54 @@ export default function Dashboard({ totalAgreement, activeAgreement, userRegiste
                             <div className="p-4 text-gray-900">
                                 <div className="flex">
                                     <div className="flex-auto">
-                                        <p>Active Agreement</p>
-                                        <p className="font-semibold text-3xl mt-3">{activeAgreement}</p>
+                                        <Link href={route('agreementarchives.index') + '?filter=active&page=1'}>Active Agreement</Link>
+                                        <p className="font-semibold text-3xl mt-3"><Link href={route('agreementarchives.index') + '?filter=active&page=1'}>{activeAgreement}</Link></p>
+                                    </div>
+                                    <div>
+                                        <div className="bg-[#D9F7E8] p-3 rounded-3xl">
+                                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.4" d="M34.1666 16.9833H29.35C25.4 16.9833 22.1833 13.7667 22.1833 9.81667V5C22.1833 4.08334 21.4333 3.33334 20.5166 3.33334H13.45C8.31663 3.33334 4.16663 6.66667 4.16663 12.6167V27.3833C4.16663 33.3333 8.31663 36.6667 13.45 36.6667H26.55C31.6833 36.6667 35.8333 33.3333 35.8333 27.3833V18.65C35.8333 17.7333 35.0833 16.9833 34.1666 16.9833Z" fill="#4AD991"/>
+                                                <path d="M26.3335 3.68333C25.6501 3 24.4668 3.46667 24.4668 4.41667V10.2333C24.4668 12.6667 26.5335 14.6833 29.0501 14.6833C30.6335 14.7 32.8335 14.7 34.7168 14.7C35.6668 14.7 36.1668 13.5833 35.5001 12.9167C33.1001 10.5 28.8001 6.15 26.3335 3.68333Z" fill="#4AD991"/>
+                                                <path d="M22.5 22.9167H12.5C11.8167 22.9167 11.25 22.35 11.25 21.6667C11.25 20.9833 11.8167 20.4167 12.5 20.4167H22.5C23.1833 20.4167 23.75 20.9833 23.75 21.6667C23.75 22.35 23.1833 22.9167 22.5 22.9167Z" fill="#4AD991"/>
+                                                <path d="M19.1667 29.5833H12.5C11.8167 29.5833 11.25 29.0167 11.25 28.3333C11.25 27.65 11.8167 27.0833 12.5 27.0833H19.1667C19.85 27.0833 20.4167 27.65 20.4167 28.3333C20.4167 29.0167 19.85 29.5833 19.1667 29.5833Z" fill="#4AD991"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="mt-4">
+                                    <p className="">From a total of {totalAgreement}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
+                            <div className="p-4 text-gray-900">
+                                <div className="flex">
+                                    <div className="flex-auto">
+                                    <Link href={route('agreementarchives.index') + '?filter=inactive&page=1'}>Inactive Agreement</Link>
+                                    <p className="font-semibold text-3xl mt-3"><Link href={route('agreementarchives.index') + '?filter=inactive&page=1'}>{inactiveAgreement}</Link></p>
+                                    </div>
+                                    <div>
+                                        <div className="bg-[#D9F7E8] p-3 rounded-3xl">
+                                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path opacity="0.4" d="M34.1666 16.9833H29.35C25.4 16.9833 22.1833 13.7667 22.1833 9.81667V5C22.1833 4.08334 21.4333 3.33334 20.5166 3.33334H13.45C8.31663 3.33334 4.16663 6.66667 4.16663 12.6167V27.3833C4.16663 33.3333 8.31663 36.6667 13.45 36.6667H26.55C31.6833 36.6667 35.8333 33.3333 35.8333 27.3833V18.65C35.8333 17.7333 35.0833 16.9833 34.1666 16.9833Z" fill="#4AD991"/>
+                                                <path d="M26.3335 3.68333C25.6501 3 24.4668 3.46667 24.4668 4.41667V10.2333C24.4668 12.6667 26.5335 14.6833 29.0501 14.6833C30.6335 14.7 32.8335 14.7 34.7168 14.7C35.6668 14.7 36.1668 13.5833 35.5001 12.9167C33.1001 10.5 28.8001 6.15 26.3335 3.68333Z" fill="#4AD991"/>
+                                                <path d="M22.5 22.9167H12.5C11.8167 22.9167 11.25 22.35 11.25 21.6667C11.25 20.9833 11.8167 20.4167 12.5 20.4167H22.5C23.1833 20.4167 23.75 20.9833 23.75 21.6667C23.75 22.35 23.1833 22.9167 22.5 22.9167Z" fill="#4AD991"/>
+                                                <path d="M19.1667 29.5833H12.5C11.8167 29.5833 11.25 29.0167 11.25 28.3333C11.25 27.65 11.8167 27.0833 12.5 27.0833H19.1667C19.85 27.0833 20.4167 27.65 20.4167 28.3333C20.4167 29.0167 19.85 29.5833 19.1667 29.5833Z" fill="#4AD991"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="mt-4">
+                                    <p className="">From a total of {totalAgreement}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
+                            <div className="p-4 text-gray-900">
+                                <div className="flex">
+                                    <div className="flex-auto">
+                                    <Link href={route('agreementarchives.index') + '?filter=no-document&page=1'}>No documents</Link>
+                                    <p className="font-semibold text-3xl mt-3"><Link href={route('agreementarchives.index') + '?filter=no-document&page=1'}>{documentNull}</Link></p>
                                     </div>
                                     <div>
                                         <div className="bg-[#D9F7E8] p-3 rounded-3xl">
@@ -101,7 +147,7 @@ export default function Dashboard({ totalAgreement, activeAgreement, userRegiste
                         <div className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
                             <div className="p-4 text-gray-900">
                                 <Chart 
-                                    label={['PTN', 'PTS', 'DuDi', 'Pemerintahan']} 
+                                    label={['PTN', 'PTS', 'DuDi', 'Pemerintahan', 'Perusahaan Multinasional', 'Perusahaan Teknologi', 'Perusahaan Startup', 'Organisasi Nirlaba', 'Lembaga Kesehatan', 'Lembaga Riset', 'Lembaga Kebudayaan']} 
                                     series={Object.values(seriesKriteriaMitra)}
                                     />
                             </div>

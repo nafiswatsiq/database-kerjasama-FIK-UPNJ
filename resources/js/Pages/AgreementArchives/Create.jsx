@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import SelectInput from '@/Components/SelectInput';
@@ -6,6 +7,7 @@ import TextInput from '@/Components/TextInput';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm } from '@inertiajs/react';
 import { Button, Input, Textarea, Typography } from '@material-tailwind/react';
+import Swal from 'sweetalert2';
 
 export default function Create() {
     const { data, setData, post, processing, errors, reset, progress } = useForm({
@@ -20,6 +22,7 @@ export default function Create() {
         dokumenKerjasama: null,
         dokumentasi: []
     });
+    const [swalShown, setSwalShown] = useState(false)
 
     const handleFileChange = (e) => {
         setData('dokumentasi', Array.from(e.target.files));
@@ -29,6 +32,13 @@ export default function Create() {
         e.preventDefault();
 
         post(route('agreementarchives.store'));
+
+        Swal.fire({
+            title: 'Success!',
+            text: 'Data berhasil disimpan',
+            didOpen: () => setSwalShown(true),
+            didClose: () => setSwalShown(false),
+        })
     }
 
     return (
@@ -113,6 +123,13 @@ export default function Create() {
                                             { value: 'Perguruan Tinggi Swasta', label: 'Perguruan Tinggi Swasta' },
                                             { value: 'Dunia Industri/Dunia Usaha', label: 'Dunia Industri/Dunia Usaha' },
                                             { value: 'Pemerintahan', label: 'Pemerintahan' },
+                                            { value: 'Perusahaan Multinasional', label: 'Perusahaan Multinasional' },
+                                            { value: 'Perusahaan Teknologi', label: 'Perusahaan Teknologi' },
+                                            { value: 'Perusahaan Startup', label: 'Perusahaan Startup' },
+                                            { value: 'Organisasi Nirlaba', label: 'Organisasi Nirlaba' },
+                                            { value: 'Lembaga Kesehatan', label: 'Lembaga Kesehatan' },
+                                            { value: 'Lembaga Riset', label: 'Lembaga Riset' },
+                                            { value: 'Lembaga Kebudayaan', label: 'Lembaga Kebudayaan' },
                                         ]}
                                     />
 

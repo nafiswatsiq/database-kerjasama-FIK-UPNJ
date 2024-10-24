@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('durasi_kerjasama');
             $table->date('waktu_kerjasama_mulai');
             $table->date('waktu_kerjasama_selesai');
-            $table->string('dokumen_kerjasama');
+            $table->string('dokumen_kerjasama')->nullable();
             $table->timestamps();
         });
     }

@@ -16,6 +16,8 @@ class Dashboard extends Controller
     {
         $totalAgreement = AgreementArchives::count();
         $activeAgreement = AgreementArchives::where('waktu_kerjasama_selesai', '>', now())->count();
+        $inactiveAgreement = AgreementArchives::where('waktu_kerjasama_selesai', '<', now())->count();
+        $documentNull = AgreementArchives::whereNull('dokumen_kerjasama')->count();
         $userRegistered = User::count();
 
         $defaultKriteriaMitra = [
@@ -23,6 +25,13 @@ class Dashboard extends Controller
             'Perguruan Tinggi Swasta' => 0,
             'Dunia Industri/Dunia Usaha' => 0,
             'Pemerintahan' => 0,
+            'Perusahaan Multinasional' => 0,
+            'Perusahaan Teknologi' => 0,
+            'Perusahaan Startup' => 0,
+            'Organisasi Nirlaba' => 0,
+            'Lembaga Kesehatan' => 0,
+            'Lembaga Riset' => 0,
+            'Lembaga Kebudayaan' => 0,
         ];
         $countKriteriaMitra = AgreementArchives::select('kriteria_mitra', DB::raw('count(*) as total'))
             ->groupBy('kriteria_mitra')
@@ -54,12 +63,12 @@ class Dashboard extends Controller
         $seriesAsalMitra = array_merge($defaultAsalMitra, $countAsalMitra);
 
         $galleries = [];
-        $getGallery = AgreementArchives::with('documentations')->orderBy('id', 'desc')->limit(5)->get();
+        $getGallery = AgreementArchives::with('documentations')->orderBy('id', 'desc')->limit(15)->get();
         foreach ($getGallery as $gallery) {
             foreach ($gallery->documentations as $documentation) {
                 $galleries[] = [
                     'nama_instansi' => $gallery->nama_instansi,
-                    'date' => Carbon::parse($gallery->created_at)->format('d F Y'),
+                    'date' => Carbon::parse($gallery->waktu_kerjasama_mulai)->format('d F Y'),
                     'path' => asset('storage/' . $documentation->path),
                 ];
             }
@@ -68,6 +77,8 @@ class Dashboard extends Controller
         return Inertia::render('Dashboard', [
             'totalAgreement' => $totalAgreement,
             'activeAgreement' => $activeAgreement,
+            'inactiveAgreement' => $inactiveAgreement,
+            'documentNull' => $documentNull,
             'userRegistered' => $userRegistered,
             'seriesKriteriaMitra' => $seriesKriteriaMitra,
             'seriesBidangKerjasama' => $seriesBidangKerjasama,

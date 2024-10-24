@@ -174,11 +174,17 @@ export default function Edit({ agreementArchive }) {
                                 <InputLabel value="Dokumen Kerjasama" className='w-44 text-lg'/>
                                 <div className="flex-auto">
                                     <label htmlFor="dokumenKerjasama">
-                                        <a href={route('agreementarchives.download', data.dokumenKerjasama)} >
+                                        {data.dokumenKerjasama ? (
+                                            <a href={route('agreementarchives.download', data.dokumenKerjasama)} >
+                                                <p className="text-sm text-gray-500 p-4 border border-dashed rounded-lg border-gray-500 flex justify-between">
+                                                    Download Dokumen {data.dokumenKerjasama} <DocumentArrowDownIcon className="h-6 w-6 text-gray-500" />
+                                                </p>
+                                            </a>
+                                        ) : (
                                           <p className="text-sm text-gray-500 p-4 border border-dashed rounded-lg border-gray-500 flex justify-between">
-                                              Download Dokumen {data.dokumenKerjasama} <DocumentArrowDownIcon className="h-6 w-6 text-gray-500" />
+                                              Tidak ada dokumen kerjasama
                                           </p>
-                                        </a>
+                                        )}
                                     </label>
                                 </div>
                             </div>

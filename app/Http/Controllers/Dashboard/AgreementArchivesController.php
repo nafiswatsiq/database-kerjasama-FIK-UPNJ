@@ -23,8 +23,32 @@ class AgreementArchivesController extends Controller
                 ->orWhere('asal_mitra', 'like', '%'.$request->get('search').'%');
         }
 
+        if ($request->get('sort'))
+        {
+            $agreementArchives->orderBy('id', $request->get('sort'));
+        }
+
+        if ($request->get('filter'))
+        {
+            $filter = $request->get('filter');
+            if ($filter == 'active') {
+                $agreementArchives->where('waktu_kerjasama_selesai', '>', now());
+            } elseif ($filter == 'inactive') {
+                $agreementArchives->where('waktu_kerjasama_selesai', '<', now());
+            } elseif ($filter == 'terbaru') {
+                $agreementArchives->orderBy('id', 'desc');
+            } elseif ($filter == 'terlama') {
+                $agreementArchives->orderBy('id', 'asc');
+            } elseif ($filter == 'no-document') {
+                $agreementArchives->whereNull('dokumen_kerjasama');
+            } else {
+                $agreementArchives->where('waktu_kerjasama_selesai', '>', now())
+                    ->orWhere('waktu_kerjasama_selesai', '<', now());
+            }
+        }
+
         return Inertia::render('AgreementArchives/Index', [
-            'agreementArchives' => $agreementArchives->orderBy('id', 'desc')->paginate(20),
+            'agreementArchives' => $agreementArchives->paginate(20),
         ]);
     }
 
@@ -44,13 +68,15 @@ class AgreementArchivesController extends Controller
             'durasiKerjasama' => 'required',
             'waktuKerjasamaMulai' => 'required',
             'waktuKerjasamaSelesai' => 'required',
-            'dokumenKerjasama' => 'required|mimes:pdf,doc,docx',
+            'dokumenKerjasama' => 'nullable|mimes:pdf,doc,docx',
             'dokumentasi.*' => 'nullable|mimes:jepg,png,jpg',
         ]);
 
-        $fileDokumenKerjasama = $request->file('dokumenKerjasama');
-        $nameDokumenKerjasama = $fileDokumenKerjasama->getClientOriginalName();
-        $pathDokumenKerjasama = $fileDokumenKerjasama->storeAs('/', $nameDokumenKerjasama, 'public');
+        if($request->file('dokumenKerjasama')) {
+            $fileDokumenKerjasama = $request->file('dokumenKerjasama');
+            $nameDokumenKerjasama = $fileDokumenKerjasama->getClientOriginalName();
+            $pathDokumenKerjasama = $fileDokumenKerjasama->storeAs('/', $nameDokumenKerjasama, 'public');
+        }
         
         $agreementArchive = AgreementArchives::create([
             'nama_instansi' => $request->namaInstansi,
@@ -61,7 +87,7 @@ class AgreementArchivesController extends Controller
             'durasi_kerjasama' => $request->durasiKerjasama,
             'waktu_kerjasama_mulai' => $request->waktuKerjasamaMulai,
             'waktu_kerjasama_selesai' => $request->waktuKerjasamaSelesai,
-            'dokumen_kerjasama' => $pathDokumenKerjasama,
+            'dokumen_kerjasama' => $pathDokumenKerjasama ?? null,
         ]);
 
         if ($request->file('dokumentasi')) {
@@ -131,7 +157,6 @@ class AgreementArchivesController extends Controller
                 'dokumenKerjasama' => 'nullable|mimes:pdf,doc,docx',
             ]);
 
-            Storage::disk('public')->delete($agreementArchive->dokumen_kerjasama);
             $fileDokumenKerjasama = $request->file('dokumenKerjasama');
             $nameDokumenKerjasama = $fileDokumenKerjasama->getClientOriginalName();
             $pathDokumenKerjasama = $fileDokumenKerjasama->storeAs('/', $nameDokumenKerjasama, 'public');
