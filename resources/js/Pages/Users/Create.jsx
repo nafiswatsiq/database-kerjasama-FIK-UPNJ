@@ -4,6 +4,8 @@ import TextInput from '@/Components/TextInput';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm } from '@inertiajs/react';
 import { Button, Checkbox } from '@material-tailwind/react';
+import { useState } from 'react';
+import Swal from 'sweetalert2';
 
 export default function Create() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -13,6 +15,7 @@ export default function Create() {
       password: '',
       is_admin: false
     });
+    const [swalShown, setSwalShown] = useState(false)
 
     const submit = (e) => {
         e.preventDefault();
@@ -20,6 +23,13 @@ export default function Create() {
         post(route('users.store'), {
             onFinish: () => reset('password'),
         });
+
+        Swal.fire({
+            title: 'Success!',
+            text: 'Data berhasil disimpan',
+            didOpen: () => setSwalShown(true),
+            didClose: () => setSwalShown(false),
+        })
     }
 
     return (

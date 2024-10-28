@@ -1,13 +1,45 @@
 import { Card, Chip, Typography } from "@material-tailwind/react";
 import { Pagination } from "../Pagination";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { Link, useForm } from "@inertiajs/react";
+import { Link, router, useForm } from "@inertiajs/react";
+import withReactContent from "sweetalert2-react-content";
+import Swal from "sweetalert2";
  
 export function TableUsers({ users }) {
   const TABLE_HEAD = ["No", "Nama", "NIP", "Jabatan", "Status User", "Action"];
   const { data, setData } = useForm({
     page: users.current_page
   })
+
+  const deleteSwal = (id) => {
+    withReactContent(Swal).fire({
+      title: 'Kamu yakin?',
+      text: 'Anda tidak akan dapat memulihkan data ini!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Dihapus!',
+          text: 'Data telah dihapus.',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+
+        router.delete(route('user.destroy', id), {
+          preserveScroll: true,
+          onSuccess: () => {
+            setData('page', users.current_page)
+          }
+        });
+      }
+    });
+  }
 
   return (
     <Card className="h-full w-full px-6">
@@ -82,7 +114,7 @@ export function TableUsers({ users }) {
                       <PencilSquareIcon className="h-5 w-5" />
                       Edit
                     </Link>
-                    <Link href={route('user.destroy', id)} method="delete" as="button" className="text-red-500 flex">
+                    <Link onClick={() => deleteSwal(id)} as="button" className="text-red-500 flex">
                       <TrashIcon className="h-5 w-5" />
                       Delete
                     </Link>

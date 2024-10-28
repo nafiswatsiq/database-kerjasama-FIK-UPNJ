@@ -36,27 +36,6 @@ export function Table({ agreementArchives}) {
     );
   }
 
-  const handleSort = () => {
-    const newSortOrder = data.sort === 'asc' ? 'desc' : 'asc';
-    setData(prevData => ({
-      ...prevData,
-      sort: newSortOrder,
-      page: 1,
-    }));
-
-    router.get(
-      route(route().current()),
-      {
-        sort: newSortOrder,
-        page: 1,
-      },
-      {
-        preserveState: true,
-        replace: true,
-      }
-    );
-  }
-
   const handleFilter = (e) => {
     setFilter(e);
     setData('page', 1);
@@ -85,7 +64,6 @@ export function Table({ agreementArchives}) {
     router.get(route('agreementarchives.view', id));
   }
 
-  const [inputValue, setInputValue] = useState('')
   const deleteSwal = (id) => {
     withReactContent(Swal).fire({
       title: 'Kamu yakin?',
@@ -99,8 +77,8 @@ export function Table({ agreementArchives}) {
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
-          title: 'Deleted!',
-          text: 'Your data has been deleted.',
+          title: 'Dihapus!',
+          text: 'Data telah dihapus.',
           icon: 'success',
           showConfirmButton: false,
           timer: 1500,
@@ -109,7 +87,7 @@ export function Table({ agreementArchives}) {
         router.delete(route('agreementarchives.destroy', id), {
           preserveState: true,
           onSuccess: () => {
-            setData('page', 1);
+            setData('page', agreementArchives.current_page);
           }
         })
       }
@@ -127,6 +105,9 @@ export function Table({ agreementArchives}) {
             onChange={(e) => handleFilter(e.target.value)}
             options={[
                 { value: 'all', label: 'Semua' },
+                { value: 'nama-instansi', label: 'Nama Instansi' },
+                { value: 'tgl-mulai', label: 'Tanggal Mulai' },
+                { value: 'tgl-selesai', label: 'Tanggal Selesai' },
                 { value: 'active', label: 'Aktif' },
                 { value: 'inactive', label: 'Non-aktif' },
                 { value: 'terbaru', label: 'Terbaru' },
@@ -171,16 +152,6 @@ export function Table({ agreementArchives}) {
                 </Typography>
               </th>
             ))}
-            <th className="border-b border-gray-300 pb-4 pt-10">
-                <Typography
-                  onClick={() => handleSort()}
-                  variant="small"
-                  color="blue-gray"
-                  className="font-bold leading-none flex items-center gap-x-1 cursor-pointer"
-                >
-                  Created At <ChevronUpDownIcon strokeWidth={2} className="h-4 w-4" />
-                </Typography>
-              </th>
           </tr>
         </thead>
         <tbody>
@@ -308,14 +279,6 @@ export function Table({ agreementArchives}) {
                     </Link>
                     ) : null}
                   </div>
-                </td>
-                <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>
-                  <Typography
-                    variant="small"
-                    className="font-normal text-gray-600"
-                  >
-                    {format(new Date(), 'dd/M/yyyy')}
-                  </Typography>
                 </td>
               </tr>
             );

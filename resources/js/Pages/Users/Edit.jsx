@@ -4,6 +4,8 @@ import TextInput from '@/Components/TextInput';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm } from '@inertiajs/react';
 import { Button, Checkbox } from '@material-tailwind/react';
+import { useState } from 'react';
+import Swal from 'sweetalert2';
 
 export default function Edit({ user }) {
     const { data, setData, patch, processing, errors, reset } = useForm({
@@ -13,11 +15,19 @@ export default function Edit({ user }) {
       password: '',
       is_admin: user.is_admin,
     });
+    const [swalShown, setSwalShown] = useState(false)
 
     const submit = (e) => {
         e.preventDefault();
 
         patch(route('user.update', user.id));
+
+        Swal.fire({
+            title: 'Success!',
+            text: 'Data berhasil diubah',
+            didOpen: () => setSwalShown(true),
+            didClose: () => setSwalShown(false),
+        })
     }
 
     return (

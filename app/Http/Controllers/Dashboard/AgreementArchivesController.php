@@ -31,7 +31,14 @@ class AgreementArchivesController extends Controller
         if ($request->get('filter'))
         {
             $filter = $request->get('filter');
-            if ($filter == 'active') {
+            // dd($filter);
+            if ($filter == 'nama-instansi'){
+                $agreementArchives->orderBy('nama_instansi');
+            } elseif ($filter == 'tgl-mulai') {
+                $agreementArchives->orderBy('waktu_kerjasama_mulai');
+            } elseif ($filter == 'tgl-selesai') {
+                $agreementArchives->orderBy('waktu_kerjasama_selesai');
+            } elseif ($filter == 'active') {
                 $agreementArchives->where('waktu_kerjasama_selesai', '>', now());
             } elseif ($filter == 'inactive') {
                 $agreementArchives->where('waktu_kerjasama_selesai', '<', now());

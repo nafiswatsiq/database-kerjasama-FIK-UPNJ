@@ -73,6 +73,7 @@ class Dashboard extends Controller
                 ];
             }
         }
+        $galleries = collect($galleries)->slice(0, 15);
 
         return Inertia::render('Dashboard', [
             'totalAgreement' => $totalAgreement,

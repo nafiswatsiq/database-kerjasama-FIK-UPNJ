@@ -20,7 +20,7 @@ export default function Dashboard({ totalAgreement, activeAgreement, inactiveAgr
                         </div>
                     </div>
                     <div className="grid grid-cols-4 gap-6">
-                        <div className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
+                        <Link href={route('agreementarchives.index')} className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
                             <div className="p-4 text-gray-900">
                                 <div className="flex">
                                     <div className="flex-auto">
@@ -41,13 +41,13 @@ export default function Dashboard({ totalAgreement, activeAgreement, inactiveAgr
                                     <p className="">Up from last year</p>
                                 </div>
                             </div>
-                        </div>
-                        <div className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
+                        </Link>
+                        <Link href={route('agreementarchives.index') + '?filter=active&page=1'} className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
                             <div className="p-4 text-gray-900">
                                 <div className="flex">
                                     <div className="flex-auto">
-                                        <Link href={route('agreementarchives.index') + '?filter=active&page=1'}>Active Agreement</Link>
-                                        <p className="font-semibold text-3xl mt-3"><Link href={route('agreementarchives.index') + '?filter=active&page=1'}>{activeAgreement}</Link></p>
+                                        <p>Active Agreement</p>
+                                        <p className="font-semibold text-3xl mt-3">{activeAgreement}</p>
                                     </div>
                                     <div>
                                         <div className="bg-[#D9F7E8] p-3 rounded-3xl">
@@ -64,13 +64,13 @@ export default function Dashboard({ totalAgreement, activeAgreement, inactiveAgr
                                     <p className="">From a total of {totalAgreement}</p>
                                 </div>
                             </div>
-                        </div>
-                        <div className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
+                        </Link>
+                        <Link href={route('agreementarchives.index') + '?filter=inactive&page=1'} className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
                             <div className="p-4 text-gray-900">
                                 <div className="flex">
                                     <div className="flex-auto">
-                                    <Link href={route('agreementarchives.index') + '?filter=inactive&page=1'}>Inactive Agreement</Link>
-                                    <p className="font-semibold text-3xl mt-3"><Link href={route('agreementarchives.index') + '?filter=inactive&page=1'}>{inactiveAgreement}</Link></p>
+                                    <p>Inactive Agreement</p>
+                                    <p className="font-semibold text-3xl mt-3">{inactiveAgreement}</p>
                                     </div>
                                     <div>
                                         <div className="bg-[#D9F7E8] p-3 rounded-3xl">
@@ -87,13 +87,13 @@ export default function Dashboard({ totalAgreement, activeAgreement, inactiveAgr
                                     <p className="">From a total of {totalAgreement}</p>
                                 </div>
                             </div>
-                        </div>
-                        <div className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
+                        </Link>
+                        <Link href={route('agreementarchives.index') + '?filter=no-document&page=1'} className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
                             <div className="p-4 text-gray-900">
                                 <div className="flex">
                                     <div className="flex-auto">
-                                    <Link href={route('agreementarchives.index') + '?filter=no-document&page=1'}>No documents</Link>
-                                    <p className="font-semibold text-3xl mt-3"><Link href={route('agreementarchives.index') + '?filter=no-document&page=1'}>{documentNull}</Link></p>
+                                    <p>No documents</p>
+                                    <p className="font-semibold text-3xl mt-3">{documentNull}</p>
                                     </div>
                                     <div>
                                         <div className="bg-[#D9F7E8] p-3 rounded-3xl">
@@ -110,9 +110,9 @@ export default function Dashboard({ totalAgreement, activeAgreement, inactiveAgr
                                     <p className="">From a total of {totalAgreement}</p>
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                         {user.is_admin ? (
-                            <div className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
+                            <Link href={route('users.index')} className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
                                 <div className="p-4 text-gray-900">
                                     <div className="flex">
                                         <div className="flex-auto">
@@ -134,7 +134,7 @@ export default function Dashboard({ totalAgreement, activeAgreement, inactiveAgr
                                         <p className="">Last Updated {format(date, 'dd MMMM yyyy')}</p>
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         ) : null}
                     </div>
 
