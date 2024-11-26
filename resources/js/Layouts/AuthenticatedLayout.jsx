@@ -44,15 +44,15 @@ export default function Authenticated({ header, children }) {
                             Dashboard 
                         </ListItem>
                     </Link>
-                    <Link href={route('agreementarchives.index')}>
+                    {/* <Link href={route('agreementarchives.index', 1)}>
                         <ListItem className={`${LIST_ITEM_STYLES} ${route().current('agreementarchives.index') || route().current('agreementarchives.view') ? 'bg-orange-700 text-white' : ''}`}>
                             <ListItemPrefix>
                                 <ArchiveBoxArrowDownIcon className="h-5 w-5" />
                             </ListItemPrefix>
                             Agreement Archives
                         </ListItem>
-                    </Link>
-                    {user.is_admin ? (
+                    </Link> */}
+                    {/* {user.is_admin ? (
                     <Link href={route('agreementarchives.create')}>
                         <ListItem className={`${LIST_ITEM_STYLES} ${route().current('agreementarchives.create') ? 'bg-orange-700 text-white' : ''}`}>
                             <ListItemPrefix>
@@ -61,7 +61,7 @@ export default function Authenticated({ header, children }) {
                             New Entry
                         </ListItem>
                     </Link>
-                    ) : null}
+                    ) : null} */}
                     {user.is_admin ? (
                     <Link href={route('users.index')}>
                         <ListItem className={`${LIST_ITEM_STYLES} ${route().current('users.index') ? 'bg-orange-700 text-white' : ''}`}>

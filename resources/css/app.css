@@ -5,3 +5,7 @@
 input[type="file"] {
   display: none;
 }
+
+input {
+  @apply focus:!ring-0;
+}

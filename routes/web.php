@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\MitraController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -8,6 +9,7 @@ use App\Http\Controllers\Dashboard\UsersController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Dashboard\AgreementArchivesController;
+use App\Models\Mitra;
 
 Route::get('/', [AuthenticatedSessionController::class, 'create'])
     ->name('login')
@@ -20,14 +22,17 @@ Route::post('/login', [AuthenticatedSessionController::class, 'login'])
 Route::middleware('auth')->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::get('/', [Dashboard::class, 'index'])->name('dashboard');
-        Route::get('/agreement-archives', [AgreementArchivesController::class, 'index'])->name('agreementarchives.index');
-        Route::get('/agreement-archives/create', [AgreementArchivesController::class, 'create'])->name('agreementarchives.create');
-        Route::post('/agreement-archives', [AgreementArchivesController::class, 'store'])->name('agreementarchives.store');
+        Route::get('/mitra/create', [MitraController::class, 'create'])->name('mitra.create');
+        Route::get('/mitra/{mitraId}', [MitraController::class, 'detail'])->name('mitra.detail');
+        Route::post('/mitra', [MitraController::class, 'store'])->name('mitra.store');
+        Route::get('/mitra/{mitraId}/agreement-archives', [AgreementArchivesController::class, 'index'])->name('agreementarchives.index');
+        Route::get('/mitra/{mitraId}/agreement-archives/create', [AgreementArchivesController::class, 'create'])->name('agreementarchives.create');
+        Route::post('/mitra/{mitraId}/agreement-archives', [AgreementArchivesController::class, 'store'])->name('agreementarchives.store');
         Route::get('/agreement-archives/download/{file}', [AgreementArchivesController::class, 'download'])->name('agreementarchives.download');
         Route::delete('/agreement-archives/{id}', [AgreementArchivesController::class, 'destroy'])->name('agreementarchives.destroy');
-        Route::get('/agreement-archives/{id}/edit', [AgreementArchivesController::class, 'edit'])->name('agreementarchives.edit');
-        Route::post('/agreement-archives/{id}', [AgreementArchivesController::class, 'update'])->name('agreementarchives.update');
-        Route::get('/agreement-archives/{id}', [AgreementArchivesController::class, 'view'])->name('agreementarchives.view');
+        Route::get('/mitra/{mitraId}/agreement-archives/{id}/edit', [AgreementArchivesController::class, 'edit'])->name('agreementarchives.edit');
+        Route::post('agreement-archives/{id}', [AgreementArchivesController::class, 'update'])->name('agreementarchives.update');
+        Route::get('/mitra/{mitraId}/agreement-archives/{id}', [AgreementArchivesController::class, 'view'])->name('agreementarchives.view');
         
         Route::get('/users', [UsersController::class, 'index'])->name('users.index');
         Route::get('/users/create', [UsersController::class, 'create'])->name('users.create');

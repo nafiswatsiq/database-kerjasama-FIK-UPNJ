@@ -1,12 +1,52 @@
+import BarChart from '@/Components/Dashboard/BarChart';
+import CardAgreement from '@/Components/Dashboard/CardAgreement';
 import { Chart } from '@/Components/Dashboard/Chart';
 import { Gallery } from '@/Components/Dashboard/Gallery';
+import SelectInput from '@/Components/SelectInput';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { DocumentPlusIcon } from '@heroicons/react/24/outline';
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Button, Option, Select, Typography } from '@material-tailwind/react';
 import { format } from 'date-fns';
+import { useState } from 'react';
 
-export default function Dashboard({ totalAgreement, activeAgreement, inactiveAgreement, documentNull, userRegistered, seriesKriteriaMitra, seriesBidangKerjasama, seriesAsalMitra, galleries }) {
+export default function Dashboard({ mitra, totalAgreement, activeAgreement, inactiveAgreement, documentNull, userRegistered, seriesKriteriaMitra, seriesBidangKerjasama, seriesAsalMitra, galleries }) {
     const user = usePage().props.auth.user;
     const date = new Date();
+    const [filterAsalMitra, setFilterAsalMitra] = useState('');
+    const [filterKriteriaMitra, setFilterKriteriaMitra] = useState('');
+
+    const handleFilterAsalMitra = (e) => {
+        setFilterAsalMitra(e);
+    
+        router.get(
+          route(route().current()),
+          {
+            asal_mitra: e,
+            kriteria_mitra: filterKriteriaMitra,
+          },
+          {
+            preserveState: true,
+            replace: true,
+          }
+        );
+    }
+
+    const handleFilterKriteriaMitra = (e) => {
+        setFilterKriteriaMitra(e);
+    
+        router.get(
+          route(route().current()),
+          {
+            kriteria_mitra: e,
+            asal_mitra: filterAsalMitra,
+          },
+          {
+            preserveState: true,
+            replace: true,
+          }
+        );
+    }
 
     return (
         <AuthenticatedLayout>
@@ -19,7 +59,86 @@ export default function Dashboard({ totalAgreement, activeAgreement, inactiveAgr
                             <h1 className="font-medium text-xl uppercase">Dashboard</h1>
                         </div>
                     </div>
-                    <div className="grid grid-cols-4 gap-6">
+                    <div className='grid grid-cols-6 gap-4'>
+                        <div className='col-span-4 bg-white sm:rounded-2xl shadow-lg'>
+                            <BarChart dataSeries={seriesKriteriaMitra}/>
+                        </div>
+                        <div className='col-span-2'>
+                            <div className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
+                                <div className="p-4 text-gray-900">
+                                    <Chart 
+                                        label={['Domestik', 'Internasional']} 
+                                        series={Object.values(seriesAsalMitra)}
+                                        />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="">
+                        <div className="border-b-2 pb-4 border-gray-500">
+                            <h1 className="font-medium text-xl uppercase">Galeri Kerjasama</h1>
+                        </div>
+                        <div className='flex justify-between mt-4'>
+                            <div className='flex gap-4 items-center'>
+                                <Typography color='gray' className='font-medium'>Urutkan</Typography>
+                                <div className="w-52">
+                                    <SelectInput
+                                        label="Asal Mitra"
+                                        value={filterAsalMitra}
+                                        className="mt-1 block w-full"
+                                        autoComplete="off"
+                                        onChange={(e) => handleFilterAsalMitra(e.target.value)}
+                                        options={[
+                                            { value: '', label: 'Semua' },
+                                            { value: 'Domestik', label: 'Domestik' },
+                                            { value: 'Internasional', label: 'Internasional' },
+                                        ]}
+                                    />
+                                </div>
+                                <div className="w-52">
+                                    <SelectInput
+                                        label="Kriteria Mitra"
+                                        value={filterKriteriaMitra}
+                                        className="mt-1 block w-full"
+                                        autoComplete="off"
+                                        onChange={(e) => handleFilterKriteriaMitra(e.target.value)}
+                                        options={[
+                                            { value: '', label: 'Semua' },
+                                            { value: 'Perguruan Tinggi Negeri', label: 'Perguruan Tinggi Negeri' },
+                                            { value: 'Perguruan Tinggi Swasta', label: 'Perguruan Tinggi Swasta' },
+                                            { value: 'Dunia Industri/Dunia Usaha', label: 'Dunia Industri/Dunia Usaha' },
+                                            { value: 'Pemerintahan', label: 'Pemerintahan' },
+                                            { value: 'Perusahaan Multinasional', label: 'Perusahaan Multinasional' },
+                                            { value: 'Perusahaan Teknologi', label: 'Perusahaan Teknologi' },
+                                            { value: 'Perusahaan Startup', label: 'Perusahaan Startup' },
+                                            { value: 'Organisasi Nirlaba', label: 'Organisasi Nirlaba' },
+                                            { value: 'Lembaga Riset', label: 'Lembaga Riset' },
+                                            { value: 'Lembaga Kebudayaan', label: 'Lembaga Kebudayaan' },
+                                        ]}
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                            {user.is_admin ? (
+                                <Link href={route('mitra.create')}>
+                                    <Button color="green" className="flex items-center gap-x-2 py-2 text-nowrap ">
+                                    <DocumentPlusIcon className="h-6 w-6 text-white" />
+                                    <span className="text-white">Tambah Mitra Baru</span>
+                                    </Button>
+                                </Link>
+                            ): null}
+                            </div>
+                        </div>
+                    </div>
+                    <div className='grid grid-cols-3 gap-6'>
+                        {mitra.map((item, index) => {
+                            return (
+                                <CardAgreement key={index} data={item}/>
+                            )
+                        })}
+                    </div>
+
+                    {/* <div className="grid grid-cols-4 gap-6">
                         <Link href={route('agreementarchives.index')} className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
                             <div className="p-4 text-gray-900">
                                 <div className="flex">
@@ -136,14 +255,14 @@ export default function Dashboard({ totalAgreement, activeAgreement, inactiveAgr
                                 </div>
                             </Link>
                         ) : null}
-                    </div>
-
+                    </div> */}
+{/* 
                     <div className="overflow-hidden">
                         <div className="border-b-2 pb-4 border-gray-500">
                             <h1 className="font-medium text-xl uppercase">GRAPHICS</h1>
                         </div>
-                    </div>
-                    <div className="grid grid-cols-3 gap-6">
+                    </div> */}
+                    {/* <div className="grid grid-cols-3 gap-6">
                         <div className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
                             <div className="p-4 text-gray-900">
                                 <Chart 
@@ -168,16 +287,16 @@ export default function Dashboard({ totalAgreement, activeAgreement, inactiveAgr
                                     />
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
-                    <div className="overflow-hidden">
+                    {/* <div className="overflow-hidden">
                         <div className="border-b-2 pb-4 border-gray-500">
                             <h1 className="font-medium text-xl uppercase">Gallery</h1>
                         </div>
-                    </div>
-                    <div>
+                    </div> */}
+                    {/* <div>
                         <Gallery data={galleries}/>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </AuthenticatedLayout>

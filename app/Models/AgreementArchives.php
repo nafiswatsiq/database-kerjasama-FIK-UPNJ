@@ -12,11 +12,14 @@ class AgreementArchives extends Model
     use HasFactory;
 
     protected $fillable = [
+        'mitra_id',
         'nama_instansi',
-        'deskripsi_kerjasama',
+        'nama_kegiatan',
+        'no_ia_pihak_1',
+        'no_ia_pihak_2',
+        'pihak_1',
+        'pihak_2',
         'bidang_kerjasama',
-        'kriteria_mitra',
-        'asal_mitra',
         'durasi_kerjasama',
         'waktu_kerjasama_mulai',
         'waktu_kerjasama_selesai',

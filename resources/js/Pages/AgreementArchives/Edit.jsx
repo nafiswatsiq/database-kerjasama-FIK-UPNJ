@@ -4,22 +4,25 @@ import SelectInput from '@/Components/SelectInput';
 import TextareaInput from '@/Components/TextareaInput';
 import TextInput from '@/Components/TextInput';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, useForm } from '@inertiajs/react';
+import { ArrowLeftCircleIcon } from '@heroicons/react/24/solid';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { Button, Input, Textarea, Typography } from '@material-tailwind/react';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 
-export default function Edit({ agreementArchive }) {
+export default function Edit({ mitraId, agreementArchive }) {
     const { data, setData, post, processing, errors, reset, progress } = useForm({
-        namaInstansi: agreementArchive.nama_instansi,
-        deskripsiKerjasama: agreementArchive.deskripsi_kerjasama,
-        bidangKerjasama: agreementArchive.bidang_kerjasama,
-        kriteriaMitra: agreementArchive.kriteria_mitra,
-        asalMitra: agreementArchive.asal_mitra,
-        durasiKerjasama: agreementArchive.durasi_kerjasama,
-        waktuKerjasamaMulai: agreementArchive.waktu_kerjasama_mulai,
-        waktuKerjasamaSelesai: agreementArchive.waktu_kerjasama_selesai,
-        dokumenKerjasama: null,
+        nama_instansi: agreementArchive.nama_instansi,
+        nama_kegiatan: agreementArchive.nama_kegiatan,
+        no_ia_pihak_1: agreementArchive.no_ia_pihak_1,
+        no_ia_pihak_2: agreementArchive.no_ia_pihak_2,
+        pihak_1: agreementArchive.pihak_1,
+        pihak_2: agreementArchive.pihak_2,
+        bidang_kerjasama: agreementArchive.bidang_kerjasama,
+        durasi_kerjasama: agreementArchive.durasi_kerjasama,
+        waktu_kerjasama_mulai: agreementArchive.waktu_kerjasama_mulai,
+        waktu_kerjasama_selesai: agreementArchive.waktu_kerjasama_selesai,
+        dokumen_kerjasama: null,
         dokumentasi: []
     });
     const [swalShown, setSwalShown] = useState(false)
@@ -31,7 +34,7 @@ export default function Edit({ agreementArchive }) {
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('agreementarchives.update', agreementArchive.id));
+        post(route('agreementarchives.update', [agreementArchive.id]));
 
         Swal.fire({
             title: 'Success!',
@@ -48,7 +51,10 @@ export default function Edit({ agreementArchive }) {
             <div className="py-10">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8 flex flex-col gap-y-8">
                     <div className="overflow-hidden">
-                        <div className="border-b-2 pb-4 border-gray-500">
+                        <div className="border-b-2 pb-4 border-gray-500 flex items-center">
+                            <Link href={route('agreementarchives.index', mitraId)}>
+                                <ArrowLeftCircleIcon className="h-10 w-10 text-orange-700 mr-4" />
+                            </Link>
                             <h1 className="font-medium text-xl">Edit</h1>
                         </div>
                     </div>
@@ -56,48 +62,116 @@ export default function Edit({ agreementArchive }) {
                         <Typography color="gray" className="px-6 pt-6 font-normal text-lg">Form Edit Rekap Kerjasama Baru</Typography>
                         <form onSubmit={submit} className="p-6">
                             <div className="flex items-center">
-                                <InputLabel htmlFor="namaInstansi" value="Nama Instansi" className='w-44 text-lg'/>
+                                <InputLabel htmlFor="nama_instansi" value="Nama Instansi" className='w-44 text-lg'/>
                                 <div className="flex-auto">
                                   <TextInput
-                                      id="namaInstansi"
+                                      id="nama_instansi"
                                       type="text"
-                                      name="namaInstansi"
-                                      value={data.namaInstansi}
+                                      name="nama_instansi"
+                                      value={data.nama_instansi}
                                       className="mt-1 block w-full px-4 py-2"
                                       autoComplete="username"
                                       isFocused={true}
-                                      onChange={(e) => setData('namaInstansi', e.target.value)}
+                                      onChange={(e) => setData('nama_instansi', e.target.value)}
                                   />
 
-                                  <InputError message={errors.namaInstansi} className="mt-2" />
+                                  <InputError message={errors.nama_instansi} className="mt-2" />
                                 </div>
                             </div>
                             <div className="flex items-start mt-3">
-                                <InputLabel htmlFor="deskripsiKerjasama" value="Deskripsi Kerjasama" className='w-44 text-lg mt-2'/>
+                                <InputLabel htmlFor="nama_kegiatan" value="Deskripsi Kegiatan" className='w-44 text-lg mt-2'/>
                                 <div className="flex-auto">
                                   <TextareaInput
-                                      id="deskripsiKerjasama"
+                                      id="nama_kegiatan"
                                       type="text"
-                                      name="deskripsiKerjasama"
-                                      value={data.deskripsiKerjasama}
+                                      name="nama_kegiatan"
+                                      value={data.nama_kegiatan}
                                       className="mt-1 block w-full px-4 py-2"
                                       isFocused={false}
-                                      onChange={(e) => setData('deskripsiKerjasama', e.target.value)}
+                                      onChange={(e) => setData('nama_kegiatan', e.target.value)}
                                   />
 
-                                  <InputError message={errors.deskripsiKerjasama} className="mt-2" />
+                                  <InputError message={errors.nama_kegiatan} className="mt-2" />
                                 </div>
                             </div>
                             <div className="flex items-center mt-3">
-                                <InputLabel htmlFor="bidangKerjasama" value="Bidang Kerjasama" className='w-44 text-lg'/>
+                                <InputLabel htmlFor="no_ia_pihak_1" value="No. IA Pihak 1" className='w-44 text-lg'/>
+                                <div className="flex-auto">
+                                  <TextInput
+                                      id="no_ia_pihak_1"
+                                      type="text"
+                                      name="no_ia_pihak_1"
+                                      value={data.no_ia_pihak_1}
+                                      className="mt-1 block w-full px-4 py-2"
+                                      autoComplete="off"
+                                      isFocused={false}
+                                      onChange={(e) => setData('no_ia_pihak_1', e.target.value)}
+                                  />
+
+                                  <InputError message={errors.no_ia_pihak_1} className="mt-2" />
+                                </div>
+                            </div>
+                            <div className="flex items-center mt-3">
+                                <InputLabel htmlFor="no_ia_pihak_2" value="No. IA Pihak 2" className='w-44 text-lg'/>
+                                <div className="flex-auto">
+                                  <TextInput
+                                      id="no_ia_pihak_2"
+                                      type="text"
+                                      name="no_ia_pihak_2"
+                                      value={data.no_ia_pihak_2}
+                                      className="mt-1 block w-full px-4 py-2"
+                                      autoComplete="off"
+                                      isFocused={false}
+                                      onChange={(e) => setData('no_ia_pihak_2', e.target.value)}
+                                  />
+
+                                  <InputError message={errors.no_ia_pihak_2} className="mt-2" />
+                                </div>
+                            </div>
+                            <div className="flex items-center mt-3">
+                                <InputLabel htmlFor="pihak_1" value="Pihak 1" className='w-44 text-lg'/>
+                                <div className="flex-auto">
+                                  <TextInput
+                                      id="pihak_1"
+                                      type="text"
+                                      name="pihak_1"
+                                      value={data.pihak_1}
+                                      className="mt-1 block w-full px-4 py-2"
+                                      autoComplete="off"
+                                      isFocused={false}
+                                      onChange={(e) => setData('pihak_1', e.target.value)}
+                                  />
+
+                                  <InputError message={errors.pihak_1} className="mt-2" />
+                                </div>
+                            </div>
+                            <div className="flex items-center mt-3">
+                                <InputLabel htmlFor="pihak_2" value="Pihak 2" className='w-44 text-lg'/>
+                                <div className="flex-auto">
+                                  <TextInput
+                                      id="pihak_2"
+                                      type="text"
+                                      name="pihak_2"
+                                      value={data.pihak_2}
+                                      className="mt-1 block w-full px-4 py-2"
+                                      autoComplete="off"
+                                      isFocused={false}
+                                      onChange={(e) => setData('pihak_2', e.target.value)}
+                                  />
+
+                                  <InputError message={errors.pihak_2} className="mt-2" />
+                                </div>
+                            </div>
+                            <div className="flex items-center mt-3">
+                                <InputLabel htmlFor="bidang_kerjasama" value="Bidang Kerjasama" className='w-44 text-lg'/>
                                 <div className="flex-auto">
                                     <SelectInput
-                                        id="bidangKerjasama"
-                                        name="bidangKerjasama"
-                                        value={data.bidangKerjasama}
+                                        id="bidang_kerjasama"
+                                        name="bidang_kerjasama"
+                                        value={data.bidang_kerjasama}
                                         className="mt-1 block w-full"
                                         autoComplete="off"
-                                        onChange={(e) => setData('bidangKerjasama', e.target.value)}
+                                        onChange={(e) => setData('bidang_kerjasama', e.target.value)}
                                         options={[
                                             { value: 'Pendidikan', label: 'Pendidikan' },
                                             { value: 'Pelatihan', label: 'Pelatihan' },
@@ -105,124 +179,77 @@ export default function Edit({ agreementArchive }) {
                                         ]}
                                     />
 
-                                  <InputError message={errors.bidangKerjasama} className="mt-2" />
+                                  <InputError message={errors.bidang_kerjasama} className="mt-2" />
                                 </div>
                             </div>
                             <div className="flex items-center mt-3">
-                                <InputLabel htmlFor="kriteriaMitra" value="Kriteria Mitra" className='w-44 text-lg'/>
-                                <div className="flex-auto">
-                                    <SelectInput
-                                        id="kriteriaMitra"
-                                        name="kriteriaMitra"
-                                        value={data.kriteriaMitra}
-                                        className="mt-1 block w-full"
-                                        autoComplete="off"
-                                        onChange={(e) => setData('kriteriaMitra', e.target.value)}
-                                        options={[
-                                            { value: 'Perguruan Tinggi Negeri', label: 'Perguruan Tinggi Negeri' },
-                                            { value: 'Perguruan Tinggi Swasta', label: 'Perguruan Tinggi Swasta' },
-                                            { value: 'Dunia Industri/Dunia Usaha', label: 'Dunia Industri/Dunia Usaha' },
-                                            { value: 'Pemerintahan', label: 'Pemerintahan' },
-                                            { value: 'Perusahaan Multinasional', label: 'Perusahaan Multinasional' },
-                                            { value: 'Perusahaan Teknologi', label: 'Perusahaan Teknologi' },
-                                            { value: 'Perusahaan Startup', label: 'Perusahaan Startup' },
-                                            { value: 'Organisasi Nirlaba', label: 'Organisasi Nirlaba' },
-                                            { value: 'Lembaga Kesehatan', label: 'Lembaga Kesehatan' },
-                                            { value: 'Lembaga Riset', label: 'Lembaga Riset' },
-                                            { value: 'Lembaga Kebudayaan', label: 'Lembaga Kebudayaan' },
-                                        ]}
-                                    />
-
-                                  <InputError message={errors.kriteriaMitra} className="mt-2" />
-                                </div>
-                            </div>
-                            <div className="flex items-center mt-3">
-                                <InputLabel htmlFor="asalMitra" value="Asal Mitra" className='w-44 text-lg'/>
-                                <div className="flex-auto">
-                                    <SelectInput
-                                        id="asalMitra"
-                                        name="asalMitra"
-                                        value={data.asalMitra}
-                                        className="mt-1 block w-full"
-                                        autoComplete="off"
-                                        onChange={(e) => setData('asalMitra', e.target.value)}
-                                        options={[
-                                            { value: 'Domestic', label: 'Domestic' },
-                                            { value: 'International', label: 'International' },
-                                        ]}
-                                    />
-
-                                  <InputError message={errors.asalMitra} className="mt-2" />
-                                </div>
-                            </div>
-                            <div className="flex items-center mt-3">
-                                <InputLabel htmlFor="durasiKerjasama" value="Durasi Kerjsama" className='w-44 text-lg'/>
+                                <InputLabel htmlFor="durasi_kerjasama" value="Durasi Kerjsama" className='w-44 text-lg'/>
                                 <div className="flex-auto">
                                   <TextInput
-                                      id="durasiKerjasama"
+                                      id="durasi_kerjasama"
                                       type="text"
-                                      name="durasiKerjasama"
-                                      value={data.durasiKerjasama}
+                                      name="durasi_kerjasama"
+                                      value={data.durasi_kerjasama}
                                       className="mt-1 block w-full px-4 py-2"
                                       isFocused={false}
-                                      onChange={(e) => setData('durasiKerjasama', e.target.value)}
+                                      onChange={(e) => setData('durasi_kerjasama', e.target.value)}
                                   />
 
-                                  <InputError message={errors.durasiKerjasama} className="mt-2" />
+                                  <InputError message={errors.durasi_kerjasama} className="mt-2" />
                                 </div>
                             </div>
                             <div className="flex items-center mt-3">
                                 <InputLabel htmlFor="waktuKerjasama" value="Waktu Kerjsama" className='w-44 text-lg'/>
                                 <div className="flex-auto">
                                   <TextInput
-                                      id="waktuKerjasamaMulai"
+                                      id="waktu_kerjasama_mulai"
                                       type="date"
-                                      name="waktuKerjasamaMulai"
-                                      value={data.waktuKerjasamaMulai}
+                                      name="waktu_kerjasama_mulai"
+                                      value={data.waktu_kerjasama_mulai}
                                       className="mt-1 block w-full px-4 py-2"
                                       isFocused={false}
-                                      onChange={(e) => setData('waktuKerjasamaMulai', e.target.value)}
+                                      onChange={(e) => setData('waktu_kerjasama_mulai', e.target.value)}
                                   />
 
-                                  <InputError message={errors.waktuKerjasamaMulai} className="mt-2" />
+                                  <InputError message={errors.waktu_kerjasama_mulai} className="mt-2" />
                                 </div>
                                 <p className="px-10">s.d</p>
                                 <div className="flex-auto">
                                   <TextInput
-                                      id="waktuKerjasamaSelesai"
+                                      id="waktu_kerjasama_selesai"
                                       type="date"
-                                      name="waktuKerjasamaSelesai"
-                                      value={data.waktuKerjasamaSelesai}
+                                      name="waktu_kerjasama_selesai"
+                                      value={data.waktu_kerjasama_selesai}
                                       className="mt-1 block w-full px-4 py-2"
                                       isFocused={false}
-                                      onChange={(e) => setData('waktuKerjasamaSelesai', e.target.value)}
+                                      onChange={(e) => setData('waktu_kerjasama_selesai', e.target.value)}
                                   />
 
-                                  <InputError message={errors.waktuKerjasamaSelesai} className="mt-2" />
+                                  <InputError message={errors.waktu_kerjasama_selesai} className="mt-2" />
                                 </div>
                             </div>
                             <div className="flex items-center mt-3">
-                                <InputLabel value="Dokumen Kerjasama" className='w-44 text-lg'/>
+                                <InputLabel value="Dokumen I.A" className='w-44 text-lg'/>
                                 <div className="flex-auto">
-                                    <label htmlFor="dokumenKerjasama">
+                                    <label htmlFor="dokumen_kerjasama">
                                         <p className="text-sm text-gray-500 p-4 border border-dashed rounded-lg border-gray-500">
                                             {agreementArchive.dokumen_kerjasama ? agreementArchive.dokumen_kerjasama : 'upload dokumen kerjasama'}
                                         </p>
                                     </label>
                                   <TextInput
-                                      id="dokumenKerjasama"
+                                      id="dokumen_kerjasama"
                                       type="file"
-                                      name="dokumenKerjasama"
+                                      name="dokumen_kerjasama"
                                       className="mt-1 block w-full px-4 py-2"
                                       isFocused={false}
-                                      onChange={(e) => setData('dokumenKerjasama', e.target.files[0])}
+                                      onChange={(e) => setData('dokumen_kerjasama', e.target.files[0])}
                                   />
                                     {progress && (
                                     <progress value={progress.percentage} max="100">
                                         {progress.percentage}%
                                     </progress>
                                     )}
-                                  <InputError message={errors.DokumenKerjasama} className="mt-2" />
+                                  <InputError message={errors.dokumen_kerjasama} className="mt-2" />
                                 </div>
                             </div>
                             <div className="flex items-center mt-3">

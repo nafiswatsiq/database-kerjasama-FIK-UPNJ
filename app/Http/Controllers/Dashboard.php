@@ -7,6 +7,7 @@ use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Models\AgreementArchives;
+use App\Models\Mitra;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -14,6 +15,15 @@ class Dashboard extends Controller
 {
     public function index()
     {
+        $mitra = Mitra::query();
+        if (request('asal_mitra')) {
+            $mitra = $mitra->where('asal_mitra', request('asal_mitra'));
+        }
+        if (request('kriteria_mitra')) {
+            $mitra = $mitra->where('kriteria_mitra', request('kriteria_mitra'));
+        }
+        $mitra = $mitra->orderBy('id', 'desc')->get();
+
         $totalAgreement = AgreementArchives::count();
         $activeAgreement = AgreementArchives::where('waktu_kerjasama_selesai', '>', now())->count();
         $inactiveAgreement = AgreementArchives::where('waktu_kerjasama_selesai', '<', now())->count();
@@ -29,11 +39,10 @@ class Dashboard extends Controller
             'Perusahaan Teknologi' => 0,
             'Perusahaan Startup' => 0,
             'Organisasi Nirlaba' => 0,
-            'Lembaga Kesehatan' => 0,
             'Lembaga Riset' => 0,
             'Lembaga Kebudayaan' => 0,
         ];
-        $countKriteriaMitra = AgreementArchives::select('kriteria_mitra', DB::raw('count(*) as total'))
+        $countKriteriaMitra = Mitra::select('kriteria_mitra', DB::raw('count(*) as total'))
             ->groupBy('kriteria_mitra')
             ->pluck('total', 'kriteria_mitra')
             ->toArray();
@@ -53,10 +62,10 @@ class Dashboard extends Controller
         $seriesBidangKerjasama = $seriesBidangKerjasama = array_merge($defaultBidangKerjasama, $countsBidangKerjasama);
             
         $defaultAsalMitra = [
-            'Domestic' => 0,
-            'International' => 0,
+            'Domestik' => 0,
+            'Internasional' => 0,
         ];
-        $countAsalMitra = AgreementArchives::select('asal_mitra', DB::raw('count(*) as total'))
+        $countAsalMitra = Mitra::select('asal_mitra', DB::raw('count(*) as total'))
             ->groupBy('asal_mitra')
             ->pluck('total', 'asal_mitra')
             ->toArray();
@@ -76,6 +85,7 @@ class Dashboard extends Controller
         $galleries = collect($galleries)->slice(0, 15);
 
         return Inertia::render('Dashboard', [
+            'mitra' => $mitra,
             'totalAgreement' => $totalAgreement,
             'activeAgreement' => $activeAgreement,
             'inactiveAgreement' => $inactiveAgreement,

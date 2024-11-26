@@ -3,18 +3,16 @@ import { Button, Card, Input, Typography } from "@material-tailwind/react";
 import { MagnifyingGlassIcon, DocumentPlusIcon, PencilSquareIcon, TrashIcon, DocumentArrowDownIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import { format, set } from "date-fns";
-import { Pagination } from "../Pagination";
 import { router } from '@inertiajs/react'
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import SelectInput from "../SelectInput";
  
 export function Table({ mitraId, agreementArchives}) {
   const user = usePage().props.auth.user;
-  const TABLE_HEAD = ["No","Nama Instansi", "No Implementasi Agreement", "Bidang Kerja Sama"];
   const { data, setData } = useForm({
     page: agreementArchives.current_page
   })
+  const TABLE_HEAD = ["No","Nama Instansi", "No Implementasi Agreement", "Bidang Kerja Sama"];
 
   const [filter, setFilter] = useState('');
   const [query, setQuery] = useState('');
@@ -61,7 +59,7 @@ export function Table({ mitraId, agreementArchives}) {
     setData('page', 1);
 
     router.get(
-      route('agreementarchives.index', mitraId),
+      route(route().current(), mitraId),
       {
         filter: filterType,
         order: newOrder,
@@ -117,48 +115,6 @@ export function Table({ mitraId, agreementArchives}) {
 
   return (
     <Card className="h-full w-full px-6 overflow-x-scroll max-w-screen-xl shadow-none">
-      <div className="flex justify-between pt-6">
-        <div className="">
-        <SelectInput
-            name="filter"
-            className="mt-1 block w-full rounded-md"
-            autoComplete="off"
-            onChange={(e) => handleFilter(e.target.value)}
-            options={[
-                { value: 'all', label: 'Semua' },
-                { value: 'nama-instansi', label: 'Nama Instansi' },
-                { value: 'tgl-mulai', label: 'Tanggal Mulai' },
-                { value: 'tgl-selesai', label: 'Tanggal Selesai' },
-                { value: 'active', label: 'Aktif' },
-                { value: 'inactive', label: 'Non-aktif' },
-                { value: 'terbaru', label: 'Terbaru' },
-                { value: 'terlama', label: 'Terlama' },
-                { value: 'no-document', label: 'Tidak ada dokumen' },
-            ]}
-        />
-        </div>
-        <div className="w-6/12">
-          <div className="flex gap-x-4">
-            <div className="w-full">
-              <Input label="Search" 
-                name="search"
-                value={query}
-                onChange={(e) => handleSearch(e.target.value)}
-                icon={<MagnifyingGlassIcon className="h-6 w-6 text-gray-500" />} />
-            </div>
-            {user.is_admin ? (
-            <div className="w-fit">
-              <Link href={route('agreementarchives.create', mitraId)}>
-                <Button color="green" className="flex items-center gap-x-2 py-2 text-nowrap ">
-                  <DocumentPlusIcon className="h-6 w-6 text-white" />
-                  <span className="text-white">Add New Agrement</span>
-                </Button>
-              </Link>
-            </div>
-            ): null}
-          </div>
-        </div>
-      </div>
       <table className="w-full min-w-max table-auto text-left">
         <thead>
           <tr>
@@ -173,7 +129,7 @@ export function Table({ mitraId, agreementArchives}) {
                 </Typography>
               </th>
             ))}
-            <th className="border-b border-gray-300 pb-4 pt-10">
+                        <th className="border-b border-gray-300 pb-4 pt-10">
               <Typography
                 variant="small"
                 color="blue-gray"
@@ -215,7 +171,7 @@ export function Table({ mitraId, agreementArchives}) {
           </tr>
         </thead>
         <tbody>
-          {agreementArchives.data.map(({ id, nama_instansi, no_ia_pihak_1, bidang_kerjasama, kriteria_mitra, waktu_kerjasama_mulai, waktu_kerjasama_selesai, dokumen_kerjasama }, index) => {
+          {agreementArchives.map(({ id, nama_instansi, no_ia_pihak_1, bidang_kerjasama, kriteria_mitra, waktu_kerjasama_mulai, waktu_kerjasama_selesai, dokumen_kerjasama }, index) => {
             const isLast = index === agreementArchives.length - 1;
             const classes = isLast ? "py-4" : "py-4 border-b border-gray-300";
  
@@ -346,15 +302,6 @@ export function Table({ mitraId, agreementArchives}) {
           })}
         </tbody>
       </table>
-
-      <div className="w-full flex justify-end py-5">
-        <Pagination 
-          search={route().params['search'] ?? null}
-          links={agreementArchives.links}
-          currentPage={agreementArchives.current_page}
-          setCurrentPage={(page) => setData('page', page)}
-          />
-      </div>
     </Card>
   );
 }
