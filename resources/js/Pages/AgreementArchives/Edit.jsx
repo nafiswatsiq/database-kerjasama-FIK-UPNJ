@@ -34,14 +34,25 @@ export default function Edit({ mitraId, agreementArchive }) {
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('agreementarchives.update', [agreementArchive.id]));
-
-        Swal.fire({
-            title: 'Success!',
-            text: 'Data berhasil diubah',
-            didOpen: () => setSwalShown(true),
-            didClose: () => setSwalShown(false),
-        })
+        post(route('agreementarchives.update', [agreementArchive.id]), {
+            onError: () => {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Data gagal diubah',
+                    icon: 'error',
+                    didOpen: () => setSwalShown(true),
+                    didClose: () => setSwalShown(false),
+                })
+            },
+            onSuccess: () => {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Data berhasil diubah',
+                    didOpen: () => setSwalShown(true),
+                    didClose: () => setSwalShown(false),
+                })
+            }
+        });
     }
 
     return (

@@ -30,14 +30,25 @@ export default function Create() {
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('mitra.store'));
-
-        Swal.fire({
-            title: 'Success!',
-            text: 'Data berhasil disimpan',
-            didOpen: () => setSwalShown(true),
-            didClose: () => setSwalShown(false),
-        })
+        post(route('mitra.store'), {
+            onError: () => {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Data gagal disimpan',
+                    icon: 'error',
+                    didOpen: () => setSwalShown(true),
+                    didClose: () => setSwalShown(false),
+                })
+            },
+            onSuccess: () => {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Data berhasil disimpan',
+                    didOpen: () => setSwalShown(true),
+                    didClose: () => setSwalShown(false),
+                })
+            }
+        });
     }
 
     return (

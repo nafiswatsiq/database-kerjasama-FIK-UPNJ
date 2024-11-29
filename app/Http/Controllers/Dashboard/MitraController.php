@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\AgreementArchives;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class MitraController extends Controller
 {
@@ -143,10 +144,12 @@ class MitraController extends Controller
                 $agreementArchives->where('waktu_kerjasama_selesai', '>', now())
                     ->orWhere('waktu_kerjasama_selesai', '<', now());
             }
+        }else{
+            $agreementArchives->orderBy('id', 'desc');
         }
         
         return Inertia::render('Mitra/Index', [
-            'agreementArchives' => $agreementArchives->limit(8)->get(),
+            'agreementArchives' => $agreementArchives->limit(5)->get(),
             'mitra' => $mitra,
             'totalAgreement' => $totalAgreement,
             'activeAgreement' => $activeAgreement,
@@ -154,5 +157,71 @@ class MitraController extends Controller
             'seriesBidangKerjasama' => $seriesBidangKerjasama,
             'galleries' => $galleries,
         ]);
+    }
+
+    public function edit($id)
+    {
+        $mitra = Mitra::findOrFail($id);
+
+        return Inertia::render('Mitra/Edit', [
+            'mitra' => $mitra,
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nama_instansi' => 'required',
+            'deskripsi_instansi' => 'required',
+            'no_pks_pihak_1' => 'required',
+            'no_pks_pihak_2' => 'required',
+            'pihak_1' => 'required',
+            'pihak_2' => 'required',
+            'kriteria_mitra' => 'required',
+            'asal_mitra' => 'required',
+            'ruang_lingkup_kerjasama' => 'required',
+            'waktu_kerjasama_mulai' => 'required',
+            'waktu_kerjasama_selesai' => 'required',
+        ]);
+
+        $mitra = Mitra::findOrFail($id);
+
+        if($request->file('dokumen_pks')) {
+            $fileDokumenPks = $request->file('dokumen_pks');
+            $nameDokumenPks = $fileDokumenPks->getClientOriginalName();
+            $pathDokumenPks = $fileDokumenPks->storeAs('/', $nameDokumenPks, 'public');
+        }
+
+        $mitra->update([
+            'nama_instansi' => $request->nama_instansi,
+            'deskripsi_instansi' => $request->deskripsi_instansi,
+            'no_pks_pihak_1' => $request->no_pks_pihak_1,
+            'no_pks_pihak_2' => $request->no_pks_pihak_2,
+            'pihak_1' => $request->pihak_1,
+            'pihak_2' => $request->pihak_2,
+            'kriteria_mitra' => $request->kriteria_mitra,
+            'asal_mitra' => $request->asal_mitra,
+            'ruang_lingkup_kerjasama' => $request->ruang_lingkup_kerjasama,
+            'waktu_kerjasama_mulai' => $request->waktu_kerjasama_mulai,
+            'waktu_kerjasama_selesai' => $request->waktu_kerjasama_selesai,
+            'dokumen_pks' => $pathDokumenPks ?? $mitra->dokumen_pks,
+        ]);
+
+        return redirect()->route('dashboard');
+    }
+
+    public function delete($id)
+    {
+        $mitra = Mitra::findOrFail($id);
+        $mitra->delete();
+
+        return redirect()->route('dashboard');
+    }
+
+    public function download($file)
+    {
+        $check = Storage::disk('public')->get($file);
+
+        return response()->download('storage/'.$file);
     }
 }

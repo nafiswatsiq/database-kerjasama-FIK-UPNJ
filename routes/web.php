@@ -14,15 +14,22 @@ use App\Models\Mitra;
 Route::get('/', [AuthenticatedSessionController::class, 'create'])
     ->name('login')
     ->middleware('guest');
+Route::get('/login', function () {
+    return redirect()->route('login');
+});
 
 Route::post('/login', [AuthenticatedSessionController::class, 'login'])
-    ->name('login')
+    ->name('login.post')
     ->middleware('guest');
 
 Route::middleware('auth')->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::get('/', [Dashboard::class, 'index'])->name('dashboard');
         Route::get('/mitra/create', [MitraController::class, 'create'])->name('mitra.create');
+        Route::get('/mitra/{id}/edit', [MitraController::class, 'edit'])->name('mitra.edit');
+        Route::get('/mitra/download/{file}', [MitraController::class, 'download'])->name('mitra.download');
+        Route::post('/mitra/{id}/update', [MitraController::class, 'update'])->name('mitra.update');
+        Route::delete('/mitra/{id}/delete', [MitraController::class, 'delete'])->name('mitra.delete');
         Route::get('/mitra/{mitraId}', [MitraController::class, 'detail'])->name('mitra.detail');
         Route::post('/mitra', [MitraController::class, 'store'])->name('mitra.store');
         Route::get('/mitra/{mitraId}/agreement-archives', [AgreementArchivesController::class, 'index'])->name('agreementarchives.index');

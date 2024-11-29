@@ -5,6 +5,7 @@ import { ArrowLeftCircleIcon, ArrowRightCircleIcon } from '@heroicons/react/24/s
 import { Head, Link, usePage } from '@inertiajs/react';
 import { format } from 'date-fns';
 import { Table } from './Utils/Table';
+import { DocumentArrowDownIcon } from '@heroicons/react/24/outline';
 
 export default function Index({ agreementArchives, mitra, totalAgreement, activeAgreement, inactiveAgreement, seriesBidangKerjasama, galleries }) {
     const user = usePage().props.auth.user;
@@ -23,6 +24,50 @@ export default function Index({ agreementArchives, mitra, totalAgreement, active
                                 <ArrowLeftCircleIcon className="h-10 w-10 text-orange-700" />
                             </Link>     
                             <h1 className="font-medium text-xl uppercase ml-4">{mitra.nama_instansi}</h1>
+                        </div>
+                    </div>
+                    <div className='my-6 grid grid-cols-1 gap-y-4'>
+                        <div className='grid grid-cols-4'>
+                            <div className="font-medium">Deskripsi Instansi</div>
+                            <div className='col-span-3'>: {mitra.deskripsi_instansi}</div>
+                        </div>
+                        <div className='grid grid-cols-4'>
+                            <div className="font-medium">No. PKS </div>
+                            <div className='col-span-3'>
+                                <ul className='list-decimal ml-4'>
+                                    <li>{mitra.no_pks_pihak_1}</li>
+                                    <li>{mitra.no_pks_pihak_2}</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div className='grid grid-cols-4'>
+                            <div className="font-medium">Pihak yang bertanggung Jawab</div>
+                            <div className='col-span-3'>
+                                <ul className='list-decimal ml-4'>
+                                    <li>{mitra.pihak_1}</li>
+                                    <li>{mitra.pihak_2}</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div className='grid grid-cols-4'>
+                            <div className="font-medium">Ruang Lingkup</div>
+                            <div className='col-span-3'>: {mitra.ruang_lingkup_kerjasama}</div>
+                        </div>
+                        <div className='grid grid-cols-4'>
+                            <div className="font-medium">Waktu Kerjsama</div>
+                            <div className='col-span-3'>
+                                <p>: {mitra.waktu_kerjasama_mulai} - {mitra.waktu_kerjasama_selesai}</p>
+                            </div>
+                        </div>
+                        <div className='grid grid-cols-4'>
+                            <div className="font-medium">Dokumen PKS</div>
+                            <div className='col-span-3 w-full'>
+                                <a href={route('mitra.download', mitra.dokumen_pks)} >
+                                    <p className="text-sm text-gray-500 p-4 border border-dashed rounded-lg border-gray-500 flex justify-between">
+                                        Download Dokumen {mitra.dokumen_pks} <DocumentArrowDownIcon className="h-6 w-6 text-gray-500" />
+                                    </p>
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div className="grid grid-cols-4 gap-6">

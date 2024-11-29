@@ -34,14 +34,25 @@ export default function Create({ mitraId }) {
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('agreementarchives.store', mitraId));
-
-        Swal.fire({
-            title: 'Success!',
-            text: 'Data berhasil disimpan',
-            didOpen: () => setSwalShown(true),
-            didClose: () => setSwalShown(false),
-        })
+        post(route('agreementarchives.store', mitraId), {
+            onError: () => {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Data gagal disimpan',
+                    icon: 'error',
+                    didOpen: () => setSwalShown(true),
+                    didClose: () => setSwalShown(false),
+                })
+            },
+            onSuccess: () => {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Data berhasil disimpan',
+                    didOpen: () => setSwalShown(true),
+                    didClose: () => setSwalShown(false),
+                })
+            }
+        });
     }
 
     return (
