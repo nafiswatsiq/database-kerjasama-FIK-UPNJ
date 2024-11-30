@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 import { Table } from './Utils/Table';
 import { DocumentArrowDownIcon } from '@heroicons/react/24/outline';
 
-export default function Index({ agreementArchives, mitra, totalAgreement, activeAgreement, inactiveAgreement, seriesBidangKerjasama, galleries }) {
+export default function Index({ agreementArchives, mitra, totalAgreement, activeAgreement, inactiveAgreement, documentNull, seriesBidangKerjasama, galleries }) {
     const user = usePage().props.auth.user;
     const date = new Date();
     console.log(agreementArchives);
@@ -116,12 +116,12 @@ export default function Index({ agreementArchives, mitra, totalAgreement, active
                                 </div>
                             </div>
                         </Link>
-                        <Link href={route('agreementarchives.index', mitra.id) + '?filter=inactive&page=1'} className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
+                        <Link href={route('agreementarchives.index', mitra.id) + '?filter=no-document&page=1'} className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
                             <div className="p-4 text-gray-900">
                                 <div className="flex">
                                     <div className="flex-auto">
                                     <p>Butuh Tindakan</p>
-                                    <p className="font-semibold text-3xl mt-3">{inactiveAgreement}</p>
+                                    <p className="font-semibold text-3xl mt-3">{documentNull}</p>
                                     </div>
                                     <div>
                                         <div className="bg-[#fec43d4c] p-3 rounded-3xl">
