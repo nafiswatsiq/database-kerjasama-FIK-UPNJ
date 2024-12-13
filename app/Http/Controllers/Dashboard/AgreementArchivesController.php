@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Models\AgreementArchives;
+use App\Notifications\ExpiredMitra;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class AgreementArchivesController extends Controller
@@ -214,6 +217,19 @@ class AgreementArchivesController extends Controller
 
             $agreementArchive->update([
                 'dokumen_kerjasama' => $pathdokumen_kerjasama,
+            ]);
+        }
+
+        if($request->file('dokumen_laporan')) {
+            $request->validate([
+                'dokumen_laporan' => 'nullable|mimes:pdf,doc,docx',
+            ]);
+            $filedokumen_laporan = $request->file('dokumen_laporan');
+            $namedokumen_laporan = $filedokumen_laporan->getClientOriginalName();
+            $pathdokumen_laporan = $filedokumen_laporan->storeAs('/', $namedokumen_laporan, 'public');
+
+            $agreementArchive->update([
+                'dokumen_laporan' => $pathdokumen_laporan,
             ]);
         }
 

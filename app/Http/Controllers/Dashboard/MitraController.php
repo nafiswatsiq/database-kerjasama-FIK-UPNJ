@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Dashboard;
 
 use Carbon\Carbon;
+use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Mitra;
 use Illuminate\Http\Request;
 use App\Models\AgreementArchives;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Notifications\ExpiredMitra;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Notification;
 
 class MitraController extends Controller
 {
@@ -55,6 +58,10 @@ class MitraController extends Controller
             'waktu_kerjasama_selesai' => $request->waktu_kerjasama_selesai,
             'dokumen_pks' => $pathDokumenPks ?? null,
         ]);
+
+        // $users = User::all();
+
+        // Notification::send($users, new ExpiredMitra($mitra->nama_instansi, $mitra->waktu_kerjasama_selesai));
 
         return redirect()->route('dashboard');
     }

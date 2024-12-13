@@ -1,7 +1,7 @@
 
 import { BellIcon } from "@heroicons/react/24/outline";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import {
   Menu,
   MenuHandler,
@@ -32,10 +32,15 @@ function ClockIcon() {
 }
 
 export default function Notification() {
+  const notification = usePage().props.notification;
+  console.log(notification);
   return (
     <Menu>
       <MenuHandler>
-        <BellIcon className="h-6 w-6 text-gray-900 cursor-pointer" />
+        <div className="relative">
+          <span className="absolute -right-2 -top-2.5 text-sm text-white font-semibold px-1.5 py-0 text-center rounded-full bg-red-500">{notification.count}</span>
+          <BellIcon className="h-6 w-6 text-gray-900 cursor-pointer" />
+        </div>
         {/* <IconButton variant="text">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -52,16 +57,30 @@ export default function Notification() {
         </IconButton> */}
       </MenuHandler>
       <MenuList className="flex flex-col gap-2">
-        <MenuItem className="py-2 pl-2 pr-8">
-          <Link className="flex items-center gap-4">
-            <ExclamationCircleIcon className="h-10 w-10 text-red-600" />
-            <div className="flex flex-col gap-1">
-              <Typography variant="small" color="gray" className="font-semibold max-w-60">
-              Kerjasamamu dengan mitra UPN Veteran  jatim akan berakhir dalam 1 Tahun pada tgl 02-11-2025
-              </Typography>
-            </div>
-          </Link>
-        </MenuItem>
+        {notification.count === 0 && (
+          <MenuItem className="py-2 pl-2 pr-8">
+            <Link className="flex items-center gap-4">
+              <ExclamationCircleIcon className="h-10 w-10 text-red-600" />
+              <div className="flex flex-col gap-1">
+                <Typography variant="small" color="gray" className="font-semibold">
+                  No Notification
+                </Typography>
+              </div>
+            </Link>
+          </MenuItem>
+        )}
+        {notification.data.map((item) => (
+          <MenuItem className="py-2 pl-2 pr-8">
+            <Link href={route('mitra.detail', `${item.data.mitra_id}`)} className="flex items-center gap-4">
+              <ExclamationCircleIcon className="h-10 w-10 text-red-600" />
+              <div className="flex flex-col gap-1">
+                <Typography variant="small" color="gray" className="font-semibold max-w-60">
+                  {item.data.data}
+                </Typography>
+              </div>
+            </Link>
+          </MenuItem>
+        ))}
       </MenuList>
     </Menu>
   )

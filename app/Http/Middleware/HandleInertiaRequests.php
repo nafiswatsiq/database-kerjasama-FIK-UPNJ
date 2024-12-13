@@ -39,6 +39,10 @@ class HandleInertiaRequests extends Middleware
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
+            'notification' => [
+                'count' => $request->user()->unreadNotifications->count(),
+                'data' => $request->user()->unreadNotifications
+            ]
         ];
     }
 }

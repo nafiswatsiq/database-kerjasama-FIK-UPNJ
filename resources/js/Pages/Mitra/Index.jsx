@@ -62,11 +62,15 @@ export default function Index({ agreementArchives, mitra, totalAgreement, active
                         <div className='grid grid-cols-4'>
                             <div className="font-medium">Dokumen PKS</div>
                             <div className='col-span-3 w-full'>
-                                <a href={route('mitra.download', mitra.dokumen_pks)} >
-                                    <p className="text-sm text-gray-500 p-4 border border-dashed rounded-lg border-gray-500 flex justify-between">
-                                        Download Dokumen {mitra.dokumen_pks} <DocumentArrowDownIcon className="h-6 w-6 text-gray-500" />
-                                    </p>
-                                </a>
+                                {mitra.dokumen_pks ? (
+                                    <a href={route('mitra.download', mitra.dokumen_pks)} >
+                                        <p className="text-sm text-gray-500 p-4 border border-dashed rounded-lg border-gray-500 flex justify-between">
+                                            Download Dokumen {mitra.dokumen_pks} <DocumentArrowDownIcon className="h-6 w-6 text-gray-500" />
+                                        </p>
+                                    </a>
+                                ) : (
+                                    <p>: Belum ada dokumen PKS</p>
+                                )}
                             </div>
                         </div>
                     </div>
