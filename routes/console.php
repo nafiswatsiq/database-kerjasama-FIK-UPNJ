@@ -19,4 +19,5 @@ Artisan::command('inspire', function () {
     }
 })->purpose('Display an inspiring quote')
 ->monthly(); // ganti everyMinute() untuk testing
+// run: php artisan schedule:work
 
