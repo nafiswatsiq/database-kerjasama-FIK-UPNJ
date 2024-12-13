@@ -4,17 +4,18 @@ import { Chart } from '@/Components/Dashboard/Chart';
 import { Gallery } from '@/Components/Dashboard/Gallery';
 import SelectInput from '@/Components/SelectInput';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { DocumentPlusIcon } from '@heroicons/react/24/outline';
+import { DocumentPlusIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { Button, Option, Select, Typography } from '@material-tailwind/react';
+import { Button, Input, Option, Select, Typography } from '@material-tailwind/react';
 import { format } from 'date-fns';
 import { useState } from 'react';
 
-export default function Dashboard({ mitra, totalAgreement, activeAgreement, inactiveAgreement, documentNull, userRegistered, seriesKriteriaMitra, seriesBidangKerjasama, seriesAsalMitra, galleries }) {
+export default function Dashboard({ mitra, totalMitra, activeMitra, inactiveMitra, totalAgreement, activeAgreement, inactiveAgreement, documentNull, userRegistered, seriesKriteriaMitra, seriesBidangKerjasama, seriesAsalMitra, galleries }) {
     const user = usePage().props.auth.user;
     const date = new Date();
     const [filterAsalMitra, setFilterAsalMitra] = useState('');
     const [filterKriteriaMitra, setFilterKriteriaMitra] = useState('');
+    const [filterStatus, setFilterStatus] = useState('');
 
     const handleFilterAsalMitra = (e) => {
         setFilterAsalMitra(e);
@@ -24,10 +25,12 @@ export default function Dashboard({ mitra, totalAgreement, activeAgreement, inac
           {
             asal_mitra: e,
             kriteria_mitra: filterKriteriaMitra,
+            status: filterStatus
           },
           {
             preserveState: true,
             replace: true,
+            preserveScroll: true,
           }
         );
     }
@@ -38,15 +41,51 @@ export default function Dashboard({ mitra, totalAgreement, activeAgreement, inac
         router.get(
           route(route().current()),
           {
-            kriteria_mitra: e,
             asal_mitra: filterAsalMitra,
+            kriteria_mitra: e,
+            status: filterStatus
           },
           {
             preserveState: true,
             replace: true,
+            preserveScroll: true,
           }
         );
     }
+
+    const handleFilterStatus = (e) => {
+        setFilterStatus(e)
+
+        router.get(
+            route(route().current()),
+            {
+                asal_mitra: filterAsalMitra,
+                kriteria_mitra: filterKriteriaMitra,
+                status: e,
+            },
+            {
+              preserveState: true,
+              replace: true,
+              preserveScroll: true,
+            }
+        )
+    }
+
+    const [query, setQuery] = useState('');
+    const handleSearch = (e) => {
+        setQuery(e);
+    
+        router.get(route(route().current()),
+          { 
+            search: e,
+          },
+          {
+            preserveState: true,
+            replace: true,
+            preserveScroll: true,
+          }
+        );
+      }
 
     return (
         <AuthenticatedLayout>
@@ -64,7 +103,25 @@ export default function Dashboard({ mitra, totalAgreement, activeAgreement, inac
                             <BarChart dataSeries={seriesKriteriaMitra}/>
                         </div>
                         <div className='col-span-2'>
-                            <div className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
+                            <div className="overflow-hidden bg-white sm:rounded-2xl shadow-lg p-6">
+                                <div className='grid grid-cols-2 gap-6'>
+                                    <div className='border p-5 text-center shadow-xl rounded-2xl'>
+                                        <p className='font-bold text-4xl'>{totalMitra}</p>
+                                    </div>
+                                    <div className=' p-5 text-center '>
+                                        <p className='font-bold text-2xl'>Total Mitra</p>
+                                    </div>
+                                    <div className='border p-5 text-center shadow-xl rounded-2xl text-green-500'>
+                                        <p className='font-bold text-2xl'>{activeMitra}</p>
+                                        <p className='font-bold text-xl'>Active</p>
+                                    </div>
+                                    <div className='border p-5 text-center shadow-xl rounded-2xl text-red-500'>
+                                        <p className='font-bold text-2xl'>{inactiveMitra}</p>
+                                        <p className='font-bold text-xl'>Inactive</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="mt-4 overflow-hidden bg-white sm:rounded-2xl shadow-lg">
                                 <div className="p-4 text-gray-900">
                                     <Chart 
                                         label={['Domestik', 'Internasional']} 
@@ -81,7 +138,7 @@ export default function Dashboard({ mitra, totalAgreement, activeAgreement, inac
                         <div className='flex justify-between mt-4'>
                             <div className='flex gap-4 items-center'>
                                 <Typography color='gray' className='font-medium'>Urutkan</Typography>
-                                <div className="w-52">
+                                <div className="w-auto">
                                     <SelectInput
                                         label="Asal Mitra"
                                         value={filterAsalMitra}
@@ -95,7 +152,7 @@ export default function Dashboard({ mitra, totalAgreement, activeAgreement, inac
                                         ]}
                                     />
                                 </div>
-                                <div className="w-52">
+                                <div className="w-auto">
                                     <SelectInput
                                         label="Kriteria Mitra"
                                         value={filterKriteriaMitra}
@@ -117,6 +174,29 @@ export default function Dashboard({ mitra, totalAgreement, activeAgreement, inac
                                         ]}
                                     />
                                 </div>
+                                <div className="w-auto">
+                                    <SelectInput
+                                        label="Status"
+                                        value={filterStatus}
+                                        className="mt-1 block w-full"
+                                        autoComplete="off"
+                                        onChange={(e) => handleFilterStatus(e.target.value)}
+                                        options={[
+                                            { value: '', label: 'Semua' },
+                                            { value: 'active', label: 'Aktif' },
+                                            { value: 'inactive', label: 'Inaktif' },
+                                        ]}
+                                    />
+                                </div>
+                                <div>
+                                    <div className="w-full">
+                                        <Input label="Search" 
+                                            name="search"
+                                            value={query}
+                                            onChange={(e) => handleSearch(e.target.value)}
+                                            icon={<MagnifyingGlassIcon className="h-6 w-6 text-gray-500" />} />
+                                    </div>
+                                </div>
                             </div>
                             <div>
                             {user.is_admin ? (
@@ -133,7 +213,7 @@ export default function Dashboard({ mitra, totalAgreement, activeAgreement, inac
                     <div className='grid grid-cols-3 gap-6'>
                         {mitra.map((item, index) => {
                             return (
-                                <CardAgreement key={index} data={item}/>
+                                <CardAgreement key={index} data={item} user={user}/>
                             )
                         })}
                     </div>

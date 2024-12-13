@@ -4,10 +4,13 @@ import SelectInput from '@/Components/SelectInput';
 import TextareaInput from '@/Components/TextareaInput';
 import TextInput from '@/Components/TextInput';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { DocumentArrowDownIcon } from '@heroicons/react/24/outline';
+import { DocumentArrowDownIcon, EyeIcon } from '@heroicons/react/24/outline';
 import { ArrowLeftCircleIcon } from '@heroicons/react/24/solid';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Breadcrumbs, Button, Input, Textarea, Typography } from '@material-tailwind/react';
+import { Viewer, Worker } from '@react-pdf-viewer/core';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import React from 'react';
 
 export default function Edit({ mitraId, agreementArchive }) {
     const { data } = useForm({
@@ -22,8 +25,20 @@ export default function Edit({ mitraId, agreementArchive }) {
         waktu_kerjasama_mulai: agreementArchive.waktu_kerjasama_mulai,
         waktu_kerjasama_selesai: agreementArchive.waktu_kerjasama_selesai,
         dokumen_kerjasama: agreementArchive.dokumen_kerjasama,
+        dokumen_laporan: agreementArchive.dokumen_laporan,
         dokumentasi: agreementArchive.documentations,
     });
+    const [viewDokumenKerjasama, setViewDokumenKerjasama] = React.useState(false)
+    const [viewDokumenLaporan, setViewDokumenLaporan] = React.useState(false)
+
+    const handleViewDokumenKerjasama = () => {
+        const view = viewDokumenKerjasama === false ? true : false;
+        setViewDokumenKerjasama(view)
+    }
+    const handleViewDokumenLaporan = () => {
+        const view = viewDokumenLaporan === false ? true : false;
+        setViewDokumenLaporan(view)
+    }
 
     return (
         <AuthenticatedLayout>
@@ -193,15 +208,20 @@ export default function Edit({ mitraId, agreementArchive }) {
                                 </div>
                             </div>
                             <div className="flex items-center mt-3">
-                                <InputLabel value="Dokumen PKS" className='w-44 text-lg'/>
+                                <InputLabel value="Dokumen I.A" className='w-44 text-lg'/>
                                 <div className="flex-auto">
                                     <label htmlFor="dokumen_kerjasama">
                                         {data.dokumen_kerjasama ? (
-                                            <a href={route('agreementarchives.download', data.dokumen_kerjasama)} >
-                                                <p className="text-sm text-gray-500 p-4 border border-dashed rounded-lg border-gray-500 flex justify-between">
-                                                    Download Dokumen {data.dokumen_kerjasama} <DocumentArrowDownIcon className="h-6 w-6 text-gray-500" />
-                                                </p>
-                                            </a>
+                                            <div className='text-sm text-gray-500 p-4 border border-dashed rounded-lg border-gray-500 flex justify-between'>
+                                                <a href={route('agreementarchives.download', data.dokumen_kerjasama)} >
+                                                    <p className="flex">
+                                                        Download Dokumen {data.dokumen_kerjasama} <DocumentArrowDownIcon className="h-6 w-6 text-gray-500" />
+                                                    </p>
+                                                </a>
+                                                <div className='flex gap-x-3 cursor-pointer' onClick={() => handleViewDokumenKerjasama()}>
+                                                    Lihat <EyeIcon className="h-6 w-6 text-gray-500" />
+                                                </div>
+                                            </div>
                                         ) : (
                                           <p className="text-sm text-gray-500 p-4 border border-dashed rounded-lg border-gray-500 flex justify-between">
                                               Tidak ada dokumen kerjasama
@@ -210,6 +230,43 @@ export default function Edit({ mitraId, agreementArchive }) {
                                     </label>
                                 </div>
                             </div>
+                            {data.dokumen_kerjasama ? (
+                                <div className={viewDokumenKerjasama === true ? 'relative max-h-[50vh] overflow-scroll h-full' : 'relative max-h-[50vh] overflow-scroll h-0'}>
+                                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                                        <Viewer fileUrl={route().t.url + '/storage/' +data.dokumen_kerjasama} />
+                                    </Worker>
+                                </div>
+                            ): null}
+                            <div className="flex items-center mt-3">
+                                <InputLabel value="Dokumen Laporan" className='w-44 text-lg'/>
+                                <div className="flex-auto">
+                                    <label htmlFor="dokumen_laporan">
+                                        {data.dokumen_laporan ? (
+                                            <div className='text-sm text-gray-500 p-4 border border-dashed rounded-lg border-gray-500 flex justify-between'>
+                                                <a href={route('agreementarchives.download', data.dokumen_laporan)} >
+                                                    <p className="flex">
+                                                        Download Dokumen {data.dokumen_laporan} <DocumentArrowDownIcon className="h-6 w-6 text-gray-500" />
+                                                    </p>
+                                                </a>
+                                                <div className='flex gap-x-3 cursor-pointer' onClick={() => handleViewDokumenLaporan()}>
+                                                    Lihat <EyeIcon className="h-6 w-6 text-gray-500" />
+                                                </div>
+                                            </div>
+                                        ) : (
+                                          <p className="text-sm text-gray-500 p-4 border border-dashed rounded-lg border-gray-500 flex justify-between">
+                                              Tidak ada dokumen Laporan
+                                          </p>
+                                        )}
+                                    </label>
+                                </div>
+                            </div>
+                            {data.dokumen_laporan ? (
+                                <div className={viewDokumenLaporan === true ? 'relative max-h-[50vh] overflow-scroll h-full' : 'relative max-h-[50vh] overflow-scroll h-0'}>
+                                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                                        <Viewer fileUrl={route().t.url + '/storage/' +data.dokumen_laporan} />
+                                    </Worker>
+                                </div>
+                            ): null}
                             <div className="mt-3 border-t-2">
                                 <Typography className="mt-3 font-semibold text-gray-700">Dokumentasi</Typography>
                                 

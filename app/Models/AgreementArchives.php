@@ -24,6 +24,7 @@ class AgreementArchives extends Model
         'waktu_kerjasama_mulai',
         'waktu_kerjasama_selesai',
         'dokumen_kerjasama',
+        'dokumen_laporan'
     ];
 
     public function documentations(): HasMany

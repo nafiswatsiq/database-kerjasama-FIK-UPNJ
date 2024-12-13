@@ -99,6 +99,7 @@ class AgreementArchivesController extends Controller
             'waktu_kerjasama_mulai' => 'required',
             'waktu_kerjasama_selesai' => 'required',
             'dokumen_kerjasama' => 'nullable|mimes:pdf,doc,docx',
+            'dokumen_laporan' => 'nullable|mimes:pdf,doc,docx',
             'dokumentasi.*' => 'nullable|mimes:jepg,png,jpg',
         ]);
 
@@ -106,6 +107,11 @@ class AgreementArchivesController extends Controller
             $filedokumen_kerjasama = $request->file('dokumen_kerjasama');
             $namedokumen_kerjasama = $filedokumen_kerjasama->getClientOriginalName();
             $pathdokumen_kerjasama = $filedokumen_kerjasama->storeAs('/', $namedokumen_kerjasama, 'public');
+        }
+        if($request->file('dokumen_laporan')) {
+            $filedokumen_laporan = $request->file('dokumen_laporan');
+            $namedokumen_laporan = $filedokumen_laporan->getClientOriginalName();
+            $pathdokumen_laporan = $filedokumen_laporan->storeAs('/', $namedokumen_laporan, 'public');
         }
         
         $agreementArchive = AgreementArchives::create([
@@ -121,6 +127,7 @@ class AgreementArchivesController extends Controller
             'waktu_kerjasama_mulai' => $request->waktu_kerjasama_mulai,
             'waktu_kerjasama_selesai' => $request->waktu_kerjasama_selesai,
             'dokumen_kerjasama' => $pathdokumen_kerjasama ?? null,
+            'dokumen_laporan' => $pathdokumen_laporan ?? null,
         ]);
 
         if ($request->file('dokumentasi')) {

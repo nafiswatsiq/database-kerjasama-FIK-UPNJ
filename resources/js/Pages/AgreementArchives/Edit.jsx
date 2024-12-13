@@ -9,6 +9,10 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { Button, Input, Textarea, Typography } from '@material-tailwind/react';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
+import { Viewer, Worker } from '@react-pdf-viewer/core';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import React from 'react';
+import { EyeIcon } from '@heroicons/react/24/outline';
 
 export default function Edit({ mitraId, agreementArchive }) {
     const { data, setData, post, processing, errors, reset, progress } = useForm({
@@ -23,9 +27,21 @@ export default function Edit({ mitraId, agreementArchive }) {
         waktu_kerjasama_mulai: agreementArchive.waktu_kerjasama_mulai,
         waktu_kerjasama_selesai: agreementArchive.waktu_kerjasama_selesai,
         dokumen_kerjasama: null,
+        dokumen_laporan: null,
         dokumentasi: []
     });
     const [swalShown, setSwalShown] = useState(false)
+    const [viewDokumenKerjasama, setViewDokumenKerjasama] = React.useState(false)
+    const [viewDokumenLaporan, setViewDokumenLaporan] = React.useState(false)
+
+    const handleViewDokumenKerjasama = () => {
+        const view = viewDokumenKerjasama === false ? true : false;
+        setViewDokumenKerjasama(view)
+    }
+    const handleViewDokumenLaporan = () => {
+        const view = viewDokumenLaporan === false ? true : false;
+        setViewDokumenLaporan(view)
+    }
 
     const handleFileChange = (e) => {
         setData('dokumentasi', Array.from(e.target.files));
@@ -243,7 +259,7 @@ export default function Edit({ mitraId, agreementArchive }) {
                                 <InputLabel value="Dokumen I.A" className='w-44 text-lg'/>
                                 <div className="flex-auto">
                                     <label htmlFor="dokumen_kerjasama">
-                                        <p className="text-sm text-gray-500 p-4 border border-dashed rounded-lg border-gray-500">
+                                        <p className="text-sm text-gray-500 p-4 border border-dashed rounded-l-lg border-r-0 border-gray-500">
                                             {agreementArchive.dokumen_kerjasama ? agreementArchive.dokumen_kerjasama : 'upload dokumen kerjasama'}
                                         </p>
                                     </label>
@@ -262,7 +278,51 @@ export default function Edit({ mitraId, agreementArchive }) {
                                     )}
                                   <InputError message={errors.dokumen_kerjasama} className="mt-2" />
                                 </div>
+                                <div className='flex gap-x-3 cursor-pointer text-sm text-gray-500 p-3.5 border border-dashed border-l-0 rounded-r-lg border-gray-500' onClick={() => handleViewDokumenKerjasama()}>
+                                    Lihat <EyeIcon className="h-6 w-6 text-gray-500" />
+                                </div>
                             </div>
+                            {agreementArchive.dokumen_kerjasama ? (
+                                <div className={viewDokumenKerjasama === true ? 'relative max-h-[50vh] overflow-scroll h-full' : 'relative max-h-[50vh] overflow-scroll h-0'}>
+                                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                                        <Viewer fileUrl={route().t.url + '/storage/' +agreementArchive.dokumen_kerjasama} />
+                                    </Worker>
+                                </div>
+                            ): null}
+                            <div className="flex items-center mt-3">
+                                <InputLabel value="Dokumen Laporan" className='w-44 text-lg'/>
+                                <div className="flex-auto">
+                                    <label htmlFor="dokumen_laporan">
+                                        <p className="text-sm text-gray-500 p-4 border border-dashed rounded-l-lg border-r-0 border-gray-500">
+                                            {agreementArchive.dokumen_laporan ? agreementArchive.dokumen_laporan : 'upload dokumen laporan'}
+                                        </p>
+                                    </label>
+                                  <TextInput
+                                      id="dokumen_laporan"
+                                      type="file"
+                                      name="dokumen_laporan"
+                                      className="mt-1 block w-full px-4 py-2"
+                                      isFocused={false}
+                                      onChange={(e) => setData('dokumen_laporan', e.target.files[0])}
+                                  />
+                                    {progress && (
+                                    <progress value={progress.percentage} max="100">
+                                        {progress.percentage}%
+                                    </progress>
+                                    )}
+                                  <InputError message={errors.dokumen_laporan} className="mt-2" />
+                                </div>
+                                <div className='flex gap-x-3 cursor-pointer text-sm text-gray-500 p-3.5 border border-dashed border-l-0 rounded-r-lg border-gray-500' onClick={() => handleViewDokumenLaporan()}>
+                                    Lihat <EyeIcon className="h-6 w-6 text-gray-500" />
+                                </div>
+                            </div>
+                            {agreementArchive.dokumen_laporan ? (
+                                <div className={viewDokumenLaporan === true ? 'relative max-h-[50vh] overflow-scroll h-full' : 'relative max-h-[50vh] overflow-scroll h-0'}>
+                                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                                        <Viewer fileUrl={route().t.url + '/storage/' +agreementArchive.dokumen_laporan} />
+                                    </Worker>
+                                </div>
+                            ): null}
                             <div className="flex items-center mt-3">
                                 <InputLabel value="Dokumentasi" className='w-44 text-lg'/>
                                 <div className="flex-auto">

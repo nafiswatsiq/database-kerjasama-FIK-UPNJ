@@ -207,6 +207,14 @@ export function Table({ mitraId, agreementArchives}) {
               <Typography
                 variant="small"
                 color="blue-gray"
+                className="font-bold leading-none flex"
+              >Keterangan Tindakan
+              </Typography>
+            </th>
+            <th className="border-b border-gray-300 pb-4 pt-10">
+              <Typography
+                variant="small"
+                color="blue-gray"
                 className="font-bold leading-none"
               >
                 Action
@@ -215,7 +223,7 @@ export function Table({ mitraId, agreementArchives}) {
           </tr>
         </thead>
         <tbody>
-          {agreementArchives.data.map(({ id, nama_instansi, no_ia_pihak_1, bidang_kerjasama, kriteria_mitra, waktu_kerjasama_mulai, waktu_kerjasama_selesai, dokumen_kerjasama }, index) => {
+          {agreementArchives.data.map(({ id, nama_instansi, no_ia_pihak_1, bidang_kerjasama, kriteria_mitra, waktu_kerjasama_mulai, waktu_kerjasama_selesai, dokumen_kerjasama, dokumen_laporan }, index) => {
             const isLast = index === agreementArchives.length - 1;
             const classes = isLast ? "py-4" : "py-4 border-b border-gray-300";
  
@@ -320,6 +328,19 @@ export function Table({ mitraId, agreementArchives}) {
                         Inactive
                       </span>
                     }
+                  </Typography>
+                </td>
+                <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>
+                  <Typography
+                    variant="small"
+                    className="font-normal text-gray-600"
+                  >
+                    {dokumen_kerjasama == null ? (
+                      <div className="border border-red-500 px-2 rounded-md text-red-500 w-fit bg-red-50">file I.A tidak ada</div>
+                    ): '-'}
+                    {dokumen_laporan == null ? (
+                      <div className="border border-red-500 px-2 rounded-md text-red-500 w-fit bg-red-50">file laporan tidak ada</div>
+                    ): '-'}
                   </Typography>
                 </td>
                 <td className={`${classes} w-16`}>

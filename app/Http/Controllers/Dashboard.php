@@ -16,11 +16,21 @@ class Dashboard extends Controller
     public function index()
     {
         $mitra = Mitra::query();
+        if (request('search')) {
+            $mitra = $mitra->where('nama_instansi', 'like', '%' . request('search') . '%');
+        }
         if (request('asal_mitra')) {
             $mitra = $mitra->where('asal_mitra', request('asal_mitra'));
         }
         if (request('kriteria_mitra')) {
             $mitra = $mitra->where('kriteria_mitra', request('kriteria_mitra'));
+        }
+        if (request('status')) {
+            if(request('status') == 'active') {
+                $mitra = $mitra->where('waktu_kerjasama_selesai', '>', now());
+            } elseif(request('status') == 'inactive') {
+                $mitra = $mitra->where('waktu_kerjasama_selesai', '<', now());
+            }
         }
         $mitra = $mitra->orderBy('id', 'desc')->get();
 
@@ -84,6 +94,10 @@ class Dashboard extends Controller
         }
         $galleries = collect($galleries)->slice(0, 15);
 
+        $totalMitra = Mitra::count();
+        $activeMitra = Mitra::where('waktu_kerjasama_selesai', '>', now())->count();
+        $inactiveMitra = Mitra::where('waktu_kerjasama_selesai', '<', now())->count();
+
         return Inertia::render('Dashboard', [
             'mitra' => $mitra,
             'totalAgreement' => $totalAgreement,
@@ -95,6 +109,9 @@ class Dashboard extends Controller
             'seriesBidangKerjasama' => $seriesBidangKerjasama,
             'seriesAsalMitra' => $seriesAsalMitra,
             'galleries' => $galleries,
+            'totalMitra' => $totalMitra,
+            'activeMitra' => $activeMitra,
+            'inactiveMitra' => $inactiveMitra,
         ]);
     }
 }

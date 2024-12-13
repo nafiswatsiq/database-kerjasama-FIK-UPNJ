@@ -86,7 +86,7 @@ export default function BarChart({ dataSeries }){
 
   return (
     <div>
-      <ReactApexChart options={options} series={series} type="bar" height={300} />
+      <ReactApexChart options={options} series={series} type="bar" height={500} />
     </div>
   )
 }

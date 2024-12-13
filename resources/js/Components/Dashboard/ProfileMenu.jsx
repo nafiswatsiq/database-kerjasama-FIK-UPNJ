@@ -16,11 +16,11 @@ export function ProfileMenu() {
   return (
     <Menu>
       <MenuHandler>
-        <div className="flex gap-x-5 cursor-pointer">
+        <div className="flex gap-x-5 cursor-pointer items-center">
           <Avatar
             variant="circular"
             alt="tania andrew"
-            className="cursor-pointer w-10 h-10"
+            className="cursor-pointer w-8 h-8 "
             src={UserImg}
           />
           <div>

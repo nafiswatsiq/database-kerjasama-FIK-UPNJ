@@ -7,6 +7,7 @@ import {
 } from "@material-tailwind/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { ProfileMenu } from "./ProfileMenu";
+import Notification from "../Notification";
  
 function NavList() {
   return (
@@ -42,7 +43,10 @@ export function NavbarDashboard() {
           Dashboard
         </Typography>
         <div className="hidden lg:block">
-          <NavList />
+          <div className="flex gap-4 items-center">
+            <Notification />
+            <NavList />
+          </div>
         </div>
         <IconButton
           variant="text"
