@@ -12,11 +12,11 @@ Artisan::command('monthly', function () {
     // logger()->info('Inspiring quote displayed');
     $mitra = Mitra::where('waktu_kerjasama_selesai', '<', Carbon::now()->addMonths(6))->get();
     foreach ($mitra as $item) {
-        logger()->info($item);
+        // logger()->info($item);
         $users = User::where('is_admin', 1)->get();
-        // $users->each(function ($user) use ($item) {
-        //     $user->notify(new ExpiredMitra($item->id, $item->nama_instansi, $item->waktu_kerjasama_selesai));
-        // });
+        $users->each(function ($user) use ($item) {
+            $user->notify(new ExpiredMitra($item->id, $item->nama_instansi, $item->waktu_kerjasama_selesai));
+        });
     }
 })->purpose('Display an inspiring quote')
 ->monthly(); // ganti everyMinute() untuk testing
@@ -27,11 +27,11 @@ Artisan::command('yearly', function () {
     // logger()->info('Inspiring quote displayed');
     $mitra = Mitra::where('waktu_kerjasama_selesai', '<', Carbon::now()->year(1))->get();
     foreach ($mitra as $item) {
-        logger()->info($item);
+        // logger()->info($item);
         $users = User::where('is_admin', 1)->get();
-        // $users->each(function ($user) use ($item) {
-        //     $user->notify(new ExpiredMitra($item->id, $item->nama_instansi, $item->waktu_kerjasama_selesai));
-        // });
+        $users->each(function ($user) use ($item) {
+            $user->notify(new ExpiredMitra($item->id, $item->nama_instansi, $item->waktu_kerjasama_selesai));
+        });
     }
 })->purpose('Display an inspiring quote')
 ->yearly(); // ganti everyMinute() untuk testing
