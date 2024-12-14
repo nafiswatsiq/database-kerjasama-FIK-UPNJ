@@ -27,7 +27,7 @@ class AgreementArchivesController extends Controller
                 ->orWhere('pihak_1', 'like', '%'.$request->get('search').'%')
                 ->orWhere('pihak_2', 'like', '%'.$request->get('search').'%')
                 ->orWhere('bidang_kerjasama', 'like', '%'.$request->get('search').'%')
-                ->orWhere('kriteria_mitra', 'like', '%'.$request->get('search').'%')
+                // ->orWhere('kriteria_mitra', 'like', '%'.$request->get('search').'%')
                 ->orWhere('asal_mitra', 'like', '%'.$request->get('search').'%');
             });
         }
@@ -192,13 +192,13 @@ class AgreementArchivesController extends Controller
         
         $agreementArchive->update([
             'nama_instansi' => $request->nama_instansi,
-            'deskripsi_kerjasama' => $request->nama_kegiatan,
-            'no_pks_pihak_1' => $request->no_ia_pihak_1,
-            'no_pks_pihak_2' => $request->no_ia_pihak_2,
+            'nama_kegiatan' => $request->nama_kegiatan,
+            'no_ia_pihak_1' => $request->no_ia_pihak_1,
+            'no_ia_pihak_2' => $request->no_ia_pihak_2,
             'pihak_1' => $request->pihak_1,
             'pihak_2' => $request->pihak_2,
             'bidang_kerjasama' => $request->bidang_kerjasama,
-            'kriteria_mitra' => $request->durasi_kerjasama,
+            // 'kriteria_mitra' => $request->durasi_kerjasama,
             // 'asal_mitra' => $request->asalMitra,
             // 'ruang_lingkup_kerjasama' => $request->ruangLingkupKerjasama,
             'durasi_kerjasama' => $request->durasi_kerjasama,

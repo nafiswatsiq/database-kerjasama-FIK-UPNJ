@@ -149,7 +149,7 @@ export function Table({ mitraId, agreementArchives}) {
                 <ChevronUpDownIcon className="h-4 w-4 ml-3 text-gray-900" />
               </Typography>
             </th>
-            <th className="border-b border-gray-300 pb-4 pt-10">
+            {/* <th className="border-b border-gray-300 pb-4 pt-10">
               <Typography
                 variant="small"
                 color="blue-gray"
@@ -157,6 +157,22 @@ export function Table({ mitraId, agreementArchives}) {
                 className="font-bold leading-none flex cursor-pointer"
               >Status
                 <ChevronUpDownIcon className="h-4 w-4 ml-3 text-gray-900" />
+              </Typography>
+            </th> */}
+            <th className="border-b border-gray-300 pb-4 pt-10">
+              <Typography
+                variant="small"
+                color="blue-gray"
+                className="font-bold leading-none flex"
+              >File I.A
+              </Typography>
+            </th>
+            <th className="border-b border-gray-300 pb-4 pt-10">
+              <Typography
+                variant="small"
+                color="blue-gray"
+                className="font-bold leading-none flex"
+              >File Laporan
               </Typography>
             </th>
             <th className="border-b border-gray-300 pb-4 pt-10">
@@ -171,7 +187,7 @@ export function Table({ mitraId, agreementArchives}) {
           </tr>
         </thead>
         <tbody>
-          {agreementArchives.map(({ id, nama_instansi, no_ia_pihak_1, bidang_kerjasama, kriteria_mitra, waktu_kerjasama_mulai, waktu_kerjasama_selesai, dokumen_kerjasama }, index) => {
+          {agreementArchives.map(({ id, nama_instansi, no_ia_pihak_1, bidang_kerjasama, kriteria_mitra, waktu_kerjasama_mulai, waktu_kerjasama_selesai, dokumen_kerjasama, dokumen_laporan }, index) => {
             const isLast = index === agreementArchives.length - 1;
             const classes = isLast ? "py-4" : "py-4 border-b border-gray-300";
  
@@ -262,7 +278,25 @@ export function Table({ mitraId, agreementArchives}) {
                     {format(waktu_kerjasama_selesai, 'dd MMMM yyyy')}
                   </Typography>
                 </td>
-                <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>
+                <td className={`${classes} w-16`}>
+                  <div className="flex justify-start gap-x-3">
+                    {dokumen_kerjasama ? 
+                      <a href={route('agreementarchives.download', dokumen_kerjasama)}>
+                        <DocumentArrowDownIcon className="h-5 w-5 text-green-500" />
+                      </a> : null
+                    }
+                  </div>
+                </td>
+                <td className={`${classes} w-16`}>
+                  <div className="flex justify-start gap-x-3">
+                    {dokumen_laporan ? 
+                      <a href={route('agreementarchives.download', dokumen_laporan)}>
+                        <DocumentArrowDownIcon className="h-5 w-5 text-green-500" />
+                      </a> : null
+                    }
+                  </div>
+                </td>
+                {/* <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>
                   <Typography
                     variant="small"
                     className="font-normal text-gray-600"
@@ -277,14 +311,9 @@ export function Table({ mitraId, agreementArchives}) {
                       </span>
                     }
                   </Typography>
-                </td>
+                </td> */}
                 <td className={`${classes} w-16`}>
                   <div className="flex justify-start gap-x-3">
-                    {dokumen_kerjasama ? 
-                      <a href={route('agreementarchives.download', dokumen_kerjasama)}>
-                        <DocumentArrowDownIcon className="h-5 w-5 text-green-500" />
-                      </a> : null
-                    }
                     {user.is_admin ? (
                     <Link href={route('agreementarchives.edit', [mitraId, id])} className="text-blue-500 flex">
                       <PencilSquareIcon className="h-5 w-5" />

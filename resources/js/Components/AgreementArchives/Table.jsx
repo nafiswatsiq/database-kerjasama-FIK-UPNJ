@@ -114,6 +114,7 @@ export function Table({ mitraId, agreementArchives}) {
       }
     })
   }
+  console.log(route().params.filter)
 
   return (
     <Card className="h-full w-full px-6 overflow-x-scroll max-w-screen-xl shadow-none">
@@ -193,7 +194,7 @@ export function Table({ mitraId, agreementArchives}) {
                 <ChevronUpDownIcon className="h-4 w-4 ml-3 text-gray-900" />
               </Typography>
             </th>
-            <th className="border-b border-gray-300 pb-4 pt-10">
+            {/* <th className="border-b border-gray-300 pb-4 pt-10">
               <Typography
                 variant="small"
                 color="blue-gray"
@@ -202,15 +203,33 @@ export function Table({ mitraId, agreementArchives}) {
               >Status
                 <ChevronUpDownIcon className="h-4 w-4 ml-3 text-gray-900" />
               </Typography>
+            </th> */}
+            <th className="border-b border-gray-300 pb-4 pt-10">
+              <Typography
+                variant="small"
+                color="blue-gray"
+                className="font-bold leading-none flex"
+              >File I.A
+              </Typography>
             </th>
             <th className="border-b border-gray-300 pb-4 pt-10">
               <Typography
                 variant="small"
                 color="blue-gray"
                 className="font-bold leading-none flex"
-              >Keterangan Tindakan
+              >File Laporan
               </Typography>
             </th>
+            {route().params.filter === 'no-document' ? (
+              <th className="border-b border-gray-300 pb-4 pt-10">
+                <Typography
+                  variant="small"
+                  color="blue-gray"
+                  className="font-bold leading-none flex"
+                >Keterangan Tindakan
+                </Typography>
+             </th>
+            ) : null}
             <th className="border-b border-gray-300 pb-4 pt-10">
               <Typography
                 variant="small"
@@ -314,7 +333,7 @@ export function Table({ mitraId, agreementArchives}) {
                     {format(waktu_kerjasama_selesai, 'dd MMMM yyyy')}
                   </Typography>
                 </td>
-                <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>
+                {/* <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>
                   <Typography
                     variant="small"
                     className="font-normal text-gray-600"
@@ -329,20 +348,7 @@ export function Table({ mitraId, agreementArchives}) {
                       </span>
                     }
                   </Typography>
-                </td>
-                <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>
-                  <Typography
-                    variant="small"
-                    className="font-normal text-gray-600"
-                  >
-                    {dokumen_kerjasama == null ? (
-                      <div className="border border-red-500 px-2 rounded-md text-red-500 w-fit bg-red-50">file I.A tidak ada</div>
-                    ): '-'}
-                    {dokumen_laporan == null ? (
-                      <div className="border border-red-500 px-2 rounded-md text-red-500 w-fit bg-red-50">file laporan tidak ada</div>
-                    ): '-'}
-                  </Typography>
-                </td>
+                </td> */}
                 <td className={`${classes} w-16`}>
                   <div className="flex justify-start gap-x-3">
                     {dokumen_kerjasama ? 
@@ -350,6 +356,39 @@ export function Table({ mitraId, agreementArchives}) {
                         <DocumentArrowDownIcon className="h-5 w-5 text-green-500" />
                       </a> : null
                     }
+                  </div>
+                </td>
+                <td className={`${classes} w-16`}>
+                  <div className="flex justify-start gap-x-3">
+                    {dokumen_laporan ? 
+                      <a href={route('agreementarchives.download', dokumen_laporan)}>
+                        <DocumentArrowDownIcon className="h-5 w-5 text-green-500" />
+                      </a> : null
+                    }
+                  </div>
+                </td>
+                {route().params.filter === 'no-document' ? (
+                  <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>
+                    <Typography
+                      variant="small"
+                      className="font-normal text-gray-600"
+                    >
+                      {dokumen_kerjasama == null ? (
+                        <div className="border border-red-500 px-2 rounded-md text-red-500 w-fit bg-red-50">file I.A tidak ada</div>
+                      ): '-'}
+                      {dokumen_laporan == null ? (
+                        <div className="border border-red-500 px-2 rounded-md text-red-500 w-fit bg-red-50">file laporan tidak ada</div>
+                      ): '-'}
+                    </Typography>
+                  </td>
+                ): null}
+                <td className={`${classes} w-16`}>
+                  <div className="flex justify-start gap-x-3">
+                    {/* {dokumen_kerjasama ? 
+                      <a href={route('agreementarchives.download', dokumen_kerjasama)}>
+                        <DocumentArrowDownIcon className="h-5 w-5 text-green-500" />
+                      </a> : null
+                    } */}
                     {user.is_admin ? (
                     <Link href={route('agreementarchives.edit', [mitraId, id])} className="text-blue-500 flex">
                       <PencilSquareIcon className="h-5 w-5" />
