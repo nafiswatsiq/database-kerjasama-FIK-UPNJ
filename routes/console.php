@@ -19,7 +19,7 @@ Artisan::command('monthly', function () {
         // });
     }
 })->purpose('Display an inspiring quote')
-->everyFiveSeconds(); // ganti everyMinute() untuk testing
+->monthly(); // ganti everyMinute() untuk testing
 // run: php artisan schedule:work
 
 Artisan::command('yearly', function () {
@@ -34,5 +34,5 @@ Artisan::command('yearly', function () {
         // });
     }
 })->purpose('Display an inspiring quote')
-->everyFiveSeconds(); // ganti everyMinute() untuk testing
+->yearly(); // ganti everyMinute() untuk testing
 
