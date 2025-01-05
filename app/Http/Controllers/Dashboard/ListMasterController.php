@@ -42,7 +42,7 @@ class ListMasterController extends Controller
     public function kriteria_mitra_update(Request $request, $id)
     {
 
-        // dd($request->all());
+        dd($request->all());
         $kriteriaMitra = KriteriaMitra::findOrFail($id);
         $kriteriaMitra->update([
             'kriteria_mitra' => $request->kriteria_mitra

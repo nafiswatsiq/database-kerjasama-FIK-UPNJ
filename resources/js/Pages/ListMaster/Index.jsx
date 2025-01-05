@@ -69,37 +69,19 @@ export default function Index({ datas }) {
 
     const handleEditSubmit = (e) => {
         e.preventDefault();
-        patch(
-            route("list-master.kriteria_mitra_update", editData.id),
-            {
-                kriteria_mitra: editData.kriteria_mitra,
-            },
-            {
-                onSuccess: () => {
-                    Swal.fire({
-                        title: "Success!",
-                        text: "Data berhasil diperbarui",
-                        icon: "success",
-                    });
-                    setEditData(null);
-                    window.location.reload();
-                },
-                onError: (errors) => {
-                    Swal.fire({
-                        title: "Error!",
-                        text:
-                            errors.kriteria_mitra ||
-                            "Terjadi kesalahan saat memperbarui data",
-                        icon: "error",
-                    });
-                },
-            }
-        );
+
+        patch(route("list-master.kriteria_mitra_update", editData.id));
+
+        Swal.fire({
+            title: "Success!",
+            text: "Data berhasil diubah",
+            didOpen: () => setSwalShown(true),
+            didClose: () => setSwalShown(false),
+        });
     };
     return (
         <AuthenticatedLayout>
             <Head title="List Master" />
-
             <div className="py-10">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8 flex flex-col gap-y-8">
                     <div className="overflow-hidden">
@@ -191,8 +173,10 @@ export default function Index({ datas }) {
                                                             type="text"
                                                             name="kriteria_mitra"
                                                             value={
-                                                                editData.kriteria_mitra
-                                                            }
+                                                                editData
+                                                                    ? editData.kriteria_mitra
+                                                                    : ""
+                                                            } // Pastikan ini terhubung dengan benar
                                                             onChange={(e) =>
                                                                 setEditData({
                                                                     ...editData,

@@ -14,7 +14,7 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         $users = User::paginate(20);
-  
+
         return Inertia::render('Users/Index', [
             'users' => $users,
         ]);
@@ -64,6 +64,7 @@ class UsersController extends Controller
 
     public function update(Request $request, $id): RedirectResponse
     {
+        dd($request->all());
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'jabatan' => ['required', 'string', 'max:255'],
