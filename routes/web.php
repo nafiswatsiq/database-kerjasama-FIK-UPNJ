@@ -55,10 +55,42 @@ Route::middleware('auth')->group(function () {
 
         // List Master
         Route::get('/list-master', [ListMasterController::class, 'index'])->name('list-master.index');
+
+        // Kriteria Mitra
         Route::post('/list-master/kriteria_mitra/store', [ListMasterController::class, 'kriteria_mitra_store'])->name('list-master.kriteria_mitra_store');
         Route::post('/list-master/kriteria_mitra/{id}', [ListMasterController::class, 'kriteria_mitra_destroy'])->name('list-master.kriteria_mitra_destroy');
-        Route::patch('/list-master/kriteria-mitra/update/{id}', [ListMasterController::class, 'kriteria_mitra_update'])
+        Route::get('/list-master/kriteria_mitra/edit/{id}', [ListMasterController::class, 'kriteria_mitra_edit'])
+            ->name('list-master.kriteria_mitra_edit');
+        Route::patch('/list-master/kriteria_mitra/update/{id}', [ListMasterController::class, 'kriteria_mitra_update'])
             ->name('list-master.kriteria_mitra_update');
+
+        Route::post('/list-master/kriteria_mitra/peringkat/{id}', [ListMasterController::class, 'kriteria_mitra_qs_store'])
+            ->name('list-master.kriteria_mitra_qs');
+
+
+        // Jenis Kegiatan
+        Route::post('/list-master/jenis_kegiatan/store', [ListMasterController::class, 'jenis_kegiatan_store'])->name('list-master.jenis_kegiatan_store');
+        Route::post('/list-master/jenis_kegiatan/{id}', [ListMasterController::class, 'jenis_kegiatan_destroy'])->name('list-master.jenis_kegiatan_destroy');
+        Route::get('/list-master/jenis_kegiatan/edit/{id}', [ListMasterController::class, 'jenis_kegiatan_edit'])
+            ->name('list-master.jenis_kegiatan_edit');
+        Route::patch('/list-master/jenis_kegiatan/update/{id}', [ListMasterController::class, 'jenis_kegiatan_update'])
+            ->name('list-master.jenis_kegiatan_update');
+
+        // Durasi Kerjasama
+        Route::post('/list-master/durasi_kerjasama/store', [ListMasterController::class, 'durasi_kerjasama_store'])->name('list-master.durasi_kerjasama_store');
+        Route::post('/list-master/durasi_kerjasama/{id}', [ListMasterController::class, 'durasi_kerjasama_destroy'])->name('list-master.durasi_kerjasama_destroy');
+        Route::get('/list-master/durasi_kerjasama/edit/{id}', [ListMasterController::class, 'durasi_kerjasama_edit'])
+            ->name('list-master.durasi_kerjasama_edit');
+        Route::patch('/list-master/durasi_kerjasama/update/{id}', [ListMasterController::class, 'durasi_kerjasama_update'])
+            ->name('list-master.durasi_kerjasama_update');
+
+        // Jenis Kerjasama
+        Route::post('/list-master/jenis_kerjasama/store', [ListMasterController::class, 'jenis_kerjasama_store'])->name('list-master.jenis_kerjasama_store');
+        Route::post('/list-master/jenis_kerjasama/{id}', [ListMasterController::class, 'jenis_kerjasama_destroy'])->name('list-master.jenis_kerjasama_destroy');
+        Route::get('/list-master/jenis_kerjasama/edit/{id}', [ListMasterController::class, 'jenis_kerjasama_edit'])
+            ->name('list-master.jenis_kerjasama_edit');
+        Route::patch('/list-master/jenis_kerjasama/update/{id}', [ListMasterController::class, 'jenis_kerjasama_update'])
+            ->name('list-master.jenis_kerjasama_update');
 
 
         Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');

@@ -13,6 +13,7 @@ class KriteriaMitra extends Model
 
     protected $fillable = [
         'id',
-        'kriteria_mitra'
+        'kriteria_mitra',
+        'peringkat'
     ];
 }
