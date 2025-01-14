@@ -10,19 +10,26 @@ class Mitra extends Model
 {
     use HasFactory;
 
+    protected $table = 'mitras';
+
     protected $fillable = [
-        'nama_instansi',
-        'deskripsi_instansi',
-        'no_pks_pihak_1',
-        'no_pks_pihak_2',
-        'pihak_1',
-        'pihak_2',
+        'nama_mitra',
+        'logo',
+        'tentang_mitra',
+        'bidang_kerjasama',
+        'jenis_kerjasama',
+        'no_pks_fik',
+        'no_pks_mitra',
         'kriteria_mitra',
         'asal_mitra',
-        'ruang_lingkup_kerjasama',
+        'pic_fik',
+        'jabatan_pic_fik',
+        'pic_mitra',
+        'jabatan_pic_mitra',
+        'lokasi',
+        'hari_tanggal',
         'waktu_kerjasama_mulai',
         'waktu_kerjasama_selesai',
-        'dokumen_pks',
     ];
 
     public function agreementArchives(): HasMany
