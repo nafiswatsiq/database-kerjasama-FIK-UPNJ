@@ -1,7 +1,7 @@
 import ReactApexChart from "react-apexcharts";
 
 export default function BarChart({ dataSeries }){
-  console.log(Object.values(dataSeries))
+  // console.log(Object.values(dataSeries))
   const series = [{
     name: '',
     // data: [2, 3, 4, 10, 4, 3, 3, 2, 1, 8]

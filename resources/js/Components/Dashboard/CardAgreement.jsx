@@ -60,7 +60,7 @@ export default function CardAgreement({ data, user }) {
             </Typography>
         </div>
         <div className="my-4 text-sm text-gray-600">
-          {data.deskripsi_instansi.length > 30 ? `${data.deskripsi_instansi.substring(0, 30)}...` : data.deskripsi_instansi}
+          {data.tentang_mitra.length > 30 ? `${data.tentang_mitra.substring(0, 30)}...` : data.tentang_mitra}
         </div>
         <div className="flex justify-between items-center">
           <div className="text-blue-900 hover:underline mt-3 text-sm flex gap-x-3 items-center">

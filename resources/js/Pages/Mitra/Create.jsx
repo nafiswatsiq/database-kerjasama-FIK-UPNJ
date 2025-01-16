@@ -379,7 +379,7 @@ export default function Create({
                                                         },
                                                         ...jenis_kerjasama.map(
                                                             (item) => ({
-                                                                value: item.id,
+                                                                value: item.jenis_kerjasama,
                                                                 label: item.jenis_kerjasama,
                                                             })
                                                         ),
@@ -480,7 +480,7 @@ export default function Create({
                                                         },
                                                         ...kriteria_mitra.map(
                                                             (item) => ({
-                                                                value: item.id,
+                                                                value: item.kriteria_mitra,
                                                                 label: item.kriteria_mitra,
                                                             })
                                                         ),

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Documentation;
+use App\Models\KriteriaMitra;
 use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Models\AgreementArchives;
+use App\Models\JenisKerjasama;
 use App\Models\Mitra;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -98,6 +100,9 @@ class Dashboard extends Controller
         $activeMitra = Mitra::where('waktu_kerjasama_selesai', '>', now())->count();
         $inactiveMitra = Mitra::where('waktu_kerjasama_selesai', '<', now())->count();
 
+        $kriteriaMitra = KriteriaMitra::get()->pluck('kriteria_mitra')->toArray();
+        $jenisKerjasama = JenisKerjasama::get()->pluck('jenis_kerjasama')->toArray();
+
         return Inertia::render('Dashboard', [
             'mitra' => $mitra,
             'totalAgreement' => $totalAgreement,
@@ -112,6 +117,8 @@ class Dashboard extends Controller
             'totalMitra' => $totalMitra,
             'activeMitra' => $activeMitra,
             'inactiveMitra' => $inactiveMitra,
+            'kriteriaMitra' => $kriteriaMitra,
+            'jenisKerjasama' => $jenisKerjasama,
         ]);
     }
 }

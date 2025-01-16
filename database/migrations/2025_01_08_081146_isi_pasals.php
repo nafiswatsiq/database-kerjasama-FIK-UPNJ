@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Pasal;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,7 +11,7 @@ return new class extends Migration
     {
         Schema::create('isi_pasals', function (Blueprint $table) {
             $table->id(); // Auto-increment id
-            $table->integer('id_pasal');
+            $table->foreignIdFor(Pasal::class)->nullable();
             $table->string('isi_pasal');
             $table->timestamps();
         });

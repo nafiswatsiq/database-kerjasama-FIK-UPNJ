@@ -11,7 +11,12 @@ import {
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import {
     Button,
+    Checkbox,
     Input,
+    Menu,
+    MenuHandler,
+    MenuItem,
+    MenuList,
     Option,
     Select,
     Typography,
@@ -34,6 +39,8 @@ export default function Dashboard({
     seriesBidangKerjasama,
     seriesAsalMitra,
     galleries,
+    kriteriaMitra,
+    jenisKerjasama
 }) {
     const user = usePage().props.auth.user;
     const date = new Date();
@@ -44,6 +51,9 @@ export default function Dashboard({
     // BARU
     const [showAsalMitraFilter, setShowAsalMitraFilter] = useState(false);
     const [selectedAsalMitra, setSelectedAsalMitra] = useState([]);
+    const [selectedKriteriaMitra, setSelectedKriteriaMitra] = useState([]);
+    const [selectedJenisKS, setSelectedJenisKS] = useState([]);
+    const [selectedTahun, setSelectedTahun] = useState([]);
     const [filteredMitra, setFilteredMitra] = useState(mitra);
 
     // Update URL with query parameters
@@ -58,7 +68,7 @@ export default function Dashboard({
     };
 
     // Handle checkbox change
-    const handleCheckboxChange = (value) => {
+    const handleCheckboxChangeAsalMitra = (value) => {
         const updatedValues = selectedAsalMitra.includes(value)
             ? selectedAsalMitra.filter((item) => item !== value) // Uncheck: remove value
             : [...selectedAsalMitra, value]; // Check: add value
@@ -70,14 +80,71 @@ export default function Dashboard({
         filterData(updatedValues);
     };
 
+    // Handle checkbox change
+    const handleCheckboxChangeKriteriaMitra = (value) => {
+        const updatedValues = selectedKriteriaMitra.includes(value)
+            ? selectedKriteriaMitra.filter((item) => item !== value) // Uncheck: remove value
+            : [...selectedKriteriaMitra, value]; // Check: add value
+
+        setSelectedKriteriaMitra(updatedValues);
+
+        // Update URL and filter data
+        updateURL("kriteria_mitra", updatedValues);
+        filterData(updatedValues);
+    };
+
+    const handleCheckboxChangeJenisKS = (value) => {
+        const updatedValues = selectedJenisKS.includes(value)
+            ? selectedJenisKS.filter((item) => item !== value) // Uncheck: remove value
+            : [...selectedJenisKS, value]; // Check: add value
+
+        setSelectedJenisKS(updatedValues);
+
+        // Update URL and filter data
+        updateURL("jenis_ks", updatedValues);
+        filterData(updatedValues);
+    };
+
+    const handleCheckboxChangeTahun = (value) => {
+        const updatedValues = selectedTahun.includes(value)
+            ? selectedTahun.filter((item) => item !== value) // Uncheck: remove value
+            : [...selectedTahun, value]; // Check: add value
+
+        setSelectedTahun(updatedValues);
+
+        // Update URL and filter data
+        updateURL("tahun", updatedValues);
+        filterData(updatedValues);
+    };
+
     // Filter data based on selected filters
     const filterData = (filters) => {
-        if (filters.length === 0) {
+        const params = route().params;
+        
+        if (params.length === 0) {
             setFilteredMitra(mitra); // Show all if no filter selected
         } else {
-            const filtered = mitra.filter((item) =>
-                filters.includes(item.asal_mitra)
-            );
+            // const filtered = mitra.filter((item) =>
+            //     params.asal_mitra.includes(item.asal_mitra)
+            // );
+
+            // setFilteredMitra(filtered);
+            console.log(mitra);
+            const filtered = mitra.filter((item) => {
+                const asalMitraMatch = params.asal_mitra
+                    ? params.asal_mitra.split(",").includes(item.asal_mitra)
+                    : true;
+                const kriteriaMitraMatch = params.kriteria_mitra
+                    ? params.kriteria_mitra.split(",").includes(item.kriteria_mitra)
+                    : true;
+                const jenisKSMatch = params.jenis_ks
+                    ? params.jenis_ks.split(",").includes(item.jenis_kerjasama)
+                    : true;
+                const tahunMatch = params.tahun
+                    ? params.tahun.split(",").includes(item.hari_tanggal.split("-")[0])
+                    : true;
+                return asalMitraMatch && kriteriaMitraMatch && jenisKSMatch && tahunMatch;
+            });
             setFilteredMitra(filtered);
         }
     };
@@ -115,7 +182,7 @@ export default function Dashboard({
 
     const handleFilterKriteriaMitra = (e) => {
         setFilterKriteriaMitra(e);
-
+        
         router.get(
             route(route().current()),
             {
@@ -243,7 +310,7 @@ export default function Dashboard({
                                     <div class="w-[50%] h-fit relative max-w-sm mx-auto bg-white rounded-lg shadow-lg p-4 grid grid-cols-2 gap-2">
                                         <div class="flex flex-col items-center justify-center border-r border-b border-gray-300 p-4">
                                             <p class="text-green-500 font-bold text-4xl">
-                                                56
+                                                {activeMitra}
                                             </p>
                                             <p class="text-gray-700 font-medium text-sm mt-1">
                                                 Aktif
@@ -251,7 +318,7 @@ export default function Dashboard({
                                         </div>
                                         <div class="flex flex-col items-center justify-center border-b border-gray-300 p-4">
                                             <p class="text-red-500 font-bold text-4xl">
-                                                24
+                                                {inactiveMitra}
                                             </p>
                                             <p class="text-gray-700 font-medium text-sm mt-1">
                                                 Nonaktif
@@ -326,59 +393,195 @@ export default function Dashboard({
                                     Urutkan Berdasarkan
                                 </Typography>
                                 <div className="w-auto">
-                                    <button
-                                        className="mt-1 flex items-center gap-4 w-full text-left bg-gray-100 px-4 py-2 rounded-md shadow-md border border-gray-300 hover:bg-gray-200"
-                                        onClick={() =>
-                                            setShowAsalMitraFilter(
-                                                (prev) => !prev
-                                            )
-                                        }
-                                    >
-                                        Asal Mitra
-                                        <IoFilter />
-                                    </button>
-                                    {showAsalMitraFilter && (
-                                        <div className="mt-2 bg-white p-4 rounded-md shadow-md border border-gray-300">
-                                            <label className="flex items-center space-x-2">
-                                                <input
-                                                    type="checkbox"
+                                    <Menu
+                                        dismiss={{
+                                            itemPress: false,
+                                        }}
+                                        >
+                                        <MenuHandler>
+                                            <Button
+                                                className="mt-1 flex items-center gap-4 w-full text-left bg-gray-100 rounded-md shadow-md border border-gray-300 hover:bg-gray-200 text-black"
+                                            >
+                                            Asal Mitra
+                                            <IoFilter />
+                                            </Button>
+                                        </MenuHandler>
+                                        <MenuList>
+                                            <MenuItem className="p-0">
+                                                <label
+                                                    htmlFor="item-1"
+                                                    className="flex cursor-pointer items-center gap-2 p-2"
+                                                >
+                                                    <Checkbox
+                                                    ripple={false}
+                                                    id="item-1"
+                                                    containerProps={{ className: "p-0" }}
+                                                    className="hover:before:content-none"
                                                     value="Domestik"
                                                     checked={selectedAsalMitra.includes(
                                                         "Domestik"
                                                     )}
                                                     onChange={() =>
-                                                        handleCheckboxChange(
+                                                        handleCheckboxChangeAsalMitra(
                                                             "Domestik"
                                                         )
                                                     }
-                                                    className="rounded text-gray-600 focus:ring-gray-500"
-                                                />
-                                                <span className="text-sm text-gray-700">
+                                                    />
                                                     Domestik
-                                                </span>
-                                            </label>
-                                            <label className="flex items-center space-x-2 mt-2">
-                                                <input
-                                                    type="checkbox"
+                                                </label>
+                                            </MenuItem>
+                                            <MenuItem className="p-0">
+                                                <label
+                                                    htmlFor="item-2"
+                                                    className="flex cursor-pointer items-center gap-2 p-2"
+                                                >
+                                                    <Checkbox
+                                                    ripple={false}
+                                                    id="item-2"
+                                                    containerProps={{ className: "p-0" }}
+                                                    className="hover:before:content-none"
                                                     value="Internasional"
                                                     checked={selectedAsalMitra.includes(
                                                         "Internasional"
                                                     )}
                                                     onChange={() =>
-                                                        handleCheckboxChange(
+                                                        handleCheckboxChangeAsalMitra(
                                                             "Internasional"
                                                         )
                                                     }
-                                                    className="rounded text-gray-600 focus:ring-gray-500"
-                                                />
-                                                <span className="text-sm text-gray-700">
+                                                    />
                                                     Internasional
-                                                </span>
-                                            </label>
-                                        </div>
-                                    )}
+                                                </label>
+                                            </MenuItem>
+                                        </MenuList>
+                                    </Menu>
                                 </div>
                                 <div className="w-auto">
+                                    <Menu
+                                        dismiss={{
+                                            itemPress: false,
+                                        }}
+                                        >
+                                        <MenuHandler>
+                                            <Button
+                                                className="mt-1 flex items-center gap-4 w-full text-left bg-gray-100 rounded-md shadow-md border border-gray-300 hover:bg-gray-200 text-black"
+                                            >
+                                            Kriteria Mitra
+                                            <IoFilter />
+                                            </Button>
+                                        </MenuHandler>
+                                        <MenuList>
+                                            {kriteriaMitra.map((item) => (
+                                                <MenuItem className="p-0">
+                                                    <label
+                                                        htmlFor={`item-${item}`}
+                                                        className="flex cursor-pointer items-center gap-2 p-2"
+                                                    >
+                                                        <Checkbox
+                                                        ripple={false}
+                                                        id={`item-${item}`}
+                                                        containerProps={{ className: "p-0" }}
+                                                        className="hover:before:content-none"
+                                                        value={item}
+                                                        checked={selectedKriteriaMitra.includes(
+                                                            item
+                                                        )}
+                                                        onChange={() =>
+                                                            handleCheckboxChangeKriteriaMitra(
+                                                                item
+                                                            )
+                                                        }
+                                                        />
+                                                        {item}
+                                                    </label>
+                                                </MenuItem>
+                                            ))}
+                                        </MenuList>
+                                    </Menu>
+                                </div>
+                                <div className="w-auto">
+                                    <Menu
+                                        dismiss={{
+                                            itemPress: false,
+                                        }}
+                                        >
+                                        <MenuHandler>
+                                            <Button
+                                                className="mt-1 flex items-center gap-4 w-full text-left bg-gray-100 rounded-md shadow-md border border-gray-300 hover:bg-gray-200 text-black"
+                                            >
+                                            Jenis KS
+                                            <IoFilter />
+                                            </Button>
+                                        </MenuHandler>
+                                        <MenuList>
+                                            {jenisKerjasama.map((item) => (
+                                                <MenuItem className="p-0">
+                                                    <label
+                                                        htmlFor={`item-${item}`}
+                                                        className="flex cursor-pointer items-center gap-2 p-2"
+                                                    >
+                                                        <Checkbox
+                                                        ripple={false}
+                                                        id={`item-${item}`}
+                                                        containerProps={{ className: "p-0" }}
+                                                        className="hover:before:content-none"
+                                                        value={item}
+                                                        checked={selectedJenisKS.includes(
+                                                            item
+                                                        )}
+                                                        onChange={() =>
+                                                            handleCheckboxChangeJenisKS(
+                                                                item
+                                                            )
+                                                        }
+                                                        />
+                                                        {item}
+                                                    </label>
+                                                </MenuItem>
+                                            ))}
+                                        </MenuList>
+                                    </Menu>
+                                </div>
+                                <div className="w-auto">
+                                    <Menu
+                                        dismiss={{
+                                            itemPress: false,
+                                        }}
+                                        >
+                                        <MenuHandler>
+                                            <Button
+                                                className="mt-1 flex items-center gap-4 w-full text-left bg-gray-100 rounded-md shadow-md border border-gray-300 hover:bg-gray-200 text-black"
+                                            >
+                                            Tahun
+                                            <IoFilter />
+                                            </Button>
+                                        </MenuHandler>
+                                        <MenuList>
+                                        {Array.from({ length: 10 }, (_, i) => 2020 + i).map((year) => (
+                                            <MenuItem className="p-0" key={year}>
+                                                <label
+                                                    htmlFor={`item-${year}`}
+                                                    className="flex cursor-pointer items-center gap-2 p-2"
+                                                >
+                                                    <Checkbox
+                                                        ripple={false}
+                                                        id={`item-${year}`}
+                                                        containerProps={{ className: "p-0" }}
+                                                        className="hover:before:content-none"
+                                                        value={year.toString()}
+                                                        checked={selectedTahun.includes(year.toString())}
+                                                        onChange={() =>
+                                                            handleCheckboxChangeTahun(year.toString())
+                                                        }
+                                                    />
+                                                    {year}
+                                                </label>
+                                            </MenuItem>
+                                        ))}
+                                        </MenuList>
+                                    </Menu>
+                                </div>
+                                {/* <div className="w-auto">
                                     <SelectInput
                                         label="Kriteria Mitra"
                                         value={filterKriteriaMitra}
@@ -452,7 +655,7 @@ export default function Dashboard({
                                             },
                                         ]}
                                     />
-                                </div>
+                                </div> */}
                                 <div>
                                     <div className="w-full">
                                         <Input

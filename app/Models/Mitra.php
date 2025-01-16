@@ -36,4 +36,9 @@ class Mitra extends Model
     {
         return $this->hasMany(AgreementArchives::class);
     }
+
+    public function pasal(): HasMany
+    {
+        return $this->hasMany(Pasal::class);
+    }
 }

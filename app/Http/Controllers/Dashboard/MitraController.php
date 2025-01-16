@@ -65,6 +65,7 @@ class MitraController extends Controller
             $pathDokumenPks = $fileDokumenPks->storeAs('/', $nameDokumenPks, 'public');
         }
 
+        // dd($request->all());
         $mitra = Mitra::create([
             'nama_mitra' => $request->nama_mitra,
             'logo' => $nameDokumenPks ?? null,
@@ -88,13 +89,13 @@ class MitraController extends Controller
         // Simpan data Pasal dan Isi Pasal
         foreach ($request->pasals as $pasalData) {
             $pasal = Pasal::create([
-                'id_mitra' => $mitra->id,
+                'mitra_id' => $mitra->id,
                 'judul_pasal' => $pasalData['judul_pasal'],
             ]);
 
             foreach ($pasalData['isi_pasals'] as $isiData) {
                 IsiPasal::create([
-                    'id_pasal' => $pasal->id,
+                    'pasal_id' => $pasal->id,
                     'isi_pasal' => $isiData['isi'],
                 ]);
             }

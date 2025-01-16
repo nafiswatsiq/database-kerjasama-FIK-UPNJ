@@ -12,8 +12,7 @@ class IsiPasal extends Model
     protected $table = 'isi_pasals';
 
     protected $fillable = [
-        'id',
-        'id_pasal',
+        'pasal_id',
         'isi_pasal',
     ];
 }

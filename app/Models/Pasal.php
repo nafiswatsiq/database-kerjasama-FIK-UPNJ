@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Pasal extends Model
 {
@@ -12,8 +13,12 @@ class Pasal extends Model
     protected $table = 'pasals';
 
     protected $fillable = [
-        'id',
-        'id_mitra',
+        'mitra_id',
         'judul_pasal',
     ];
+
+    public function isiPasal(): HasMany
+    {
+        return $this->hasMany(IsiPasal::class);
+    }
 }
