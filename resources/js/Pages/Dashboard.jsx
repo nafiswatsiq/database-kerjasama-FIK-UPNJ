@@ -2,6 +2,7 @@ import BarChart from "@/Components/Dashboard/BarChart";
 import CardAgreement from "@/Components/Dashboard/CardAgreement";
 import { Chart } from "@/Components/Dashboard/Chart";
 import { Gallery } from "@/Components/Dashboard/Gallery";
+import LineChart from "@/Components/Dashboard/LineChart";
 import SelectInput from "@/Components/SelectInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import {
@@ -40,7 +41,9 @@ export default function Dashboard({
     seriesAsalMitra,
     galleries,
     kriteriaMitra,
-    jenisKerjasama
+    jenisKerjasama,
+    years,
+    seriesYears,
 }) {
     const user = usePage().props.auth.user;
     const date = new Date();
@@ -56,6 +59,7 @@ export default function Dashboard({
     const [selectedActive, setSelectedActive] = useState([]);
     const [selectedTahun, setSelectedTahun] = useState([]);
     const [filteredMitra, setFilteredMitra] = useState(mitra);
+    const [filterChart, setFilterChart] = useState("kriteriaMitra");
 
     // Update URL with query parameters
     const updateURL = (queryParam, values) => {
@@ -279,11 +283,25 @@ export default function Dashboard({
                                         </MenuHandler>
                                         <MenuList>
                                             <MenuItem
-                                                
-                                            >Berdasarkan kriteria mitra</MenuItem>
-                                            <MenuItem>Berdasarkan Aktif Inaktif</MenuItem>
-                                            <MenuItem>Berdasarkan Asal</MenuItem>
-                                            <MenuItem>Berdasarkan Tahun</MenuItem>
+                                                onClick={() => setFilterChart("kriteriaMitra")}
+                                            >
+                                                Berdasarkan kriteria mitra
+                                            </MenuItem>
+                                            <MenuItem
+                                                onClick={() => setFilterChart("activeMitra")}
+                                            >
+                                                Berdasarkan Aktif Inaktif
+                                            </MenuItem>
+                                            <MenuItem
+                                                onClick={() => setFilterChart("asalMitra")}
+                                            >
+                                                Berdasarkan Asal
+                                            </MenuItem>
+                                            <MenuItem
+                                                onClick={() => setFilterChart("yearMitra")}
+                                            >
+                                                Berdasarkan Tahun
+                                            </MenuItem>
                                         </MenuList>
                                     </Menu>
                                 </div>
@@ -304,7 +322,15 @@ export default function Dashboard({
                                         <p>Berdasarkan Tahun</p>
                                     </div>
                                 )} */}
-                                <BarChart dataSeries={seriesKriteriaMitra} />
+                                {filterChart === "kriteriaMitra" ? (
+                                    <BarChart dataSeries={seriesKriteriaMitra} dataCategories={kriteriaMitra} horizontal={false}/>
+                                ):filterChart === 'activeMitra' ? (
+                                    <BarChart dataSeries={[activeMitra, inactiveMitra]} dataCategories={['Active', 'Inactive']} horizontal={true}/>
+                                ):filterChart === 'asalMitra' ? (
+                                    <BarChart dataSeries={seriesAsalMitra} dataCategories={['Domestik', 'Internasional']} horizontal={true}/>
+                                ):filterChart === 'yearMitra' ? (
+                                    <LineChart dataSeries={seriesYears} dataCategories={years}/>
+                                ):null}
                             </div>
                             <div className="flex flex-col gap-2 ">
                                 <div className="flex gap-2">
@@ -653,7 +679,7 @@ export default function Dashboard({
                                             </Button>
                                         </MenuHandler>
                                         <MenuList>
-                                        {Array.from({ length: 10 }, (_, i) => 2020 + i).map((year) => (
+                                        {years.map((year) => (
                                             <MenuItem className="p-0" key={year}>
                                                 <label
                                                     htmlFor={`item-${year}`}

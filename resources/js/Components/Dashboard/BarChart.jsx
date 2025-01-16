@@ -1,7 +1,6 @@
 import ReactApexChart from "react-apexcharts";
 
-export default function BarChart({ dataSeries }){
-  // console.log(Object.values(dataSeries))
+export default function BarChart({ dataSeries, dataCategories, horizontal }){
   const series = [{
     name: '',
     // data: [2, 3, 4, 10, 4, 3, 3, 2, 1, 8]
@@ -19,6 +18,7 @@ export default function BarChart({ dataSeries }){
         dataLabels: {
           position: 'top', // top, center, bottom
         },
+        horizontal: horizontal,
       }
     },
     dataLabels: {
@@ -34,7 +34,7 @@ export default function BarChart({ dataSeries }){
     },
     
     xaxis: {
-      categories: ["PTN", "PTS", "DuDi", "Pemerintahan", "Perusahaan Multinasional", "Perusahaan Teknologi", "Perusahaan Startup", "Organisasi Nirlaba", "Lembaga Riset", "Lembaga Kebudayaan"],
+      categories: dataCategories,
       position: 'bottom',
       axisBorder: {
         show: false
@@ -66,9 +66,9 @@ export default function BarChart({ dataSeries }){
         show: false,
       },
       labels: {
-        show: false,
+        show: true,
         formatter: function (val) {
-          return val + "%";
+          return val + "";
         }
       }
     
