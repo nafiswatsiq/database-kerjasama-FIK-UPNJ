@@ -53,6 +53,7 @@ export default function Dashboard({
     const [selectedAsalMitra, setSelectedAsalMitra] = useState([]);
     const [selectedKriteriaMitra, setSelectedKriteriaMitra] = useState([]);
     const [selectedJenisKS, setSelectedJenisKS] = useState([]);
+    const [selectedActive, setSelectedActive] = useState([]);
     const [selectedTahun, setSelectedTahun] = useState([]);
     const [filteredMitra, setFilteredMitra] = useState(mitra);
 
@@ -105,6 +106,18 @@ export default function Dashboard({
         filterData(updatedValues);
     };
 
+    const handleCheckboxChangeActive = (value) => {
+        const updatedValues = selectedActive.includes(value)
+            ? selectedActive.filter((item) => item !== value) // Uncheck: remove value
+            : [...selectedActive, value]; // Check: add value
+
+        setSelectedActive(updatedValues);
+
+        // Update URL and filter data
+        updateURL("active", updatedValues);
+        filterData(updatedValues);
+    };
+
     const handleCheckboxChangeTahun = (value) => {
         const updatedValues = selectedTahun.includes(value)
             ? selectedTahun.filter((item) => item !== value) // Uncheck: remove value
@@ -129,7 +142,6 @@ export default function Dashboard({
             // );
 
             // setFilteredMitra(filtered);
-            console.log(mitra);
             const filtered = mitra.filter((item) => {
                 const asalMitraMatch = params.asal_mitra
                     ? params.asal_mitra.split(",").includes(item.asal_mitra)
@@ -140,10 +152,13 @@ export default function Dashboard({
                 const jenisKSMatch = params.jenis_ks
                     ? params.jenis_ks.split(",").includes(item.jenis_kerjasama)
                     : true;
+                const activeMatch = params.active
+                    ? params.active.split(",").includes(item.active)
+                    : true;
                 const tahunMatch = params.tahun
                     ? params.tahun.split(",").includes(item.hari_tanggal.split("-")[0])
                     : true;
-                return asalMitraMatch && kriteriaMitraMatch && jenisKSMatch && tahunMatch;
+                return asalMitraMatch && kriteriaMitraMatch && jenisKSMatch && tahunMatch && activeMatch;
             });
             setFilteredMitra(filtered);
         }
@@ -255,7 +270,24 @@ export default function Dashboard({
                     <div className="flex flex-col gap-2 items-center">
                         <div className="flex gap-4">
                             <div className="col-span-4 w-[45%] bg-white sm:rounded-2xl shadow-lg">
-                                <div
+                                <div className="px-5 pt-5">
+                                    <Menu>
+                                        <MenuHandler>
+                                            <Button 
+                                                className="bg-orange-500 w-80"
+                                            >Filter</Button>
+                                        </MenuHandler>
+                                        <MenuList>
+                                            <MenuItem
+                                                
+                                            >Berdasarkan kriteria mitra</MenuItem>
+                                            <MenuItem>Berdasarkan Aktif Inaktif</MenuItem>
+                                            <MenuItem>Berdasarkan Asal</MenuItem>
+                                            <MenuItem>Berdasarkan Tahun</MenuItem>
+                                        </MenuList>
+                                    </Menu>
+                                </div>
+                                {/* <div
                                     className="bg-orange-500 cursor-pointer w-80 h-10 m-4 rounded-lg flex justify-center items-center"
                                     onClick={toggleVisible}
                                 >
@@ -271,7 +303,7 @@ export default function Dashboard({
                                         <p>Berdasarkan Asal</p>
                                         <p>Berdasarkan Tahun</p>
                                     </div>
-                                )}
+                                )} */}
                                 <BarChart dataSeries={seriesKriteriaMitra} />
                             </div>
                             <div className="flex flex-col gap-2 ">
@@ -384,14 +416,14 @@ export default function Dashboard({
                                 Galeri Kerjasama
                             </h1>
                         </div>
-                        <div className="flex justify-between mt-4">
-                            <div className="flex gap-4 items-center">
                                 <Typography
                                     color="gray"
-                                    className="font-medium"
+                                    className="font-medium mt-4"
                                 >
                                     Urutkan Berdasarkan
                                 </Typography>
+                        <div className="flex justify-between mt-4">
+                            <div className="flex gap-4 items-center">
                                 <div className="w-auto">
                                     <Menu
                                         dismiss={{
@@ -539,6 +571,70 @@ export default function Dashboard({
                                                     </label>
                                                 </MenuItem>
                                             ))}
+                                        </MenuList>
+                                    </Menu>
+                                </div>
+                                <div className="w-auto">
+                                    <Menu
+                                        dismiss={{
+                                            itemPress: false,
+                                        }}
+                                        >
+                                        <MenuHandler>
+                                            <Button
+                                                className="mt-1 flex items-center gap-4 w-full text-left bg-gray-100 rounded-md shadow-md border border-gray-300 hover:bg-gray-200 text-black"
+                                            >
+                                            Status
+                                            <IoFilter />
+                                            </Button>
+                                        </MenuHandler>
+                                        <MenuList>
+                                            <MenuItem className="p-0">
+                                                <label
+                                                    htmlFor="item-1"
+                                                    className="flex cursor-pointer items-center gap-2 p-2"
+                                                >
+                                                    <Checkbox
+                                                    ripple={false}
+                                                    id="item-1"
+                                                    containerProps={{ className: "p-0" }}
+                                                    className="hover:before:content-none"
+                                                    value="true"
+                                                    checked={selectedActive.includes(
+                                                        'true'
+                                                    )}
+                                                    onChange={() =>
+                                                        handleCheckboxChangeActive(
+                                                            'true'
+                                                        )
+                                                    }
+                                                    />
+                                                    Aktif
+                                                </label>
+                                            </MenuItem>
+                                            <MenuItem className="p-0">
+                                                <label
+                                                    htmlFor="item-2"
+                                                    className="flex cursor-pointer items-center gap-2 p-2"
+                                                >
+                                                    <Checkbox
+                                                    ripple={false}
+                                                    id="item-2"
+                                                    containerProps={{ className: "p-0" }}
+                                                    className="hover:before:content-none"
+                                                    value="false"
+                                                    checked={selectedActive.includes(
+                                                        'false'
+                                                    )}
+                                                    onChange={() =>
+                                                        handleCheckboxChangeActive(
+                                                            'false'
+                                                        )
+                                                    }
+                                                    />
+                                                    Inaktif
+                                                </label>
+                                            </MenuItem>
                                         </MenuList>
                                     </Menu>
                                 </div>

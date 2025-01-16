@@ -34,7 +34,30 @@ class Dashboard extends Controller
                 $mitra = $mitra->where('waktu_kerjasama_selesai', '<', now());
             }
         }
-        $mitra = $mitra->orderBy('id', 'desc')->get();
+        $mitra = $mitra->orderBy('id', 'desc')->get()
+            ->map(function($item) {
+                return [
+                    'id' => $item->id,
+                    'nama_instansi' => $item->nama_instansi,
+                    'logo' => $item->logo,
+                    'tentang_mitra' => $item->tentang_mitra,
+                    'bidang_kerjasama' => $item->bidang_kerjasama,
+                    'jenis_kerjasama' => $item->jenis_kerjasama,
+                    'no_pks_fik' => $item->no_pks_fik,
+                    'no_pks_mitra' => $item->no_pks_mitra,
+                    'kriteria_mitra' => $item->kriteria_mitra,
+                    'asal_mitra' => $item->asal_mitra,
+                    'pic_fik' => $item->pic_fik,
+                    'jabatan_pic_fik' => $item->jabatan_pic_fik,
+                    'pic_mitra' => $item->pic_mitra,
+                    'jabatan_pic_mitra' => $item->jabatan_pic_mitra,
+                    'lokasi' => $item->lokasi,
+                    'hari_tanggal' => $item->hari_tanggal,
+                    'waktu_kerjasama_mulai' => $item->waktu_kerjasama_mulai,
+                    'waktu_kerjasama_selesai' => $item->waktu_kerjasama_selesai,
+                    'active' => $item->waktu_kerjasama_selesai > now() ? 'true' : 'false',
+                ];
+            });
 
         $totalAgreement = AgreementArchives::count();
         $activeAgreement = AgreementArchives::where('waktu_kerjasama_selesai', '>', now())->count();
