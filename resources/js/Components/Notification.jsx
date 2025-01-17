@@ -33,7 +33,7 @@ function ClockIcon() {
 
 export default function Notification() {
   const notification = usePage().props.notification;
-  console.log(notification);
+
   return (
     <Menu>
       <MenuHandler>

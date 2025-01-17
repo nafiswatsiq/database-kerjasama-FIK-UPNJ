@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Documentation;
+use App\Models\KriteriaMitra;
 use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Models\AgreementArchives;
+use App\Models\JenisKerjasama;
 use App\Models\Mitra;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +34,30 @@ class Dashboard extends Controller
                 $mitra = $mitra->where('waktu_kerjasama_selesai', '<', now());
             }
         }
-        $mitra = $mitra->orderBy('id', 'desc')->get();
+        $mitra = $mitra->orderBy('id', 'desc')->get()
+            ->map(function($item) {
+                return [
+                    'id' => $item->id,
+                    'nama_instansi' => $item->nama_instansi,
+                    'logo' => $item->logo,
+                    'tentang_mitra' => $item->tentang_mitra,
+                    'bidang_kerjasama' => $item->bidang_kerjasama,
+                    'jenis_kerjasama' => $item->jenis_kerjasama,
+                    'no_pks_fik' => $item->no_pks_fik,
+                    'no_pks_mitra' => $item->no_pks_mitra,
+                    'kriteria_mitra' => $item->kriteria_mitra,
+                    'asal_mitra' => $item->asal_mitra,
+                    'pic_fik' => $item->pic_fik,
+                    'jabatan_pic_fik' => $item->jabatan_pic_fik,
+                    'pic_mitra' => $item->pic_mitra,
+                    'jabatan_pic_mitra' => $item->jabatan_pic_mitra,
+                    'lokasi' => $item->lokasi,
+                    'hari_tanggal' => $item->hari_tanggal,
+                    'waktu_kerjasama_mulai' => $item->waktu_kerjasama_mulai,
+                    'waktu_kerjasama_selesai' => $item->waktu_kerjasama_selesai,
+                    'active' => $item->waktu_kerjasama_selesai > now() ? 'true' : 'false',
+                ];
+            });
 
         $totalAgreement = AgreementArchives::count();
         $activeAgreement = AgreementArchives::where('waktu_kerjasama_selesai', '>', now())->count();
@@ -40,18 +65,11 @@ class Dashboard extends Controller
         $documentNull = AgreementArchives::whereNull('dokumen_kerjasama')->count();
         $userRegistered = User::count();
 
-        $defaultKriteriaMitra = [
-            'Perguruan Tinggi Negeri' => 0,
-            'Perguruan Tinggi Swasta' => 0,
-            'Dunia Industri/Dunia Usaha' => 0,
-            'Pemerintahan' => 0,
-            'Perusahaan Multinasional' => 0,
-            'Perusahaan Teknologi' => 0,
-            'Perusahaan Startup' => 0,
-            'Organisasi Nirlaba' => 0,
-            'Lembaga Riset' => 0,
-            'Lembaga Kebudayaan' => 0,
-        ];
+        $defaultKriteriaMitra = [];
+        foreach (KriteriaMitra::get() as $kriteria) {
+            $defaultKriteriaMitra[$kriteria->kriteria_mitra] = 0;
+        }
+
         $countKriteriaMitra = Mitra::select('kriteria_mitra', DB::raw('count(*) as total'))
             ->groupBy('kriteria_mitra')
             ->pluck('total', 'kriteria_mitra')
@@ -98,6 +116,19 @@ class Dashboard extends Controller
         $activeMitra = Mitra::where('waktu_kerjasama_selesai', '>', now())->count();
         $inactiveMitra = Mitra::where('waktu_kerjasama_selesai', '<', now())->count();
 
+        $kriteriaMitra = KriteriaMitra::get()->pluck('kriteria_mitra')->toArray();
+        $jenisKerjasama = JenisKerjasama::get()->pluck('jenis_kerjasama')->toArray();
+
+        $years = [2020, 2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030];
+        $countYears = Mitra::select(DB::raw('strftime("%Y", hari_tanggal) as year'), DB::raw('count(*) as total'))
+            ->groupBy('year')
+            ->pluck('total', 'year')
+            ->toArray();
+
+        $seriesYears = array_map(function($year) use ($countYears) {
+            return $countYears[$year] ?? 0;
+        }, $years);
+
         return Inertia::render('Dashboard', [
             'mitra' => $mitra,
             'totalAgreement' => $totalAgreement,
@@ -112,6 +143,10 @@ class Dashboard extends Controller
             'totalMitra' => $totalMitra,
             'activeMitra' => $activeMitra,
             'inactiveMitra' => $inactiveMitra,
+            'kriteriaMitra' => $kriteriaMitra,
+            'jenisKerjasama' => $jenisKerjasama,
+            'years' => $years,
+            'seriesYears' => $seriesYears,
         ]);
     }
 }
