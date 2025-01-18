@@ -13,18 +13,24 @@ return new class extends Migration
     {
         Schema::create('mitras', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_instansi');
-            $table->text('deskripsi_instansi');
-            $table->string('no_pks_pihak_1');
-            $table->string('no_pks_pihak_2');
-            $table->string('pihak_1');
-            $table->string('pihak_2');
+            $table->string('nama_mitra');
+            $table->string('logo');
+            $table->text('tentang_mitra');
+            $table->text('bidang_kerjasama');
+            $table->string('jenis_kerjasama');
+            $table->string('no_pks_fik');
+            $table->string('no_pks_mitra');
             $table->string('kriteria_mitra');
             $table->string('asal_mitra');
-            $table->string('ruang_lingkup_kerjasama');
+            $table->string('pic_fik');
+            $table->string('jabatan_pic_fik');
+            $table->string('pic_mitra');
+            $table->string('jabatan_pic_mitra');
+            $table->string('lokasi');
+            $table->date('hari_tanggal');
             $table->date('waktu_kerjasama_mulai');
             $table->date('waktu_kerjasama_selesai');
-            $table->string('dokumen_pks')->nullable();
+            // $table->string('dokumen_pks')->nullable();
             $table->timestamps();
         });
     }
