@@ -25,7 +25,6 @@ import {
 import { format } from "date-fns";
 import { useState, useEffect } from "react";
 import { IoFilter } from "react-icons/io5";
-
 export default function Dashboard({
     mitra,
     totalMitra,
@@ -59,6 +58,7 @@ export default function Dashboard({
     const [selectedActive, setSelectedActive] = useState([]);
     const [selectedTahun, setSelectedTahun] = useState([]);
     const [filteredMitra, setFilteredMitra] = useState(mitra);
+    console.log(mitra);
     const [filterChart, setFilterChart] = useState("kriteriaMitra");
 
     // Update URL with query parameters
@@ -137,7 +137,7 @@ export default function Dashboard({
     // Filter data based on selected filters
     const filterData = (filters) => {
         const params = route().params;
-        
+
         if (params.length === 0) {
             setFilteredMitra(mitra); // Show all if no filter selected
         } else {
@@ -151,7 +151,9 @@ export default function Dashboard({
                     ? params.asal_mitra.split(",").includes(item.asal_mitra)
                     : true;
                 const kriteriaMitraMatch = params.kriteria_mitra
-                    ? params.kriteria_mitra.split(",").includes(item.kriteria_mitra)
+                    ? params.kriteria_mitra
+                          .split(",")
+                          .includes(item.kriteria_mitra)
                     : true;
                 const jenisKSMatch = params.jenis_ks
                     ? params.jenis_ks.split(",").includes(item.jenis_kerjasama)
@@ -160,9 +162,17 @@ export default function Dashboard({
                     ? params.active.split(",").includes(item.active)
                     : true;
                 const tahunMatch = params.tahun
-                    ? params.tahun.split(",").includes(item.hari_tanggal.split("-")[0])
+                    ? params.tahun
+                          .split(",")
+                          .includes(item.hari_tanggal.split("-")[0])
                     : true;
-                return asalMitraMatch && kriteriaMitraMatch && jenisKSMatch && tahunMatch && activeMatch;
+                return (
+                    asalMitraMatch &&
+                    kriteriaMitraMatch &&
+                    jenisKSMatch &&
+                    tahunMatch &&
+                    activeMatch
+                );
             });
             setFilteredMitra(filtered);
         }
@@ -201,7 +211,7 @@ export default function Dashboard({
 
     const handleFilterKriteriaMitra = (e) => {
         setFilterKriteriaMitra(e);
-        
+
         router.get(
             route(route().current()),
             {
@@ -277,35 +287,48 @@ export default function Dashboard({
                                 <div className="px-5 pt-5">
                                     <Menu>
                                         <MenuHandler>
-                                            <Button 
-                                                className="bg-orange-500 w-80"
-                                            >Filter</Button>
+                                            <Button className="bg-orange-500 w-80">
+                                                Filter
+                                            </Button>
                                         </MenuHandler>
                                         <MenuList>
                                             <MenuItem
-                                                onClick={() => setFilterChart("kriteriaMitra")}
+                                                onClick={() =>
+                                                    setFilterChart(
+                                                        "kriteriaMitra"
+                                                    )
+                                                }
                                             >
                                                 Berdasarkan kriteria mitra
                                             </MenuItem>
                                             <MenuItem
-                                                onClick={() => setFilterChart("activeMitra")}
+                                                onClick={() =>
+                                                    setFilterChart(
+                                                        "activeMitra"
+                                                    )
+                                                }
                                             >
                                                 Berdasarkan Aktif Inaktif
                                             </MenuItem>
                                             <MenuItem
-                                                onClick={() => setFilterChart("asalMitra")}
+                                                onClick={() =>
+                                                    setFilterChart("asalMitra")
+                                                }
                                             >
                                                 Berdasarkan Asal
                                             </MenuItem>
                                             <MenuItem
-                                                onClick={() => setFilterChart("yearMitra")}
+                                                onClick={() =>
+                                                    setFilterChart("yearMitra")
+                                                }
                                             >
                                                 Berdasarkan Tahun
                                             </MenuItem>
                                         </MenuList>
                                     </Menu>
                                 </div>
-                                {/* <div
+                                {/*
+                                <div
                                     className="bg-orange-500 cursor-pointer w-80 h-10 m-4 rounded-lg flex justify-center items-center"
                                     onClick={toggleVisible}
                                 >
@@ -321,16 +344,38 @@ export default function Dashboard({
                                         <p>Berdasarkan Asal</p>
                                         <p>Berdasarkan Tahun</p>
                                     </div>
-                                )} */}
+                                )}
+                                 */}
                                 {filterChart === "kriteriaMitra" ? (
-                                    <BarChart dataSeries={seriesKriteriaMitra} dataCategories={kriteriaMitra} horizontal={false}/>
-                                ):filterChart === 'activeMitra' ? (
-                                    <BarChart dataSeries={[activeMitra, inactiveMitra]} dataCategories={['Active', 'Inactive']} horizontal={true}/>
-                                ):filterChart === 'asalMitra' ? (
-                                    <BarChart dataSeries={seriesAsalMitra} dataCategories={['Domestik', 'Internasional']} horizontal={true}/>
-                                ):filterChart === 'yearMitra' ? (
-                                    <LineChart dataSeries={seriesYears} dataCategories={years}/>
-                                ):null}
+                                    <BarChart
+                                        dataSeries={seriesKriteriaMitra}
+                                        dataCategories={kriteriaMitra}
+                                        horizontal={false}
+                                    />
+                                ) : filterChart === "activeMitra" ? (
+                                    <BarChart
+                                        dataSeries={[
+                                            activeMitra,
+                                            inactiveMitra,
+                                        ]}
+                                        dataCategories={["Active", "Inactive"]}
+                                        horizontal={true}
+                                    />
+                                ) : filterChart === "asalMitra" ? (
+                                    <BarChart
+                                        dataSeries={seriesAsalMitra}
+                                        dataCategories={[
+                                            "Domestik",
+                                            "Internasional",
+                                        ]}
+                                        horizontal={true}
+                                    />
+                                ) : filterChart === "yearMitra" ? (
+                                    <LineChart
+                                        dataSeries={seriesYears}
+                                        dataCategories={years}
+                                    />
+                                ) : null}
                             </div>
                             <div className="flex flex-col gap-2 ">
                                 <div className="flex gap-2">
@@ -442,12 +487,9 @@ export default function Dashboard({
                                 Galeri Kerjasama
                             </h1>
                         </div>
-                                <Typography
-                                    color="gray"
-                                    className="font-medium mt-4"
-                                >
-                                    Urutkan Berdasarkan
-                                </Typography>
+                        <Typography color="gray" className="font-medium mt-4">
+                            Urutkan Berdasarkan
+                        </Typography>
                         <div className="flex justify-between mt-4">
                             <div className="flex gap-4 items-center">
                                 <div className="w-auto">
@@ -455,13 +497,11 @@ export default function Dashboard({
                                         dismiss={{
                                             itemPress: false,
                                         }}
-                                        >
+                                    >
                                         <MenuHandler>
-                                            <Button
-                                                className="mt-1 flex items-center gap-4 w-full text-left bg-gray-100 rounded-md shadow-md border border-gray-300 hover:bg-gray-200 text-black"
-                                            >
-                                            Asal Mitra
-                                            <IoFilter />
+                                            <Button className="mt-1 flex items-center gap-4 w-full text-left bg-gray-100 rounded-md shadow-md border border-gray-300 hover:bg-gray-200 text-black">
+                                                Asal Mitra
+                                                <IoFilter />
                                             </Button>
                                         </MenuHandler>
                                         <MenuList>
@@ -471,19 +511,21 @@ export default function Dashboard({
                                                     className="flex cursor-pointer items-center gap-2 p-2"
                                                 >
                                                     <Checkbox
-                                                    ripple={false}
-                                                    id="item-1"
-                                                    containerProps={{ className: "p-0" }}
-                                                    className="hover:before:content-none"
-                                                    value="Domestik"
-                                                    checked={selectedAsalMitra.includes(
-                                                        "Domestik"
-                                                    )}
-                                                    onChange={() =>
-                                                        handleCheckboxChangeAsalMitra(
+                                                        ripple={false}
+                                                        id="item-1"
+                                                        containerProps={{
+                                                            className: "p-0",
+                                                        }}
+                                                        className="hover:before:content-none"
+                                                        value="Domestik"
+                                                        checked={selectedAsalMitra.includes(
                                                             "Domestik"
-                                                        )
-                                                    }
+                                                        )}
+                                                        onChange={() =>
+                                                            handleCheckboxChangeAsalMitra(
+                                                                "Domestik"
+                                                            )
+                                                        }
                                                     />
                                                     Domestik
                                                 </label>
@@ -494,19 +536,21 @@ export default function Dashboard({
                                                     className="flex cursor-pointer items-center gap-2 p-2"
                                                 >
                                                     <Checkbox
-                                                    ripple={false}
-                                                    id="item-2"
-                                                    containerProps={{ className: "p-0" }}
-                                                    className="hover:before:content-none"
-                                                    value="Internasional"
-                                                    checked={selectedAsalMitra.includes(
-                                                        "Internasional"
-                                                    )}
-                                                    onChange={() =>
-                                                        handleCheckboxChangeAsalMitra(
+                                                        ripple={false}
+                                                        id="item-2"
+                                                        containerProps={{
+                                                            className: "p-0",
+                                                        }}
+                                                        className="hover:before:content-none"
+                                                        value="Internasional"
+                                                        checked={selectedAsalMitra.includes(
                                                             "Internasional"
-                                                        )
-                                                    }
+                                                        )}
+                                                        onChange={() =>
+                                                            handleCheckboxChangeAsalMitra(
+                                                                "Internasional"
+                                                            )
+                                                        }
                                                     />
                                                     Internasional
                                                 </label>
@@ -519,13 +563,11 @@ export default function Dashboard({
                                         dismiss={{
                                             itemPress: false,
                                         }}
-                                        >
+                                    >
                                         <MenuHandler>
-                                            <Button
-                                                className="mt-1 flex items-center gap-4 w-full text-left bg-gray-100 rounded-md shadow-md border border-gray-300 hover:bg-gray-200 text-black"
-                                            >
-                                            Kriteria Mitra
-                                            <IoFilter />
+                                            <Button className="mt-1 flex items-center gap-4 w-full text-left bg-gray-100 rounded-md shadow-md border border-gray-300 hover:bg-gray-200 text-black">
+                                                Kriteria Mitra
+                                                <IoFilter />
                                             </Button>
                                         </MenuHandler>
                                         <MenuList>
@@ -536,19 +578,22 @@ export default function Dashboard({
                                                         className="flex cursor-pointer items-center gap-2 p-2"
                                                     >
                                                         <Checkbox
-                                                        ripple={false}
-                                                        id={`item-${item}`}
-                                                        containerProps={{ className: "p-0" }}
-                                                        className="hover:before:content-none"
-                                                        value={item}
-                                                        checked={selectedKriteriaMitra.includes(
-                                                            item
-                                                        )}
-                                                        onChange={() =>
-                                                            handleCheckboxChangeKriteriaMitra(
+                                                            ripple={false}
+                                                            id={`item-${item}`}
+                                                            containerProps={{
+                                                                className:
+                                                                    "p-0",
+                                                            }}
+                                                            className="hover:before:content-none"
+                                                            value={item}
+                                                            checked={selectedKriteriaMitra.includes(
                                                                 item
-                                                            )
-                                                        }
+                                                            )}
+                                                            onChange={() =>
+                                                                handleCheckboxChangeKriteriaMitra(
+                                                                    item
+                                                                )
+                                                            }
                                                         />
                                                         {item}
                                                     </label>
@@ -562,13 +607,11 @@ export default function Dashboard({
                                         dismiss={{
                                             itemPress: false,
                                         }}
-                                        >
+                                    >
                                         <MenuHandler>
-                                            <Button
-                                                className="mt-1 flex items-center gap-4 w-full text-left bg-gray-100 rounded-md shadow-md border border-gray-300 hover:bg-gray-200 text-black"
-                                            >
-                                            Jenis KS
-                                            <IoFilter />
+                                            <Button className="mt-1 flex items-center gap-4 w-full text-left bg-gray-100 rounded-md shadow-md border border-gray-300 hover:bg-gray-200 text-black">
+                                                Jenis KS
+                                                <IoFilter />
                                             </Button>
                                         </MenuHandler>
                                         <MenuList>
@@ -579,19 +622,22 @@ export default function Dashboard({
                                                         className="flex cursor-pointer items-center gap-2 p-2"
                                                     >
                                                         <Checkbox
-                                                        ripple={false}
-                                                        id={`item-${item}`}
-                                                        containerProps={{ className: "p-0" }}
-                                                        className="hover:before:content-none"
-                                                        value={item}
-                                                        checked={selectedJenisKS.includes(
-                                                            item
-                                                        )}
-                                                        onChange={() =>
-                                                            handleCheckboxChangeJenisKS(
+                                                            ripple={false}
+                                                            id={`item-${item}`}
+                                                            containerProps={{
+                                                                className:
+                                                                    "p-0",
+                                                            }}
+                                                            className="hover:before:content-none"
+                                                            value={item}
+                                                            checked={selectedJenisKS.includes(
                                                                 item
-                                                            )
-                                                        }
+                                                            )}
+                                                            onChange={() =>
+                                                                handleCheckboxChangeJenisKS(
+                                                                    item
+                                                                )
+                                                            }
                                                         />
                                                         {item}
                                                     </label>
@@ -605,13 +651,11 @@ export default function Dashboard({
                                         dismiss={{
                                             itemPress: false,
                                         }}
-                                        >
+                                    >
                                         <MenuHandler>
-                                            <Button
-                                                className="mt-1 flex items-center gap-4 w-full text-left bg-gray-100 rounded-md shadow-md border border-gray-300 hover:bg-gray-200 text-black"
-                                            >
-                                            Status
-                                            <IoFilter />
+                                            <Button className="mt-1 flex items-center gap-4 w-full text-left bg-gray-100 rounded-md shadow-md border border-gray-300 hover:bg-gray-200 text-black">
+                                                Status
+                                                <IoFilter />
                                             </Button>
                                         </MenuHandler>
                                         <MenuList>
@@ -621,19 +665,21 @@ export default function Dashboard({
                                                     className="flex cursor-pointer items-center gap-2 p-2"
                                                 >
                                                     <Checkbox
-                                                    ripple={false}
-                                                    id="item-1"
-                                                    containerProps={{ className: "p-0" }}
-                                                    className="hover:before:content-none"
-                                                    value="true"
-                                                    checked={selectedActive.includes(
-                                                        'true'
-                                                    )}
-                                                    onChange={() =>
-                                                        handleCheckboxChangeActive(
-                                                            'true'
-                                                        )
-                                                    }
+                                                        ripple={false}
+                                                        id="item-1"
+                                                        containerProps={{
+                                                            className: "p-0",
+                                                        }}
+                                                        className="hover:before:content-none"
+                                                        value="true"
+                                                        checked={selectedActive.includes(
+                                                            "true"
+                                                        )}
+                                                        onChange={() =>
+                                                            handleCheckboxChangeActive(
+                                                                "true"
+                                                            )
+                                                        }
                                                     />
                                                     Aktif
                                                 </label>
@@ -644,19 +690,21 @@ export default function Dashboard({
                                                     className="flex cursor-pointer items-center gap-2 p-2"
                                                 >
                                                     <Checkbox
-                                                    ripple={false}
-                                                    id="item-2"
-                                                    containerProps={{ className: "p-0" }}
-                                                    className="hover:before:content-none"
-                                                    value="false"
-                                                    checked={selectedActive.includes(
-                                                        'false'
-                                                    )}
-                                                    onChange={() =>
-                                                        handleCheckboxChangeActive(
-                                                            'false'
-                                                        )
-                                                    }
+                                                        ripple={false}
+                                                        id="item-2"
+                                                        containerProps={{
+                                                            className: "p-0",
+                                                        }}
+                                                        className="hover:before:content-none"
+                                                        value="false"
+                                                        checked={selectedActive.includes(
+                                                            "false"
+                                                        )}
+                                                        onChange={() =>
+                                                            handleCheckboxChangeActive(
+                                                                "false"
+                                                            )
+                                                        }
                                                     />
                                                     Inaktif
                                                 </label>
@@ -669,37 +717,45 @@ export default function Dashboard({
                                         dismiss={{
                                             itemPress: false,
                                         }}
-                                        >
+                                    >
                                         <MenuHandler>
-                                            <Button
-                                                className="mt-1 flex items-center gap-4 w-full text-left bg-gray-100 rounded-md shadow-md border border-gray-300 hover:bg-gray-200 text-black"
-                                            >
-                                            Tahun
-                                            <IoFilter />
+                                            <Button className="mt-1 flex items-center gap-4 w-full text-left bg-gray-100 rounded-md shadow-md border border-gray-300 hover:bg-gray-200 text-black">
+                                                Tahun
+                                                <IoFilter />
                                             </Button>
                                         </MenuHandler>
                                         <MenuList>
-                                        {years.map((year) => (
-                                            <MenuItem className="p-0" key={year}>
-                                                <label
-                                                    htmlFor={`item-${year}`}
-                                                    className="flex cursor-pointer items-center gap-2 p-2"
+                                            {years.map((year) => (
+                                                <MenuItem
+                                                    className="p-0"
+                                                    key={year}
                                                 >
-                                                    <Checkbox
-                                                        ripple={false}
-                                                        id={`item-${year}`}
-                                                        containerProps={{ className: "p-0" }}
-                                                        className="hover:before:content-none"
-                                                        value={year.toString()}
-                                                        checked={selectedTahun.includes(year.toString())}
-                                                        onChange={() =>
-                                                            handleCheckboxChangeTahun(year.toString())
-                                                        }
-                                                    />
-                                                    {year}
-                                                </label>
-                                            </MenuItem>
-                                        ))}
+                                                    <label
+                                                        htmlFor={`item-${year}`}
+                                                        className="flex cursor-pointer items-center gap-2 p-2"
+                                                    >
+                                                        <Checkbox
+                                                            ripple={false}
+                                                            id={`item-${year}`}
+                                                            containerProps={{
+                                                                className:
+                                                                    "p-0",
+                                                            }}
+                                                            className="hover:before:content-none"
+                                                            value={year.toString()}
+                                                            checked={selectedTahun.includes(
+                                                                year.toString()
+                                                            )}
+                                                            onChange={() =>
+                                                                handleCheckboxChangeTahun(
+                                                                    year.toString()
+                                                                )
+                                                            }
+                                                        />
+                                                        {year}
+                                                    </label>
+                                                </MenuItem>
+                                            ))}
                                         </MenuList>
                                     </Menu>
                                 </div>
