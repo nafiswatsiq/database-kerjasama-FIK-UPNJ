@@ -73,7 +73,7 @@ export default function CardAgreement({ data, user }) {
                     {formatDate(data.waktu_kerjasama_mulai)} -{" "}
                     {formatDate(data.waktu_kerjasama_selesai)}
                 </p>
-                <p className="font-medium text-xl">{data.nama_instansi}</p>
+                <p className="font-medium text-xl">{data.nama_mitra}</p>
                 <div className="flex gap-x-1 mt-3 items-center">
                     <Typography
                         variant="small"
