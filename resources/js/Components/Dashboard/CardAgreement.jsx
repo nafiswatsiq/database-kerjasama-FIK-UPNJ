@@ -61,7 +61,7 @@ export default function CardAgreement({ data, user }) {
                         alt=""
                         className="w-[56px] h-auto rounded-full"
                     />
-                    <p className="font-bold text-md mx-2">Nama Instansi</p>
+                    <p className="font-bold text-md mx-2">{data.nama_mitra}</p>
                     <Typography
                         variant="small"
                         className="bg-red-500 text-white rounded-xl px-3 py-1 text-xs font-medium"

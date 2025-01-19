@@ -8,6 +8,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import {
     DocumentPlusIcon,
     MagnifyingGlassIcon,
+    PlusIcon,
 } from "@heroicons/react/24/outline";
 import { Head, Link, router, usePage } from "@inertiajs/react";
 import {
@@ -365,7 +366,7 @@ export default function Dashboard({
                                     <BarChart
                                         dataSeries={seriesAsalMitra}
                                         dataCategories={[
-                                            "Domestik",
+                                            "Nasional",
                                             "Internasional",
                                         ]}
                                         horizontal={true}
@@ -465,7 +466,7 @@ export default function Dashboard({
                                         <div className="p-4 text-gray-900">
                                             <Chart
                                                 label={[
-                                                    "Domestik",
+                                                    "Nasional",
                                                     "Internasional",
                                                 ]}
                                                 series={Object.values(
@@ -517,17 +518,17 @@ export default function Dashboard({
                                                             className: "p-0",
                                                         }}
                                                         className="hover:before:content-none"
-                                                        value="Domestik"
+                                                        value="Nasional"
                                                         checked={selectedAsalMitra.includes(
-                                                            "Domestik"
+                                                            "Nasional"
                                                         )}
                                                         onChange={() =>
                                                             handleCheckboxChangeAsalMitra(
-                                                                "Domestik"
+                                                                "Nasional"
                                                             )
                                                         }
                                                     />
-                                                    Domestik
+                                                    Nasional
                                                 </label>
                                             </MenuItem>
                                             <MenuItem className="p-0">
@@ -850,17 +851,14 @@ export default function Dashboard({
                                     </div>
                                 </div>
                             </div>
-                            <div>
+                            <div className="mt-[10px]">
                                 {user.is_admin ? (
                                     <Link href={route("mitra.create")}>
                                         <Button
                                             color="green"
                                             className="flex items-center gap-x-2 py-2 text-nowrap "
                                         >
-                                            <DocumentPlusIcon className="h-6 w-6 text-white" />
-                                            <span className="text-white">
-                                                Tambah Mitra Baru
-                                            </span>
+                                            <PlusIcon className="h-6 w-6 text-white" />
                                         </Button>
                                     </Link>
                                 ) : null}

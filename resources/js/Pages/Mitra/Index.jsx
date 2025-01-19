@@ -5,6 +5,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import {
     ArrowLeftCircleIcon,
     ArrowRightCircleIcon,
+    PlusIcon,
 } from "@heroicons/react/24/solid";
 import { Head, Link, usePage } from "@inertiajs/react";
 import { format } from "date-fns";
@@ -23,7 +24,7 @@ export default function Index({
     seriesBidangKerjasama,
     galleries,
 }) {
-    console.log(mitra);
+    // console.log(mitra);
     const user = usePage().props.auth.user;
     const date = new Date();
     // console.log(agreementArchives);
@@ -45,7 +46,7 @@ export default function Index({
             <div className="py-10">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8 flex flex-col gap-y-8">
                     <div className="overflow-hidden">
-                        <div className="border-b-2 pb-4 border-gray-500 flex items-center">
+                        <div className="border-b-2 pb-4 border-gray-300 flex items-center">
                             <Link href={route("dashboard")}>
                                 <ArrowLeftCircleIcon className="h-10 w-10 text-orange-700" />
                             </Link>
@@ -357,11 +358,11 @@ export default function Index({
                             </h1>
                             <Link
                                 href={route(
-                                    "agreementarchives.index",
+                                    "agreementarchives.create",
                                     mitra.id
                                 )}
                             >
-                                <ArrowRightCircleIcon className="h-10 w-10 text-orange-700" />
+                                <PlusIcon className="h-8 w-8  p-1 text-white rounded-full bg-green-700" />
                             </Link>
                         </div>
                     </div>

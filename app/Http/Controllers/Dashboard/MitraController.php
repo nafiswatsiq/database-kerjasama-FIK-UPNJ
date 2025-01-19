@@ -123,7 +123,7 @@ class MitraController extends Controller
             'Abdimas' => 0,
         ];
         // Ambil data dari database dan hitung jumlah berdasarkan bidang_kerjasama
-        $countsBidangKerjasama = AgreementArchives::where('mitra_id', $mitraId)->select('bidang_kerjasama', DB::raw('count(*) as total'))
+        $countsBidangKerjasama = Mitra::where('id', $mitraId)->select('bidang_kerjasama', DB::raw('count(*) as total'))
             ->groupBy('bidang_kerjasama')
             ->pluck('total', 'bidang_kerjasama')
             ->toArray();

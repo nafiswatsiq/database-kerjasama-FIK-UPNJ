@@ -187,12 +187,6 @@ export default function Create({
                                     </div>
                                 </div>
                                 <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                                    <Typography
-                                        color="gray"
-                                        className="px-6 pt-6 font-normal text-lg"
-                                    >
-                                        Form Pengisian Mitra Kerjasama
-                                    </Typography>
                                     <div className="flex justify-center gap-10">
                                         <div className="flex flex-col items-center gap-3">
                                             <button
@@ -516,8 +510,8 @@ export default function Create({
                                                     }
                                                     options={[
                                                         {
-                                                            value: "Domestik",
-                                                            label: "Domestik",
+                                                            value: "Nasional",
+                                                            label: "Nasional",
                                                         },
                                                         {
                                                             value: "Internasional",

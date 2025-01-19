@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\AgreementArchives;
 use App\Notifications\ExpiredMitra;
 use App\Http\Controllers\Controller;
+use App\Models\Mitra;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,7 +17,6 @@ class AgreementArchivesController extends Controller
     public function index(Request $request, $mitraId)
     {
         $agreementArchives = AgreementArchives::query()->where('mitra_id', $mitraId);
-
         if ($request->get('search'))
         {
             $agreementArchives->where(function($query) use ($request) {
@@ -83,24 +83,34 @@ class AgreementArchivesController extends Controller
 
     public function create($mitraId)
     {
+        $mitra = Mitra::findOrFail($mitraId);
         return Inertia::render('AgreementArchives/Create', [
             'mitraId' => $mitraId,
+            'mitra' => $mitra,
+
         ]);
-    }  
-    
+    }
+
     public function store(Request $request, $mitraId)
     {
         $request->validate([
             'nama_instansi' => 'required',
             'nama_kegiatan' => 'required',
-            'no_ia_pihak_1' => 'required',
-            'no_ia_pihak_2' => 'required',
-            'pihak_1' => 'required',
-            'pihak_2' => 'required',
-            'bidang_kerjasama' => 'required',
-            'durasi_kerjasama' => 'required',
+            'deskripsi_kegiatan' => 'required',
+            'no_ia' => 'required',
             'waktu_kerjasama_mulai' => 'required',
             'waktu_kerjasama_selesai' => 'required',
+            'durasi_kerjasama' => 'required',
+            'tahun_ajaran' => 'required',
+            'tahun_ajaran1' => 'required',
+            'tahun_ajaran2' => 'required',
+            'jenis_kegiatan' => 'required',
+            'pihak_1' => 'required',
+            'pihak_2' => 'required',
+            'jabatan_pihak_1' => 'required',
+            'jabatan_pihak_2' => 'required',
+            'bentuk_kegiatan' => 'required',
+            'ringkasan_luaran' => 'required',
             'dokumen_kerjasama' => 'nullable|mimes:pdf,doc,docx',
             'dokumen_laporan' => 'nullable|mimes:pdf,doc,docx',
             'dokumentasi.*' => 'nullable|mimes:jepg,png,jpg',
@@ -116,19 +126,26 @@ class AgreementArchivesController extends Controller
             $namedokumen_laporan = $filedokumen_laporan->getClientOriginalName();
             $pathdokumen_laporan = $filedokumen_laporan->storeAs('/', $namedokumen_laporan, 'public');
         }
-        
+
         $agreementArchive = AgreementArchives::create([
             'mitra_id' => $mitraId,
             'nama_instansi' => $request->nama_instansi,
             'nama_kegiatan' => $request->nama_kegiatan,
-            'no_ia_pihak_1' => $request->no_ia_pihak_1,
-            'no_ia_pihak_2' => $request->no_ia_pihak_2,
-            'pihak_1' => $request->pihak_1,
-            'pihak_2' => $request->pihak_2,
-            'bidang_kerjasama' => $request->bidang_kerjasama,
-            'durasi_kerjasama' => $request->durasi_kerjasama,
+            'deskripsi_kegiatan' => $request->deskripsi_kegiatan,
+            'no_ia' => $request->no_ia,
             'waktu_kerjasama_mulai' => $request->waktu_kerjasama_mulai,
             'waktu_kerjasama_selesai' => $request->waktu_kerjasama_selesai,
+            'durasi_kerjasama' => $request->durasi_kerjasama,
+            'tahun_ajaran' => $request->tahun_ajaran,
+            'tahun_ajaran_1' => $request->tahun_ajaran1,
+            'tahun_ajaran_2' => $request->tahun_ajaran2,
+            'jenis_kegiatan' => $request->jenis_kegiatan,
+            'pihak_1' => $request->pihak_1,
+            'pihak_2' => $request->pihak_2,
+            'jabatan_pihak_1' => $request->jabatan_pihak_1,
+            'jabatan_pihak_2' => $request->jabatan_pihak_2,
+            'bentuk_kegiatan' => $request->bentuk_kegiatan,
+            'ringkasan_luaran' => $request->ringkasan_luaran,
             'dokumen_kerjasama' => $pathdokumen_kerjasama ?? null,
             'dokumen_laporan' => $pathdokumen_laporan ?? null,
         ]);
@@ -156,7 +173,7 @@ class AgreementArchivesController extends Controller
     public function download($file)
     {
         $check = Storage::disk('public')->get($file);
-        
+
         return response()->download('storage/'.$file);
     }
 
@@ -170,11 +187,12 @@ class AgreementArchivesController extends Controller
         ]);
     }
 
-    public function update(Request $request) 
+    public function update(Request $request)
     {
         $request->validate([
             'nama_instansi' => 'required',
             'nama_kegiatan' => 'required',
+            'deskripsi_kegiatan' => 'required',
             'no_ia_pihak_1' => 'required',
             'no_ia_pihak_2' => 'required',
             'pihak_1' => 'required',
@@ -189,10 +207,11 @@ class AgreementArchivesController extends Controller
         ]);
 
         $agreementArchive = AgreementArchives::findOrFail($request->id);
-        
+
         $agreementArchive->update([
             'nama_instansi' => $request->nama_instansi,
             'nama_kegiatan' => $request->nama_kegiatan,
+            'deskripsi_kegiatan' => $request->deskripsi_kegiatan,
             'no_ia_pihak_1' => $request->no_ia_pihak_1,
             'no_ia_pihak_2' => $request->no_ia_pihak_2,
             'pihak_1' => $request->pihak_1,
@@ -237,7 +256,7 @@ class AgreementArchivesController extends Controller
             $request->validate([
                 'dokumentasi.*' => 'nullable|mimes:jepg,png,jpg',
             ]);
-            
+
             $agreementArchive->documentations()->delete();
 
             foreach ($request->file('dokumentasi') as $file) {

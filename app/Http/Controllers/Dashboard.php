@@ -19,7 +19,7 @@ class Dashboard extends Controller
     {
         $mitra = Mitra::query();
         if (request('search')) {
-            $mitra = $mitra->where('nama_instansi', 'like', '%' . request('search') . '%');
+            $mitra = $mitra->where('nama_mitra', 'like', '%' . request('search') . '%');
         }
         if (request('asal_mitra')) {
             $mitra = $mitra->where('asal_mitra', request('asal_mitra'));
@@ -38,7 +38,7 @@ class Dashboard extends Controller
             ->map(function($item) {
                 return [
                     'id' => $item->id,
-                    'nama_instansi' => $item->nama_instansi,
+                    'nama_mitra' => $item->nama_mitra,
                     'logo' => $item->logo,
                     'tentang_mitra' => $item->tentang_mitra,
                     'bidang_kerjasama' => $item->bidang_kerjasama,
@@ -83,14 +83,14 @@ class Dashboard extends Controller
             'Abdimas' => 0,
         ];
         // Ambil data dari database dan hitung jumlah berdasarkan bidang_kerjasama
-        $countsBidangKerjasama = AgreementArchives::select('bidang_kerjasama', DB::raw('count(*) as total'))
+        $countsBidangKerjasama = Mitra::select('bidang_kerjasama', DB::raw('count(*) as total'))
                     ->groupBy('bidang_kerjasama')
                     ->pluck('total', 'bidang_kerjasama')
                     ->toArray();
         $seriesBidangKerjasama = $seriesBidangKerjasama = array_merge($defaultBidangKerjasama, $countsBidangKerjasama);
-            
+
         $defaultAsalMitra = [
-            'Domestik' => 0,
+            'Nasional' => 0,
             'Internasional' => 0,
         ];
         $countAsalMitra = Mitra::select('asal_mitra', DB::raw('count(*) as total'))
@@ -104,7 +104,7 @@ class Dashboard extends Controller
         foreach ($getGallery as $gallery) {
             foreach ($gallery->documentations as $documentation) {
                 $galleries[] = [
-                    'nama_instansi' => $gallery->nama_instansi,
+                    'nama_mitra' => $gallery->nama_mitra,
                     'date' => Carbon::parse($gallery->waktu_kerjasama_mulai)->format('d F Y'),
                     'path' => asset('storage/' . $documentation->path),
                 ];
