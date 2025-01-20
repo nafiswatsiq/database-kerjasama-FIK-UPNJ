@@ -280,17 +280,7 @@ export function Table({ mitraId, agreementArchives}) {
                     variant="small"
                     className="font-normal text-gray-600"
                   >
-                    {bidang_kerjasama === 'Pendidikan' ? 
-                      <span className="border px-3 py-0.5 rounded-md bg-purple-50 text-purple-500">
-                        {bidang_kerjasama}
-                      </span> : bidang_kerjasama === 'Pelatihan' ? 
-                      <span className="border px-3 py-0.5 rounded-md bg-blue-50 text-blue-500">
-                        {bidang_kerjasama}
-                      </span> : bidang_kerjasama === 'Abdimas' ? 
-                      <span className="border px-3 py-0.5 rounded-md bg-orange-50 text-orange-500">
-                        {bidang_kerjasama}
-                      </span> : null
-                    }
+                    {bidang_kerjasama}
                   </Typography>
                 </td>
                 {/* <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>

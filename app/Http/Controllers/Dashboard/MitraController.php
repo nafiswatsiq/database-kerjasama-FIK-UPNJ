@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Services\DocumentGenerator;
+use App\Traits\FormatNumberToText;
 use Carbon\Carbon;
 use App\Models\User;
 use Inertia\Inertia;
@@ -22,6 +24,8 @@ use Illuminate\Support\Facades\Notification;
 
 class MitraController extends Controller
 {
+    use FormatNumberToText;
+
     public function create()
     {
         $jenis_kerjasama = JenisKerjasama::all();
@@ -123,7 +127,7 @@ class MitraController extends Controller
             'Abdimas' => 0,
         ];
         // Ambil data dari database dan hitung jumlah berdasarkan bidang_kerjasama
-        $countsBidangKerjasama = AgreementArchives::where('mitra_id', $mitraId)->select('bidang_kerjasama', DB::raw('count(*) as total'))
+        $countsBidangKerjasama = Mitra::where('id', $mitraId)->select('bidang_kerjasama', DB::raw('count(*) as total'))
             ->groupBy('bidang_kerjasama')
             ->pluck('total', 'bidang_kerjasama')
             ->toArray();
@@ -195,8 +199,41 @@ class MitraController extends Controller
         }
         $documentNull = AgreementArchives::where('mitra_id', $mitraId)->whereNull('dokumen_kerjasama')->count();
 
+        $defaultJenisKegiatan = [];
+        foreach (JenisKegiatan::get() as $jenis) {
+            $defaultJenisKegiatan[$jenis->jenis_kegiatan] = 0;
+        }
+        
+        $countJenisKegiatan = AgreementArchives::where('mitra_id', $mitraId)->select('jenis_kegiatan', DB::raw('count(*) as total'))
+            ->groupBy('jenis_kegiatan')
+            ->pluck('total', 'jenis_kegiatan')
+            ->toArray();
+
+        $seriesJenisKegiatan = array_merge($defaultJenisKegiatan, $countJenisKegiatan);
+
+        $seriesYears = AgreementArchives::where('mitra_id', $mitraId)
+            ->select(DB::raw('YEAR(waktu_kerjasama_mulai) as year'), DB::raw('count(*) as total'))
+            ->groupBy('year')
+            ->pluck('total', 'year')
+            ->toArray();
+        
+        $defaultDurasiKerjasama = [];
+        foreach (DurasiKerjasamas::get() as $durasi) {
+            $defaultDurasiKerjasama[$durasi->durasi_kerjasama] = 0;
+        }
+
+        $countDurasiKerjasama = AgreementArchives::where('mitra_id', $mitraId)->select('durasi_kerjasama', DB::raw('count(*) as total'))
+            ->groupBy('durasi_kerjasama')
+            ->pluck('total', 'durasi_kerjasama')
+            ->toArray();
+
+        $seriesDurasiKerjasama = array_merge($defaultDurasiKerjasama, $countDurasiKerjasama);
+
+        $nullDocument = AgreementArchives::where('mitra_id', $mitraId)->whereNull('dokumen_kerjasama')->count();
+        $nullLaporan = AgreementArchives::where('mitra_id', $mitraId)->whereNull('dokumen_laporan')->count();
+
         return Inertia::render('Mitra/Index', [
-            'agreementArchives' => $agreementArchives->limit(5)->get(),
+            'agreementArchives' => $agreementArchives->get(),
             'mitra' => $mitra,
             'totalAgreement' => $totalAgreement,
             'activeAgreement' => $activeAgreement,
@@ -204,6 +241,11 @@ class MitraController extends Controller
             'documentNull' => $documentNull,
             'seriesBidangKerjasama' => $seriesBidangKerjasama,
             'galleries' => $galleries,
+            'seriesJenisKegiatan' => $seriesJenisKegiatan,
+            'seriesYears' => $seriesYears,
+            'seriesDurasiKerjasama' => $seriesDurasiKerjasama,
+            'nullDocument' => $nullDocument,
+            'nullLaporan' => $nullLaporan,
         ]);
     }
 
@@ -219,15 +261,14 @@ class MitraController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama_instansi' => 'required',
-            'deskripsi_instansi' => 'required',
-            'no_pks_pihak_1' => 'required',
-            'no_pks_pihak_2' => 'required',
-            'pihak_1' => 'required',
-            'pihak_2' => 'required',
+            'nama_mitra' => 'required',
+            'tentang_mitra' => 'required',
+            'no_pks_fik' => 'required',
+            'no_pks_mitra' => 'required',
+            'pic_fik' => 'required',
+            'pic_mitra' => 'required',
             'kriteria_mitra' => 'required',
             'asal_mitra' => 'required',
-            'ruang_lingkup_kerjasama' => 'required',
             'waktu_kerjasama_mulai' => 'required',
             'waktu_kerjasama_selesai' => 'required',
         ]);
@@ -241,15 +282,14 @@ class MitraController extends Controller
         }
 
         $mitra->update([
-            'nama_instansi' => $request->nama_instansi,
-            'deskripsi_instansi' => $request->deskripsi_instansi,
-            'no_pks_pihak_1' => $request->no_pks_pihak_1,
-            'no_pks_pihak_2' => $request->no_pks_pihak_2,
-            'pihak_1' => $request->pihak_1,
-            'pihak_2' => $request->pihak_2,
+            'nama_mitra' => $request->nama_mitra,
+            'tentang_mitra' => $request->tentang_mitra,
+            'no_pks_fik' => $request->no_pks_fik,
+            'no_pks_mitra' => $request->no_pks_mitra,
+            'pic_fik' => $request->pic_fik,
+            'pic_mitra' => $request->pic_mitra,
             'kriteria_mitra' => $request->kriteria_mitra,
             'asal_mitra' => $request->asal_mitra,
-            'ruang_lingkup_kerjasama' => $request->ruang_lingkup_kerjasama,
             'waktu_kerjasama_mulai' => $request->waktu_kerjasama_mulai,
             'waktu_kerjasama_selesai' => $request->waktu_kerjasama_selesai,
             'dokumen_pks' => $pathDokumenPks ?? $mitra->dokumen_pks,
@@ -271,5 +311,111 @@ class MitraController extends Controller
         $check = Storage::disk('public')->get($file);
 
         return response()->download('storage/' . $file);
+    }
+
+    public function draftDocumentPks($id)
+    {
+        $mitra = Mitra::findOrFail($id);
+
+        $logoMitra = public_path('storage/' . $mitra->logo);
+        $data = [
+            'tentang_mitra' => $mitra->tentang_mitra,
+            'nama_mitra' => $mitra->nama_mitra,
+            'no_pks_mitra' => $mitra->no_pks_mitra,
+            'no_pks_fik' => $mitra->no_pks_fik,
+            'hari' => Carbon::parse($mitra->hari_tanggal)->locale('id')->isoFormat('dddd'),
+            'tanggal' => Carbon::parse($mitra->hari_tanggal)->format('d'),
+            'bulan' => Carbon::parse($mitra->hari_tanggal)->locale('id')->isoFormat('MMMM'),
+            'tahun' => $this->convertYear(Carbon::parse($mitra->hari_tanggal)->format('Y')),
+            'lokasi' => $mitra->lokasi,
+            'pic_mitra' => $mitra->pic_mitra,
+            'jabatan_pic_mitra' => $mitra->jabatan_pic_mitra,
+            'pic_fik' => $mitra->pic_fik,
+            'jabatan_pic_fik' => $mitra->jabatan_pic_fik,
+            'hari_tanggal' => Carbon::parse($mitra->hari_tanggal)->locale('id')->isoFormat('D MMMM Y'),
+        ];
+
+        $pasal = [];
+        foreach ($mitra->pasal as $key => $pasalData) {
+            $isiPasal = '';
+            foreach ($pasalData->isiPasal as $isiData) {
+                $isiPasal .= $isiData->isi_pasal . '<w:br/>';
+            }
+            $pasal[] = [
+                'pasal' => $key + 1,
+                'judul_pasal' => $pasalData->judul_pasal,
+                'isi_pasal' => $isiPasal,
+            ];
+        }
+
+        $generated = (new DocumentGenerator())->draftDocumentPks($logoMitra, $data, $pasal);
+        
+        if ($generated) {
+            $mitra->update([
+                'draft' => $generated,
+            ]);
+            return response()->download($generated);
+        }
+    }
+
+    public function downloadLaporanMitra($id)
+    {
+        $mitra = Mitra::findOrFail($id);
+
+        $logoMitra = public_path('storage/' . $mitra->logo);
+        $data = [
+            'nama_mitra' => $mitra->nama_mitra,
+            'tentang_mitra' => $mitra->tentang_mitra,
+            'jenis_kerjasama' => $mitra->jenis_kerjasama,
+            'no_pks_mitra' => $mitra->no_pks_mitra,
+            'no_pks_fik' => $mitra->no_pks_fik,
+            'pic_mitra' => $mitra->pic_mitra,
+            'pic_fik' => $mitra->pic_fik,
+            'hari_tanggal' => Carbon::parse($mitra->hari_tanggal)->locale('id')->isoFormat('D MMMM Y'),
+            'tanggal_ia_terakhir' => $mitra->agreementArchives()?->latest()?->first()?->created_at?->locale('id')->isoFormat('D MMMM Y') ?? '-',
+            'total_ia' => $mitra->agreementArchives->count(),
+            'waktu_kerjasama_mulai' => Carbon::parse($mitra->waktu_kerjasama_mulai)->locale('id')->isoFormat('D MMMM Y'),
+            'waktu_kerjasama_selesai' => Carbon::parse($mitra->waktu_kerjasama_selesai)->locale('id')->isoFormat('D MMMM Y'),
+            'jumlah_tanpa_dokumen' => $mitra->agreementArchives->whereNull('dokumen_kerjasama')->count(),
+            'jumlah_belum_dilaporkan' => $mitra->agreementArchives->whereNull('dokumen_laporan')->count(),
+        ];
+        
+        $tableJenisIa = [];
+        foreach (JenisKegiatan::get() as $key => $jenis) {
+            $tableJenisIa[] = [
+                'no_jenis_ia' => $key + 1,
+                'jenis_ia' => $jenis->jenis_kegiatan,
+                'jumlah_ia' => $mitra->agreementArchives->where('jenis_kegiatan', $jenis->jenis_kegiatan)->count(),
+            ];
+        }
+
+        $tableTahunIa = [];
+        $getDataYear = AgreementArchives::with('mitra')
+            ->where('mitra_id', $id)
+            ->select(DB::raw('YEAR(waktu_kerjasama_mulai) as year'), DB::raw('count(*) as total'))
+            ->groupBy('year')
+            ->get();
+        foreach ($getDataYear as $key => $ia) {
+            $tableTahunIa[] = [
+                'no_tahun_ia' => $key + 1,
+                'tahun_ia' => $ia->year,
+                'jumlah_ia' => $ia->total,
+            ];
+        }
+
+        $tableLamaIa = [];
+        foreach (DurasiKerjasamas::get() as $key => $durasi) {
+            $tableLamaIa[] = [
+                'no_lama_ia' => $key + 1,
+                'lama_ia' => $durasi->durasi_kerjasama,
+                'jumlah_ia' => $mitra->agreementArchives->where('durasi_kerjasama', $durasi->durasi_kerjasama)->count(),
+            ];
+        }
+
+        $generated = (new DocumentGenerator())->laporanMitra($logoMitra, $data, $tableJenisIa, $tableTahunIa, $tableLamaIa);
+        
+        if ($generated) {
+            return response()->download($generated);
+        }
     }
 }

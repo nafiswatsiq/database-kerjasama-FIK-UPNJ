@@ -1,6 +1,6 @@
 import ReactApexChart from "react-apexcharts";
 
-export default function BarChart({ dataSeries, dataCategories, horizontal }){
+export default function BarChart({ dataSeries, dataCategories, horizontal, height }){
   const series = [{
     name: '',
     // data: [2, 3, 4, 10, 4, 3, 3, 2, 1, 8]
@@ -86,7 +86,7 @@ export default function BarChart({ dataSeries, dataCategories, horizontal }){
 
   return (
     <div>
-      <ReactApexChart options={options} series={series} type="bar" height={500} />
+      <ReactApexChart options={options} series={series} type="bar" height={height ?? 500} />
     </div>
   )
 }

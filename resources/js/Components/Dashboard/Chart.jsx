@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
-export function Chart({ label, series}) {
+export function Chart({ label, series, height}) {
   const chartOptions = {
     chart: {
       type: 'donut',
@@ -24,7 +24,7 @@ export function Chart({ label, series}) {
 
   return (
     <div>
-      <ReactApexChart options={chartOptions} series={chartSeries} type="donut" />
+      <ReactApexChart options={chartOptions} series={chartSeries} type="donut" height={height ?? 350}/>
     </div>
   )
 }

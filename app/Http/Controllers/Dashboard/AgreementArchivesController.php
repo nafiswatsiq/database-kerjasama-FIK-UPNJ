@@ -4,10 +4,15 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Models\User;
 use Inertia\Inertia;
+use App\Models\Mitra;
 use Illuminate\Http\Request;
+use App\Models\JenisKerjasama;
+use App\Models\DurasiKerjasamas;
 use App\Models\AgreementArchives;
 use App\Notifications\ExpiredMitra;
 use App\Http\Controllers\Controller;
+use App\Models\JenisKegiatan;
+use App\Services\DocumentGeneratorIa;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,7 +21,6 @@ class AgreementArchivesController extends Controller
     public function index(Request $request, $mitraId)
     {
         $agreementArchives = AgreementArchives::query()->where('mitra_id', $mitraId);
-
         if ($request->get('search'))
         {
             $agreementArchives->where(function($query) use ($request) {
@@ -83,64 +87,98 @@ class AgreementArchivesController extends Controller
 
     public function create($mitraId)
     {
+        $mitra = Mitra::findOrFail($mitraId);
+        $durasi = DurasiKerjasamas::get()
+            ->map(function($item) {
+                return [
+                    'value' => $item->durasi_kerjasama,
+                    'label' => $item->durasi_kerjasama,
+                ];
+            });
+
+        $jenisKegiatan = JenisKegiatan::get()
+            ->map(function($item) {
+                return [
+                    'value' => $item->jenis_kegiatan,
+                    'label' => $item->jenis_kegiatan,
+                ];
+            });
+
         return Inertia::render('AgreementArchives/Create', [
             'mitraId' => $mitraId,
+            'mitra' => $mitra,
+            'durasi' => $durasi,
+            'jenisKegiatan' => $jenisKegiatan,
         ]);
-    }  
-    
+    }
+
     public function store(Request $request, $mitraId)
     {
         $request->validate([
             'nama_instansi' => 'required',
             'nama_kegiatan' => 'required',
-            'no_ia_pihak_1' => 'required',
-            'no_ia_pihak_2' => 'required',
-            'pihak_1' => 'required',
-            'pihak_2' => 'required',
-            'bidang_kerjasama' => 'required',
-            'durasi_kerjasama' => 'required',
+            'deskripsi_kegiatan' => 'required',
+            'no_ia' => 'required',
             'waktu_kerjasama_mulai' => 'required',
             'waktu_kerjasama_selesai' => 'required',
-            'dokumen_kerjasama' => 'nullable|mimes:pdf,doc,docx',
-            'dokumen_laporan' => 'nullable|mimes:pdf,doc,docx',
-            'dokumentasi.*' => 'nullable|mimes:jepg,png,jpg',
+            'durasi_kerjasama' => 'required',
+            'tahun_ajaran' => 'required',
+            'tahun_ajaran1' => 'required',
+            'tahun_ajaran2' => 'required',
+            'jenis_kegiatan' => 'required',
+            'pihak_1' => 'required',
+            'pihak_2' => 'required',
+            'jabatan_pihak_1' => 'required',
+            'jabatan_pihak_2' => 'required',
+            'bentuk_kegiatan' => 'required',
+            'ringkasan_luaran' => 'required',
+            // 'dokumen_kerjasama' => 'nullable|mimes:pdf,doc,docx',
+            // 'dokumen_laporan' => 'nullable|mimes:pdf,doc,docx',
+            // 'dokumentasi.*' => 'nullable|mimes:jepg,png,jpg',
         ]);
 
-        if($request->file('dokumen_kerjasama')) {
-            $filedokumen_kerjasama = $request->file('dokumen_kerjasama');
-            $namedokumen_kerjasama = $filedokumen_kerjasama->getClientOriginalName();
-            $pathdokumen_kerjasama = $filedokumen_kerjasama->storeAs('/', $namedokumen_kerjasama, 'public');
-        }
-        if($request->file('dokumen_laporan')) {
-            $filedokumen_laporan = $request->file('dokumen_laporan');
-            $namedokumen_laporan = $filedokumen_laporan->getClientOriginalName();
-            $pathdokumen_laporan = $filedokumen_laporan->storeAs('/', $namedokumen_laporan, 'public');
-        }
-        
+        // if($request->file('dokumen_kerjasama')) {
+        //     $filedokumen_kerjasama = $request->file('dokumen_kerjasama');
+        //     $namedokumen_kerjasama = $filedokumen_kerjasama->getClientOriginalName();
+        //     $pathdokumen_kerjasama = $filedokumen_kerjasama->storeAs('/', $namedokumen_kerjasama, 'public');
+        // }
+        // if($request->file('dokumen_laporan')) {
+        //     $filedokumen_laporan = $request->file('dokumen_laporan');
+        //     $namedokumen_laporan = $filedokumen_laporan->getClientOriginalName();
+        //     $pathdokumen_laporan = $filedokumen_laporan->storeAs('/', $namedokumen_laporan, 'public');
+        // }
+
         $agreementArchive = AgreementArchives::create([
             'mitra_id' => $mitraId,
             'nama_instansi' => $request->nama_instansi,
             'nama_kegiatan' => $request->nama_kegiatan,
-            'no_ia_pihak_1' => $request->no_ia_pihak_1,
-            'no_ia_pihak_2' => $request->no_ia_pihak_2,
-            'pihak_1' => $request->pihak_1,
-            'pihak_2' => $request->pihak_2,
-            'bidang_kerjasama' => $request->bidang_kerjasama,
-            'durasi_kerjasama' => $request->durasi_kerjasama,
+            'deskripsi_kegiatan' => $request->deskripsi_kegiatan,
+            'no_ia' => $request->no_ia,
             'waktu_kerjasama_mulai' => $request->waktu_kerjasama_mulai,
             'waktu_kerjasama_selesai' => $request->waktu_kerjasama_selesai,
-            'dokumen_kerjasama' => $pathdokumen_kerjasama ?? null,
-            'dokumen_laporan' => $pathdokumen_laporan ?? null,
+            'durasi_kerjasama' => $request->durasi_kerjasama,
+            'tahun_ajaran' => $request->tahun_ajaran,
+            'tahun_ajaran_1' => $request->tahun_ajaran1,
+            'tahun_ajaran_2' => $request->tahun_ajaran2,
+            'jenis_kegiatan' => $request->jenis_kegiatan,
+            'pihak_1' => $request->pihak_1,
+            'pihak_2' => $request->pihak_2,
+            'jabatan_pihak_1' => $request->jabatan_pihak_1,
+            'jabatan_pihak_2' => $request->jabatan_pihak_2,
+            'bentuk_kegiatan' => $request->bentuk_kegiatan,
+            'ringkasan_luaran' => $request->ringkasan_luaran,
+            // 'dokumen_kerjasama' => $pathdokumen_kerjasama ?? null,
+            // 'dokumen_laporan' => $pathdokumen_laporan ?? null,
         ]);
 
-        if ($request->file('dokumentasi')) {
-            foreach ($request->file('dokumentasi') as $file) {
-                $path = $file->store('/', 'public');
-                $agreementArchive->documentations()->create([
-                    'path' => $path,
-                ]);
-            }
-        };
+        // if ($request->file('dokumentasi')) {
+        //     foreach ($request->file('dokumentasi') as $file) {
+        //         $path = $file->store('/', 'public');
+        //         $agreementArchive->documentations()->create([
+        //             'path' => $path,
+        //         ]);
+        //     }
+        // };
 
         return redirect()->route('agreementarchives.index', $mitraId);
     }
@@ -156,7 +194,7 @@ class AgreementArchivesController extends Controller
     public function download($file)
     {
         $check = Storage::disk('public')->get($file);
-        
+
         return response()->download('storage/'.$file);
     }
 
@@ -170,11 +208,12 @@ class AgreementArchivesController extends Controller
         ]);
     }
 
-    public function update(Request $request) 
+    public function update(Request $request)
     {
         $request->validate([
             'nama_instansi' => 'required',
             'nama_kegiatan' => 'required',
+            'deskripsi_kegiatan' => 'required',
             'no_ia_pihak_1' => 'required',
             'no_ia_pihak_2' => 'required',
             'pihak_1' => 'required',
@@ -189,10 +228,11 @@ class AgreementArchivesController extends Controller
         ]);
 
         $agreementArchive = AgreementArchives::findOrFail($request->id);
-        
+
         $agreementArchive->update([
             'nama_instansi' => $request->nama_instansi,
             'nama_kegiatan' => $request->nama_kegiatan,
+            'deskripsi_kegiatan' => $request->deskripsi_kegiatan,
             'no_ia_pihak_1' => $request->no_ia_pihak_1,
             'no_ia_pihak_2' => $request->no_ia_pihak_2,
             'pihak_1' => $request->pihak_1,
@@ -237,7 +277,7 @@ class AgreementArchivesController extends Controller
             $request->validate([
                 'dokumentasi.*' => 'nullable|mimes:jepg,png,jpg',
             ]);
-            
+
             $agreementArchive->documentations()->delete();
 
             foreach ($request->file('dokumentasi') as $file) {
@@ -259,5 +299,49 @@ class AgreementArchivesController extends Controller
             'mitraId' => $mitraId,
             'agreementArchive' => $agreementArchive,
         ]);
+    }
+
+    public function updateDokumenKerjasama(Request $request, $id)
+    {
+        $request->validate([
+            'dokumen_kerjasama' => 'required|mimes:pdf,doc,docx',
+        ]);
+
+        $file = $request->file('dokumen_kerjasama');
+        $filename = $file->getClientOriginalName();
+        $path = $file->storeAs('/', $filename, 'public');
+
+        $agreementArchive = AgreementArchives::findOrFail($id);
+        $agreementArchive->update([
+            'dokumen_kerjasama' => $path,
+        ]);
+
+        return redirect()->back();
+    }
+
+    public function downloadLaporanIa($id)
+    {
+        $agrement = AgreementArchives::with('mitra')->findOrFail($id);
+        $data = [
+            'nama_mitra' => $agrement->mitra->nama_mitra,
+            'nama_kegiatan' => $agrement->nama_kegiatan,
+            'durasi_kerjasama' => $agrement->durasi_kerjasama,
+            'tahun_ajaran' => $agrement->tahun_ajaran,
+            'tahun_ajaran_1' => $agrement->tahun_ajaran_1,
+            'tahun_ajaran_2' => $agrement->tahun_ajaran_2,
+            'no_pks_mitra' => $agrement->mitra->no_pks_mitra,
+            'no_ia' => $agrement->no_ia,
+            'jabatan_pic_mitra' => $agrement->mitra->jabatan_pic_mitra,
+            'jabatan_pic_fik' => $agrement->mitra->jabatan_pic_fik,
+            'pic_fik' => $agrement->mitra->pic_fik,
+            'tanggal' => date('Y-m-d'),
+            // Tambahkan data lain sesuai kebutuhan
+        ];
+
+        $generated = (new DocumentGeneratorIa())->generateDocument($data);
+        
+        if ($generated) {
+            return response()->download($generated);
+        }
     }
 }
