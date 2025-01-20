@@ -62,6 +62,7 @@ export default function Dashboard({
     const [filteredMitra, setFilteredMitra] = useState(mitra);
     console.log(mitra);
     const [filterChart, setFilterChart] = useState("kriteriaMitra");
+    const [filterPieChart, setFilterPieChart] = useState("kriteriaMitra");
 
     // Update URL with query parameters
     const updateURL = (queryParam, values) => {
@@ -461,19 +462,54 @@ export default function Dashboard({
                                     </div>
 
                                     <div className="mt-4 overflow-hidden h-fit p-4 bg-white sm:rounded-2xl shadow-lg">
-                                        <div className="border-2 border-gray-700 text-nowrap text-sm w-full p-2 rounded-full">
+                                        {/* <div className="border-2 border-gray-700 text-nowrap text-sm w-full p-2 rounded-full">
                                             <p>Berdasarkan kriteria mitra</p>
-                                        </div>
+                                        </div> */}
+                                        <Menu>
+                                            <MenuHandler>
+                                                <Button
+                                                    className="w-full bg-white border-2 text-gray-900"
+                                                >Filter</Button>
+                                            </MenuHandler>
+                                            <MenuList>
+                                                <MenuItem
+                                                    onClick={() => setFilterPieChart('kriteriaMitra')}
+                                                >Berdasarkan Kriteria Mitra</MenuItem>
+                                                <MenuItem
+                                                    onClick={() => setFilterPieChart('asal')}
+                                                >Berdasarkan Asal</MenuItem>
+                                                <MenuItem
+                                                    onClick={() => setFilterPieChart('active')}
+                                                >Berdasarkan Aktif</MenuItem>
+                                            </MenuList>
+                                        </Menu>
                                         <div className="p-4 text-gray-900">
-                                            <Chart
-                                                label={[
-                                                    "Nasional",
-                                                    "Internasional",
-                                                ]}
-                                                series={Object.values(
-                                                    seriesAsalMitra
-                                                )}
-                                            />
+                                            {filterPieChart == 'kriteriaMitra' ? (
+                                                <Chart
+                                                    label={Object.values(kriteriaMitra)}
+                                                    series={Object.values(
+                                                        seriesKriteriaMitra
+                                                    )}
+                                                />
+                                            ): filterPieChart == 'asal' ? (
+                                                <Chart
+                                                    label={[
+                                                        "Nasional",
+                                                        "Internasional",
+                                                    ]}
+                                                    series={Object.values(
+                                                        seriesAsalMitra
+                                                    )}
+                                                />
+                                            ): filterPieChart == 'active' ? (
+                                                <Chart
+                                                    label={["Active", "Inactive"]}
+                                                    series={[
+                                                        activeMitra,
+                                                        inactiveMitra,
+                                                    ]}
+                                                />
+                                            ): null}
                                         </div>
                                     </div>
                                 </div>
