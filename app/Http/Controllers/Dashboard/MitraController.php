@@ -193,17 +193,50 @@ class MitraController extends Controller
         } else {
             $agreementArchives->orderBy('waktu_kerjasama_mulai', 'desc');
         }
-        // $documentNull = AgreementArchives::where('mitra_id', $mitraId)->whereNull('dokumen_kerjasama')->count();
+        $documentNull = AgreementArchives::where('mitra_id', $mitraId)->whereNull('dokumen_kerjasama')->count();
 
+        $defaultJenisKegiatan = [];
+        foreach (JenisKegiatan::get() as $jenis) {
+            $defaultJenisKegiatan[$jenis->jenis_kegiatan] = 0;
+        }
+        
+        $countJenisKegiatan = AgreementArchives::where('mitra_id', $mitraId)->select('jenis_kegiatan', DB::raw('count(*) as total'))
+            ->groupBy('jenis_kegiatan')
+            ->pluck('total', 'jenis_kegiatan')
+            ->toArray();
+
+        $seriesJenisKegiatan = array_merge($defaultJenisKegiatan, $countJenisKegiatan);
+
+        $seriesYears = AgreementArchives::where('mitra_id', $mitraId)
+            ->select(DB::raw('YEAR(waktu_kerjasama_mulai) as year'), DB::raw('count(*) as total'))
+            ->groupBy('year')
+            ->pluck('total', 'year')
+            ->toArray();
+        
+        $defaultDurasiKerjasama = [];
+        foreach (DurasiKerjasamas::get() as $durasi) {
+            $defaultDurasiKerjasama[$durasi->durasi_kerjasama] = 0;
+        }
+
+        $countDurasiKerjasama = AgreementArchives::where('id', $mitraId)->select('durasi_kerjasama', DB::raw('count(*) as total'))
+            ->groupBy('durasi_kerjasama')
+            ->pluck('total', 'durasi_kerjasama')
+            ->toArray();
+
+        $seriesDurasiKerjasama = array_merge($defaultDurasiKerjasama, $countDurasiKerjasama);
+        
         return Inertia::render('Mitra/Index', [
             'agreementArchives' => $agreementArchives->get(),
             'mitra' => $mitra,
             'totalAgreement' => $totalAgreement,
             'activeAgreement' => $activeAgreement,
             'inactiveAgreement' => $inactiveAgreement,
-            // 'documentNull' => $documentNull,
+            'documentNull' => $documentNull,
             'seriesBidangKerjasama' => $seriesBidangKerjasama,
             'galleries' => $galleries,
+            'seriesJenisKegiatan' => $seriesJenisKegiatan,
+            'seriesYears' => $seriesYears,
+            'seriesDurasiKerjasama' => $seriesDurasiKerjasama,
         ]);
     }
 
