@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Services\DocumentGenerator;
+use App\Traits\FormatNumberToText;
 use Carbon\Carbon;
 use App\Models\User;
 use Inertia\Inertia;
@@ -22,6 +24,8 @@ use Illuminate\Support\Facades\Notification;
 
 class MitraController extends Controller
 {
+    use FormatNumberToText;
+
     public function create()
     {
         $jenis_kerjasama = JenisKerjasama::all();
@@ -218,13 +222,13 @@ class MitraController extends Controller
             $defaultDurasiKerjasama[$durasi->durasi_kerjasama] = 0;
         }
 
-        $countDurasiKerjasama = AgreementArchives::where('id', $mitraId)->select('durasi_kerjasama', DB::raw('count(*) as total'))
+        $countDurasiKerjasama = AgreementArchives::where('mitra_id', $mitraId)->select('durasi_kerjasama', DB::raw('count(*) as total'))
             ->groupBy('durasi_kerjasama')
             ->pluck('total', 'durasi_kerjasama')
             ->toArray();
 
         $seriesDurasiKerjasama = array_merge($defaultDurasiKerjasama, $countDurasiKerjasama);
-        
+
         return Inertia::render('Mitra/Index', [
             'agreementArchives' => $agreementArchives->get(),
             'mitra' => $mitra,
@@ -302,5 +306,106 @@ class MitraController extends Controller
         $check = Storage::disk('public')->get($file);
 
         return response()->download('storage/' . $file);
+    }
+
+    public function draftDocumentPks($id)
+    {
+        $mitra = Mitra::findOrFail($id);
+
+        $logoMitra = public_path('storage/' . $mitra->logo);
+        $data = [
+            'tentang_mitra' => $mitra->tentang_mitra,
+            'nama_mitra' => $mitra->nama_mitra,
+            'no_pks_mitra' => $mitra->no_pks_mitra,
+            'no_pks_fik' => $mitra->no_pks_fik,
+            'hari' => Carbon::parse($mitra->hari_tanggal)->locale('id')->isoFormat('dddd'),
+            'tanggal' => Carbon::parse($mitra->hari_tanggal)->format('d'),
+            'bulan' => Carbon::parse($mitra->hari_tanggal)->locale('id')->isoFormat('MMMM'),
+            'tahun' => $this->convertYear(Carbon::parse($mitra->hari_tanggal)->format('Y')),
+            'lokasi' => $mitra->lokasi,
+            'pic_mitra' => $mitra->pic_mitra,
+            'jabatan_pic_mitra' => $mitra->jabatan_pic_mitra,
+            'pic_fik' => $mitra->pic_fik,
+            'jabatan_pic_fik' => $mitra->jabatan_pic_fik,
+            'hari_tanggal' => Carbon::parse($mitra->hari_tanggal)->locale('id')->isoFormat('D MMMM Y'),
+        ];
+
+        $pasal = [];
+        foreach ($mitra->pasal as $key => $pasalData) {
+            $isiPasal = '';
+            foreach ($pasalData->isiPasal as $isiData) {
+                $isiPasal .= $isiData->isi_pasal . '<w:br/>';
+            }
+            $pasal[] = [
+                'pasal' => $key + 1,
+                'judul_pasal' => $pasalData->judul_pasal,
+                'isi_pasal' => $isiPasal,
+            ];
+        }
+
+        $generated = (new DocumentGenerator())->draftDocumentPks($logoMitra, $data, $pasal);
+        
+        if ($generated) {
+            $mitra->update([
+                'draft' => $generated,
+            ]);
+            return response()->download($generated);
+        }
+    }
+
+    public function downloadLaporanMitra($id)
+    {
+        $mitra = Mitra::findOrFail($id);
+
+        $logoMitra = public_path('storage/' . $mitra->logo);
+        $data = [
+            'nama_mitra' => $mitra->nama_mitra,
+            'tentang_mitra' => $mitra->tentang_mitra,
+            'jenis_kerjasama' => $mitra->jenis_kerjasama,
+            'no_pks_mitra' => $mitra->no_pks_mitra,
+            'no_pks_fik' => $mitra->no_pks_fik,
+            'pic_mitra' => $mitra->pic_mitra,
+            'pic_fik' => $mitra->pic_fik,
+            'hari_tanggal' => Carbon::parse($mitra->hari_tanggal)->locale('id')->isoFormat('D MMMM Y'),
+            'tanggal_ia_terakhir' => $mitra->agreementArchives()?->latest()?->first()?->created_at?->locale('id')->isoFormat('D MMMM Y') ?? '-',
+            'total_ia' => $mitra->agreementArchives->count(),
+            'waktu_kerjasama_mulai' => Carbon::parse($mitra->waktu_kerjasama_mulai)->locale('id')->isoFormat('D MMMM Y'),
+            'waktu_kerjasama_selesai' => Carbon::parse($mitra->waktu_kerjasama_selesai)->locale('id')->isoFormat('D MMMM Y'),
+            'jumlah_tanpa_dokumen' => $mitra->agreementArchives->whereNull('dokumen_kerjasama')->count(),
+            'jumlah_belum_dilaporkan' => $mitra->agreementArchives->whereNull('dokumen_laporan')->count(),
+        ];
+        
+        $tableJenisIa = [];
+        foreach (JenisKegiatan::get() as $key => $jenis) {
+            $tableJenisIa[] = [
+                'no_jenis_ia' => $key + 1,
+                'jenis_ia' => $jenis->jenis_kegiatan,
+                'jumlah_ia' => $mitra->agreementArchives->where('jenis_kegiatan', $jenis->jenis_kegiatan)->count(),
+            ];
+        }
+
+        $tableTahunIa = [];
+        foreach ($mitra->agreementArchives as $key => $ia) {
+            $tableTahunIa[] = [
+                'no_tahun_ia' => $key + 1,
+                'tahun_ia' => Carbon::parse($ia->waktu_kerjasama_mulai)->format('Y'),
+                'jumlah_ia' => 1,
+            ];
+        }
+
+        $tableLamaIa = [];
+        foreach (DurasiKerjasamas::get() as $key => $durasi) {
+            $tableLamaIa[] = [
+                'no_lama_ia' => $key + 1,
+                'lama_ia' => $durasi->durasi_kerjasama,
+                'jumlah_ia' => $mitra->agreementArchives->where('durasi_kerjasama', $durasi->durasi_kerjasama)->count(),
+            ];
+        }
+
+        $generated = (new DocumentGenerator())->laporanMitra($logoMitra, $data, $tableJenisIa, $tableTahunIa, $tableLamaIa);
+        
+        if ($generated) {
+            return response()->download($generated);
+        }
     }
 }

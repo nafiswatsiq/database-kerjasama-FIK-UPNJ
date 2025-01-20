@@ -30,7 +30,8 @@ return new class extends Migration
             $table->date('hari_tanggal');
             $table->date('waktu_kerjasama_mulai');
             $table->date('waktu_kerjasama_selesai');
-            // $table->string('dokumen_pks')->nullable();
+            $table->string('draft')->nullable();
+            $table->string('dokumen_pks')->nullable();
             $table->timestamps();
         });
     }

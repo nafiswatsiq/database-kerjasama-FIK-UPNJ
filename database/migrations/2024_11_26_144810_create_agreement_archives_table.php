@@ -37,6 +37,7 @@ return new class extends Migration
             // $table->string('kriteria_mitra');
             // $table->string('asal_mitra');
             // $table->string('ruang_lingkup_kerjasama');
+            $table->string('draft')->nullable();
             $table->string('dokumen_kerjasama')->nullable();
             $table->string('dokumen_laporan')->nullable();
             $table->timestamps();

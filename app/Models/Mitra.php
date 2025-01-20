@@ -30,6 +30,8 @@ class Mitra extends Model
         'hari_tanggal',
         'waktu_kerjasama_mulai',
         'waktu_kerjasama_selesai',
+        'draft',
+        'dokumen_pks'
     ];
 
     public function agreementArchives(): HasMany

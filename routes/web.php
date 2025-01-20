@@ -92,6 +92,9 @@ Route::middleware('auth')->group(function () {
         Route::patch('/list-master/jenis_kerjasama/update/{id}', [ListMasterController::class, 'jenis_kerjasama_update'])
             ->name('list-master.jenis_kerjasama_update');
 
+        Route::get('download-draft-pks/{id}', [MitraController::class, 'draftDocumentPks'])->name('download-draft-pks');
+        Route::get('download-laporan-mitra/{id}', [MitraController::class, 'downloadLaporanMitra'])->name('download-laporan-mitra');
+
 
         Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
     });

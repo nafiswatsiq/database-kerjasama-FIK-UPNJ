@@ -7,7 +7,7 @@ import {
     ArrowRightCircleIcon,
     PlusIcon,
 } from "@heroicons/react/24/solid";
-import { Head, Link, usePage } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
 import { format } from "date-fns";
 import { Table } from "./Utils/Table";
 import { DocumentArrowDownIcon } from "@heroicons/react/24/outline";
@@ -16,6 +16,7 @@ import ActionButton from "@/Components/Mitra/ActionButton";
 import BarChart from "@/Components/Dashboard/BarChart";
 import LineChart from "@/Components/Dashboard/LineChart";
 import { useState } from "react";
+import axios from "axios";
 
 export default function Index({
     agreementArchives,
@@ -31,6 +32,7 @@ export default function Index({
     seriesDurasiKerjasama
 }) {
     const [filterChart, setFilterChart] = useState("jenisIA");
+    const url = new URL(window.location.href);
 
     // console.log(mitra);
     const user = usePage().props.auth.user;
@@ -164,9 +166,13 @@ export default function Index({
 
                     {/* Section Button */}
                     <div className="grid grid-cols-2">
-                        <ActionButton content="Download Draft PKS" />
+                        <a href={route("download-draft-pks", mitra.id)} className="w-full px-4">
+                            <ActionButton content="Download Draft PKS"/>
+                        </a>
                         <ActionButton content="Upload File PKS Bertandatangan " />
-                        <ActionButton content="Download Laporan Kerjasama Mitra" />
+                        <a href={route("download-laporan-mitra", mitra.id)} className="w-full px-4">
+                            <ActionButton content="Download Laporan Kerjasama Mitra" />
+                        </a>
                         <ActionButton content="Donwload File PKS Bertandatangan" />
                     </div>
                     <div className="flex flex-row gap-4">
@@ -225,15 +231,15 @@ export default function Index({
                                         height={250}
                                     />
                                 ) : filterChart === "tahun" ? (
+                                    <LineChart
+                                        dataSeries={Object.values(seriesYears)} 
+                                        dataCategories={Object.keys(seriesYears)} 
+                                    />
+                                ) : filterChart === "lamaKegiatan" ? (
                                     <Chart
                                         label={Object.keys(seriesDurasiKerjasama)}
                                         series={Object.values(seriesDurasiKerjasama)} 
                                         height={250}
-                                    />
-                                ) : filterChart === "lamaKegiatan" ? (
-                                    <LineChart
-                                        dataSeries={Object.values(seriesYears)} 
-                                        dataCategories={Object.keys(seriesYears)} 
                                     />
                                 ) : null}
                             </div>

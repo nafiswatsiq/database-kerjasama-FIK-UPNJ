@@ -30,8 +30,9 @@ class AgreementArchives extends Model
         'jabatan_pihak_2',
         'bentuk_kegiatan',
         'ringkasan_luaran',
-        // 'dokumen_kerjasama',
-        // 'dokumen_laporan'
+        'draft',
+        'dokumen_kerjasama',
+        'dokumen_laporan'
     ];
 
     public function documentations(): HasMany
