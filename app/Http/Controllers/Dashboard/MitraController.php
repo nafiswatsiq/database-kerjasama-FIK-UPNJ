@@ -219,15 +219,14 @@ class MitraController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama_instansi' => 'required',
-            'deskripsi_instansi' => 'required',
-            'no_pks_pihak_1' => 'required',
-            'no_pks_pihak_2' => 'required',
-            'pihak_1' => 'required',
-            'pihak_2' => 'required',
+            'nama_mitra' => 'required',
+            'tentang_mitra' => 'required',
+            'no_pks_fik' => 'required',
+            'no_pks_mitra' => 'required',
+            'pic_fik' => 'required',
+            'pic_mitra' => 'required',
             'kriteria_mitra' => 'required',
             'asal_mitra' => 'required',
-            'ruang_lingkup_kerjasama' => 'required',
             'waktu_kerjasama_mulai' => 'required',
             'waktu_kerjasama_selesai' => 'required',
         ]);
@@ -241,15 +240,14 @@ class MitraController extends Controller
         }
 
         $mitra->update([
-            'nama_instansi' => $request->nama_instansi,
-            'deskripsi_instansi' => $request->deskripsi_instansi,
-            'no_pks_pihak_1' => $request->no_pks_pihak_1,
-            'no_pks_pihak_2' => $request->no_pks_pihak_2,
-            'pihak_1' => $request->pihak_1,
-            'pihak_2' => $request->pihak_2,
+            'nama_mitra' => $request->nama_mitra,
+            'tentang_mitra' => $request->tentang_mitra,
+            'no_pks_fik' => $request->no_pks_fik,
+            'no_pks_mitra' => $request->no_pks_mitra,
+            'pic_fik' => $request->pic_fik,
+            'pic_mitra' => $request->pic_mitra,
             'kriteria_mitra' => $request->kriteria_mitra,
             'asal_mitra' => $request->asal_mitra,
-            'ruang_lingkup_kerjasama' => $request->ruang_lingkup_kerjasama,
             'waktu_kerjasama_mulai' => $request->waktu_kerjasama_mulai,
             'waktu_kerjasama_selesai' => $request->waktu_kerjasama_selesai,
             'dokumen_pks' => $pathDokumenPks ?? $mitra->dokumen_pks,
