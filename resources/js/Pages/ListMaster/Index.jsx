@@ -87,6 +87,7 @@ export default function Index({
     };
 
     const handleCheckboxChange = async (id, isChecked) => {
+        console.log(id,isChecked);
         try {
             const response = await axios.post(
                 `/dashboard/list-master/kriteria_mitra/peringkat/${id}`,

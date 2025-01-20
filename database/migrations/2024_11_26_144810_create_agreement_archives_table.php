@@ -30,15 +30,15 @@ return new class extends Migration
             $table->string('jenis_kegiatan');
             $table->string('pihak_1');
             $table->string('pihak_2');
-            $table->string('jabtan_pihak_1');
-            $table->string('jabtan_pihak_2');
+            $table->string('jabatan_pihak_1');
+            $table->string('jabatan_pihak_2');
             $table->string('bentuk_kegiatan');
             $table->string('ringkasan_luaran');
             // $table->string('kriteria_mitra');
             // $table->string('asal_mitra');
             // $table->string('ruang_lingkup_kerjasama');
-            $table->string('dokumen_kerjasama')->nullable();
-            $table->string('dokumen_laporan')->nullable();
+            // $table->string('dokumen_kerjasama')->nullable();
+            // $table->string('dokumen_laporan')->nullable();
             $table->timestamps();
         });
     }

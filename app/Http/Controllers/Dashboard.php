@@ -62,7 +62,7 @@ class Dashboard extends Controller
         $totalAgreement = AgreementArchives::count();
         $activeAgreement = AgreementArchives::where('waktu_kerjasama_selesai', '>', now())->count();
         $inactiveAgreement = AgreementArchives::where('waktu_kerjasama_selesai', '<', now())->count();
-        $documentNull = AgreementArchives::whereNull('dokumen_kerjasama')->count();
+        // $documentNull = AgreementArchives::whereNull('dokumen_kerjasama')->count();
         $userRegistered = User::count();
 
         $defaultKriteriaMitra = [];
@@ -129,12 +129,15 @@ class Dashboard extends Controller
             return $countYears[$year] ?? 0;
         }, $years);
 
+        $mitraEndingInSixMonths = Mitra::whereBetween('waktu_kerjasama_selesai', [now(), now()->addMonths(6)])->count();
+        $mitraEndingInOneYear = Mitra::whereBetween('waktu_kerjasama_selesai', [now(), now()->addYear()])->count();
+
         return Inertia::render('Dashboard', [
             'mitra' => $mitra,
             'totalAgreement' => $totalAgreement,
             'activeAgreement' => $activeAgreement,
             'inactiveAgreement' => $inactiveAgreement,
-            'documentNull' => $documentNull,
+            // 'documentNull' => $documentNull,
             'userRegistered' => $userRegistered,
             'seriesKriteriaMitra' => $seriesKriteriaMitra,
             'seriesBidangKerjasama' => $seriesBidangKerjasama,
@@ -147,6 +150,8 @@ class Dashboard extends Controller
             'jenisKerjasama' => $jenisKerjasama,
             'years' => $years,
             'seriesYears' => $seriesYears,
+            'mitraEndingInSixMonths' => $mitraEndingInSixMonths,
+            'mitraEndingInOneYear' => $mitraEndingInOneYear,
         ]);
     }
 }

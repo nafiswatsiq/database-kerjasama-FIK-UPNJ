@@ -193,15 +193,15 @@ class MitraController extends Controller
         } else {
             $agreementArchives->orderBy('waktu_kerjasama_mulai', 'desc');
         }
-        $documentNull = AgreementArchives::where('mitra_id', $mitraId)->whereNull('dokumen_kerjasama')->count();
+        // $documentNull = AgreementArchives::where('mitra_id', $mitraId)->whereNull('dokumen_kerjasama')->count();
 
         return Inertia::render('Mitra/Index', [
-            'agreementArchives' => $agreementArchives->limit(5)->get(),
+            'agreementArchives' => $agreementArchives->get(),
             'mitra' => $mitra,
             'totalAgreement' => $totalAgreement,
             'activeAgreement' => $activeAgreement,
             'inactiveAgreement' => $inactiveAgreement,
-            'documentNull' => $documentNull,
+            // 'documentNull' => $documentNull,
             'seriesBidangKerjasama' => $seriesBidangKerjasama,
             'galleries' => $galleries,
         ]);

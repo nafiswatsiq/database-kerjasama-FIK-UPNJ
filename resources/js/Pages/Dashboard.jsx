@@ -34,7 +34,6 @@ export default function Dashboard({
     totalAgreement,
     activeAgreement,
     inactiveAgreement,
-    documentNull,
     userRegistered,
     seriesKriteriaMitra,
     seriesBidangKerjasama,
@@ -44,6 +43,8 @@ export default function Dashboard({
     jenisKerjasama,
     years,
     seriesYears,
+    mitraEndingInSixMonths,
+    mitraEndingInOneYear
 }) {
     const user = usePage().props.auth.user;
     const date = new Date();
@@ -430,7 +431,7 @@ export default function Dashboard({
                                         </div>
                                         <div class="flex flex-col items-center justify-center border-r border-gray-300 p-4">
                                             <p class="text-cyan-500 font-bold text-4xl">
-                                                15
+                                                {mitraEndingInSixMonths}
                                             </p>
                                             <p class="text-gray-700 font-medium text-sm mt-1 text-center">
                                                 Berakhir 6 Bulan lagi
@@ -438,7 +439,7 @@ export default function Dashboard({
                                         </div>
                                         <div class="flex flex-col items-center justify-center p-4">
                                             <p class="text-yellow-500 font-bold text-4xl">
-                                                06
+                                                {mitraEndingInOneYear}
                                             </p>
                                             <p class="text-gray-700 font-medium text-sm mt-1 text-center">
                                                 Berakhir 1 Tahun lagi
@@ -450,7 +451,7 @@ export default function Dashboard({
                                                     Total
                                                 </p>
                                                 <p class="text-orange-500 font-bold text-4xl">
-                                                    80
+                                                    {totalMitra}
                                                 </p>
                                                 <p class="text-gray-700 font-medium text-sm">
                                                     PKS

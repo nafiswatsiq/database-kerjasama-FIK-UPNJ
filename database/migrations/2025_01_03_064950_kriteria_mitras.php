@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('kriteria_mitras', function (Blueprint $table) {
             $table->id();
             $table->string('kriteria_mitra')->nullable();
+            $table->string('peringkat')->nullable();
             $table->timestamps();
         });
     }

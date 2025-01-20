@@ -17,7 +17,7 @@ import { ArrowLeftCircleIcon } from "@heroicons/react/24/solid";
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 
-export default function Create({ mitraId, mitra }) {
+export default function Create({ mitraId, mitra, durasi, jenisKegiatan }) {
     const { data, setData, post, processing, errors, reset, progress } =
         useForm({
             nama_instansi: mitra.nama_mitra,
@@ -37,29 +37,29 @@ export default function Create({ mitraId, mitra }) {
             jabatan_pihak_2: "",
             bentuk_kegiatan: "",
             ringkasan_luaran: "",
-            dokumen_kerjasama: null,
-            dokumen_laporan: null,
-            dokumentasi: [],
+            // dokumen_kerjasama: null,
+            // dokumen_laporan: null,
+            // dokumentasi: [],
         });
     const [swalShown, setSwalShown] = useState(false);
     const [urlDokumenKerjasama, setUrlDokumenKerjasama] = useState("");
     const [urlDokumenLaporan, setUrlDokumenLaporan] = useState("");
 
-    const onChangeDokumenKerjasama = (e) => {
-        setData("dokumen_kerjasama", e.target.files[0]);
-        const files = e.target.files;
-        files.length > 0 &&
-            setUrlDokumenKerjasama(URL.createObjectURL(files[0]));
-    };
-    const onChangeDokumenLaporan = (e) => {
-        setData("dokumen_laporan", e.target.files[0]);
-        const files = e.target.files;
-        files.length > 0 && setUrlDokumenLaporan(URL.createObjectURL(files[0]));
-    };
+    // const onChangeDokumenKerjasama = (e) => {
+    //     setData("dokumen_kerjasama", e.target.files[0]);
+    //     const files = e.target.files;
+    //     files.length > 0 &&
+    //         setUrlDokumenKerjasama(URL.createObjectURL(files[0]));
+    // };
+    // const onChangeDokumenLaporan = (e) => {
+    //     setData("dokumen_laporan", e.target.files[0]);
+    //     const files = e.target.files;
+    //     files.length > 0 && setUrlDokumenLaporan(URL.createObjectURL(files[0]));
+    // };
 
-    const handleFileChange = (e) => {
-        setData("dokumentasi", Array.from(e.target.files));
-    };
+    // const handleFileChange = (e) => {
+    //     setData("dokumentasi", Array.from(e.target.files));
+    // };
 
     const submit = (e) => {
         e.preventDefault();
@@ -286,7 +286,7 @@ export default function Create({ mitraId, mitra }) {
                                     className="w-44 text-lg"
                                 />
                                 <div className="flex-auto">
-                                    <TextInput
+                                    {/* <TextInput
                                         id="durasi_kerjasama"
                                         type="text"
                                         name="durasi_kerjasama"
@@ -299,6 +299,20 @@ export default function Create({ mitraId, mitra }) {
                                                 e.target.value
                                             )
                                         }
+                                    /> */}
+                                    <SelectInput
+                                        id="durasi_kerjasama"
+                                        name="durasi_kerjasama"
+                                        value={data.durasi_kerjasama}
+                                        className="mt-1 block w-full"
+                                        autoComplete="off"
+                                        onChange={(e) =>
+                                            setData(
+                                                "durasi_kerjasama",
+                                                e.target.value
+                                            )
+                                        }
+                                        options={durasi}
                                     />
 
                                     <InputError
@@ -398,20 +412,7 @@ export default function Create({ mitraId, mitra }) {
                                                 e.target.value
                                             )
                                         }
-                                        options={[
-                                            {
-                                                value: "Pendidikan",
-                                                label: "Pendidikan",
-                                            },
-                                            {
-                                                value: "Pelatihan",
-                                                label: "Pelatihan",
-                                            },
-                                            {
-                                                value: "Abdimas",
-                                                label: "Abdimas",
-                                            },
-                                        ]}
+                                        options={jenisKegiatan}
                                     />
 
                                     <InputError
@@ -581,7 +582,7 @@ export default function Create({ mitraId, mitra }) {
                                     />
                                 </div>
                             </div>
-                            <div className="flex items-center mt-3">
+                            {/* <div className="flex items-center mt-3">
                                 <InputLabel
                                     value="Dokumen I.A"
                                     className="w-44 text-lg"
@@ -711,7 +712,7 @@ export default function Create({ mitraId, mitra }) {
                                         className="mt-2"
                                     />
                                 </div>
-                            </div>
+                            </div> */}
                             <div className="mt-4 flex justify-end">
                                 <Button
                                     color="green"

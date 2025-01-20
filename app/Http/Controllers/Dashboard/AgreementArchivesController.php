@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Models\User;
 use Inertia\Inertia;
+use App\Models\Mitra;
 use Illuminate\Http\Request;
+use App\Models\JenisKerjasama;
+use App\Models\DurasiKerjasamas;
 use App\Models\AgreementArchives;
 use App\Notifications\ExpiredMitra;
 use App\Http\Controllers\Controller;
-use App\Models\Mitra;
+use App\Models\JenisKegiatan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -84,10 +87,27 @@ class AgreementArchivesController extends Controller
     public function create($mitraId)
     {
         $mitra = Mitra::findOrFail($mitraId);
+        $durasi = DurasiKerjasamas::get()
+            ->map(function($item) {
+                return [
+                    'value' => $item->durasi_kerjasama,
+                    'label' => $item->durasi_kerjasama,
+                ];
+            });
+
+        $jenisKegiatan = JenisKegiatan::get()
+            ->map(function($item) {
+                return [
+                    'value' => $item->jenis_kegiatan,
+                    'label' => $item->jenis_kegiatan,
+                ];
+            });
+
         return Inertia::render('AgreementArchives/Create', [
             'mitraId' => $mitraId,
             'mitra' => $mitra,
-
+            'durasi' => $durasi,
+            'jenisKegiatan' => $jenisKegiatan,
         ]);
     }
 
@@ -111,21 +131,21 @@ class AgreementArchivesController extends Controller
             'jabatan_pihak_2' => 'required',
             'bentuk_kegiatan' => 'required',
             'ringkasan_luaran' => 'required',
-            'dokumen_kerjasama' => 'nullable|mimes:pdf,doc,docx',
-            'dokumen_laporan' => 'nullable|mimes:pdf,doc,docx',
-            'dokumentasi.*' => 'nullable|mimes:jepg,png,jpg',
+            // 'dokumen_kerjasama' => 'nullable|mimes:pdf,doc,docx',
+            // 'dokumen_laporan' => 'nullable|mimes:pdf,doc,docx',
+            // 'dokumentasi.*' => 'nullable|mimes:jepg,png,jpg',
         ]);
 
-        if($request->file('dokumen_kerjasama')) {
-            $filedokumen_kerjasama = $request->file('dokumen_kerjasama');
-            $namedokumen_kerjasama = $filedokumen_kerjasama->getClientOriginalName();
-            $pathdokumen_kerjasama = $filedokumen_kerjasama->storeAs('/', $namedokumen_kerjasama, 'public');
-        }
-        if($request->file('dokumen_laporan')) {
-            $filedokumen_laporan = $request->file('dokumen_laporan');
-            $namedokumen_laporan = $filedokumen_laporan->getClientOriginalName();
-            $pathdokumen_laporan = $filedokumen_laporan->storeAs('/', $namedokumen_laporan, 'public');
-        }
+        // if($request->file('dokumen_kerjasama')) {
+        //     $filedokumen_kerjasama = $request->file('dokumen_kerjasama');
+        //     $namedokumen_kerjasama = $filedokumen_kerjasama->getClientOriginalName();
+        //     $pathdokumen_kerjasama = $filedokumen_kerjasama->storeAs('/', $namedokumen_kerjasama, 'public');
+        // }
+        // if($request->file('dokumen_laporan')) {
+        //     $filedokumen_laporan = $request->file('dokumen_laporan');
+        //     $namedokumen_laporan = $filedokumen_laporan->getClientOriginalName();
+        //     $pathdokumen_laporan = $filedokumen_laporan->storeAs('/', $namedokumen_laporan, 'public');
+        // }
 
         $agreementArchive = AgreementArchives::create([
             'mitra_id' => $mitraId,
@@ -146,18 +166,18 @@ class AgreementArchivesController extends Controller
             'jabatan_pihak_2' => $request->jabatan_pihak_2,
             'bentuk_kegiatan' => $request->bentuk_kegiatan,
             'ringkasan_luaran' => $request->ringkasan_luaran,
-            'dokumen_kerjasama' => $pathdokumen_kerjasama ?? null,
-            'dokumen_laporan' => $pathdokumen_laporan ?? null,
+            // 'dokumen_kerjasama' => $pathdokumen_kerjasama ?? null,
+            // 'dokumen_laporan' => $pathdokumen_laporan ?? null,
         ]);
 
-        if ($request->file('dokumentasi')) {
-            foreach ($request->file('dokumentasi') as $file) {
-                $path = $file->store('/', 'public');
-                $agreementArchive->documentations()->create([
-                    'path' => $path,
-                ]);
-            }
-        };
+        // if ($request->file('dokumentasi')) {
+        //     foreach ($request->file('dokumentasi') as $file) {
+        //         $path = $file->store('/', 'public');
+        //         $agreementArchive->documentations()->create([
+        //             'path' => $path,
+        //         ]);
+        //     }
+        // };
 
         return redirect()->route('agreementarchives.index', $mitraId);
     }

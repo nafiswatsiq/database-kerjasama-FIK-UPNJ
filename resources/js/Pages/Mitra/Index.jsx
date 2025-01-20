@@ -20,7 +20,7 @@ export default function Index({
     totalAgreement,
     activeAgreement,
     inactiveAgreement,
-    documentNull,
+    // documentNull,
     seriesBidangKerjasama,
     galleries,
 }) {
@@ -257,7 +257,7 @@ export default function Index({
                                 </div>
                             </div>
                         </Link>
-                        <Link
+                        {/* <Link
                             href={
                                 route("agreementarchives.index", mitra.id) +
                                 "?filter=no-document&page=1"
@@ -309,7 +309,7 @@ export default function Index({
                                     </p>
                                 </div>
                             </div>
-                        </Link>
+                        </Link> */}
                         <div className="overflow-hidden bg-white sm:rounded-2xl shadow-lg">
                             <div className="p-4 text-gray-900">
                                 <Chart
