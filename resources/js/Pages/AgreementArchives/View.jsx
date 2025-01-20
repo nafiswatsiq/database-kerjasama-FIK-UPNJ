@@ -19,10 +19,12 @@ import {
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import React from "react";
+import UploadButton from "@/Components/AgreementArchives/UploadButton";
 
 const drafIA = "../../../../dokumen/template_draft_ia.docx";
 
 export default function Edit({ mitraId, agreementArchive }) {
+    console.log(agreementArchive)
     const { data } = useForm({
         nama_instansi: agreementArchive.nama_instansi,
         nama_kegiatan: agreementArchive.nama_kegiatan,
@@ -166,9 +168,11 @@ export default function Edit({ mitraId, agreementArchive }) {
                                 content="Download Draft IA"
                                 link={drafIA}
                             ></DownloadButton>
-                            <DownloadButton content="Download Draf IA Bertanda tangan" />
-                            <DownloadButton content="Upload Dokumen IA" />
-                            <DownloadButton content="Download Laporan IA Bertanda tangan" />
+                            <DownloadButton content="Download Draf IA Bertanda tangan" link={route('agreementarchives.download', agreementArchive.dokumen_kerjasama)}/>
+                            <UploadButton content="Upload Dokumen IA" agrementId={agreementArchive.id}/>
+                            <div className="">
+                                <DownloadButton content="Download Laporan IA Bertanda tangan" link={route('download-laporan-ia', agreementArchive.id)}/>
+                            </div>
                         </div>
 
                         <div className="py-2">

@@ -12,6 +12,7 @@ use App\Models\AgreementArchives;
 use App\Notifications\ExpiredMitra;
 use App\Http\Controllers\Controller;
 use App\Models\JenisKegiatan;
+use App\Services\DocumentGeneratorIa;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -298,5 +299,49 @@ class AgreementArchivesController extends Controller
             'mitraId' => $mitraId,
             'agreementArchive' => $agreementArchive,
         ]);
+    }
+
+    public function updateDokumenKerjasama(Request $request, $id)
+    {
+        $request->validate([
+            'dokumen_kerjasama' => 'required|mimes:pdf,doc,docx',
+        ]);
+
+        $file = $request->file('dokumen_kerjasama');
+        $filename = $file->getClientOriginalName();
+        $path = $file->storeAs('/', $filename, 'public');
+
+        $agreementArchive = AgreementArchives::findOrFail($id);
+        $agreementArchive->update([
+            'dokumen_kerjasama' => $path,
+        ]);
+
+        return redirect()->back();
+    }
+
+    public function downloadLaporanIa($id)
+    {
+        $agrement = AgreementArchives::with('mitra')->findOrFail($id);
+        $data = [
+            'nama_mitra' => $agrement->mitra->nama_mitra,
+            'nama_kegiatan' => $agrement->nama_kegiatan,
+            'durasi_kerjasama' => $agrement->durasi_kerjasama,
+            'tahun_ajaran' => $agrement->tahun_ajaran,
+            'tahun_ajaran_1' => $agrement->tahun_ajaran_1,
+            'tahun_ajaran_2' => $agrement->tahun_ajaran_2,
+            'no_pks_mitra' => $agrement->mitra->no_pks_mitra,
+            'no_ia' => $agrement->no_ia,
+            'jabatan_pic_mitra' => $agrement->mitra->jabatan_pic_mitra,
+            'jabatan_pic_fik' => $agrement->mitra->jabatan_pic_fik,
+            'pic_fik' => $agrement->mitra->pic_fik,
+            'tanggal' => date('Y-m-d'),
+            // Tambahkan data lain sesuai kebutuhan
+        ];
+
+        $generated = (new DocumentGeneratorIa())->generateDocument($data);
+        
+        if ($generated) {
+            return response()->download($generated);
+        }
     }
 }

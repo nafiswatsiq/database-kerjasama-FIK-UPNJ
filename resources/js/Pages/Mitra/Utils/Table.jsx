@@ -206,6 +206,15 @@ export function Table({ mitraId, agreementArchives }) {
                                 Lap I.A
                             </Typography>
                         </th>
+                        <th className="border-b border-gray-300 pb-4 pt-10">
+                            <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-bold leading-none"
+                            >
+                                Action
+                            </Typography>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -218,6 +227,7 @@ export function Table({ mitraId, agreementArchives }) {
                                 jenis_kegiatan,
                                 waktu_kerjasama_mulai,
                                 waktu_kerjasama_selesai,
+                                draft,
                                 dokumen_kerjasama,
                                 dokumen_laporan,
                             },
@@ -275,20 +285,7 @@ export function Table({ mitraId, agreementArchives }) {
                                             variant="small"
                                             className="font-normal text-gray-600"
                                         >
-                                            {jenis_kegiatan === "Pendidikan" ? (
-                                                <span className="border px-3 py-0.5 rounded-md bg-purple-50 text-purple-500">
-                                                    {jenis_kegiatan}
-                                                </span>
-                                            ) : jenis_kegiatan ===
-                                              "Pelatihan" ? (
-                                                <span className="border px-3 py-0.5 rounded-md bg-blue-50 text-blue-500">
-                                                    {jenis_kegiatan}
-                                                </span>
-                                            ) : jenis_kegiatan === "Abdimas" ? (
-                                                <span className="border px-3 py-0.5 rounded-md bg-orange-50 text-orange-500">
-                                                    {jenis_kegiatan}
-                                                </span>
-                                            ) : null}
+                                            {jenis_kegiatan}
                                         </Typography>
                                     </td>
                                     {/* <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>
@@ -342,6 +339,20 @@ export function Table({ mitraId, agreementArchives }) {
                                                 "dd MMMM yyyy"
                                             )}
                                         </Typography>
+                                    </td>
+                                    <td className={`${classes} w-16`}>
+                                        <div className="flex justify-start gap-x-3">
+                                            {draft ? (
+                                                <a
+                                                    href={route(
+                                                        "agreementarchives.download",
+                                                        draft
+                                                    )}
+                                                >
+                                                    <DocumentArrowDownIcon className="h-5 w-5 text-green-500" />
+                                                </a>
+                                            ) : null}
+                                        </div>
                                     </td>
                                     <td className={`${classes} w-16`}>
                                         <div className="flex justify-start gap-x-3">
