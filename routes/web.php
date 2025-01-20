@@ -94,6 +94,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('download-draft-pks/{id}', [MitraController::class, 'draftDocumentPks'])->name('download-draft-pks');
         Route::get('download-laporan-mitra/{id}', [MitraController::class, 'downloadLaporanMitra'])->name('download-laporan-mitra');
+        Route::get('download-laporan-dashboard', [Dashboard::class, 'downloadLaporanDashboard'])->name('download-laporan-dashboard');
 
 
         Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\AgreementArchives;
 use App\Models\JenisKerjasama;
 use App\Models\Mitra;
+use App\Services\DocumentGeneratorDashboard;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -153,5 +154,14 @@ class Dashboard extends Controller
             'mitraEndingInSixMonths' => $mitraEndingInSixMonths,
             'mitraEndingInOneYear' => $mitraEndingInOneYear,
         ]);
+    }
+
+    public function downloadLaporanDashboard()
+    {
+        $generated = (new DocumentGeneratorDashboard())->generateDocument();
+        
+        if ($generated) {
+            return response()->download($generated);
+        }
     }
 }

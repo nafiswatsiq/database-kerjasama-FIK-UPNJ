@@ -513,9 +513,9 @@ export default function Dashboard({
                                         </div>
                                     </div>
                                 </div>
-                                <button className="bg-green-400 border-2 border-gray-400 w-full h-fit py-2 text-white P-3 rounded-lg">
+                                <a href={route('download-laporan-dashboard')} className="bg-green-400 border-2 border-gray-400 w-full h-fit py-2 text-white P-3 rounded-lg text-center">
                                     DOWNLOAD REPORT DASHBOARD & KERJA SAMA
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>
