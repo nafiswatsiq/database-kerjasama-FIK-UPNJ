@@ -29,11 +29,10 @@ class AgreementArchivesController extends Controller
             $agreementArchives->where(function($query) use ($request) {
             $query->where('nama_instansi', 'like', '%'.$request->get('search').'%')
                 ->orWhere('nama_kegiatan', 'like', '%'.$request->get('search').'%')
-                ->orWhere('no_ia_pihak_1', 'like', '%'.$request->get('search').'%')
-                ->orWhere('no_ia_pihak_2', 'like', '%'.$request->get('search').'%')
+                ->orWhere('no_ia', 'like', '%'.$request->get('search').'%')
                 ->orWhere('pihak_1', 'like', '%'.$request->get('search').'%')
                 ->orWhere('pihak_2', 'like', '%'.$request->get('search').'%')
-                ->orWhere('bidang_kerjasama', 'like', '%'.$request->get('search').'%');
+                ->orWhere('jenis_kegiatan', 'like', '%'.$request->get('search').'%');
                 // ->orWhere('kriteria_mitra', 'like', '%'.$request->get('search').'%')
                 // ->orWhere('asal_mitra', 'like', '%'.$request->get('search').'%');
             });

@@ -57,6 +57,8 @@ class Dashboard extends Controller
                     'waktu_kerjasama_mulai' => $item->waktu_kerjasama_mulai,
                     'waktu_kerjasama_selesai' => $item->waktu_kerjasama_selesai,
                     'active' => $item->waktu_kerjasama_selesai > now() ? 'true' : 'false',
+                    'draft' => $item->draft,
+                    'dokumen_pks' => $item->dokumen_pks,
                 ];
             });
 

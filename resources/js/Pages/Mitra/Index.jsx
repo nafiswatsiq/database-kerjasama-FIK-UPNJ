@@ -267,9 +267,11 @@ export default function Index({
 
                     <div className="overflow-hidden">
                         <div className="border-t-2 py-4 border-gray-500 flex justify-between items-center">
-                            <h1 className="font-medium text-xl uppercase">
-                                Galeri I.A
-                            </h1>
+                            <Link href={route("agreementarchives.index", mitra.id)}>
+                                <h1 className="font-medium text-xl uppercase">
+                                    Galeri I.A
+                                </h1>
+                            </Link>
                             <Link
                                 href={route(
                                     "agreementarchives.create",
