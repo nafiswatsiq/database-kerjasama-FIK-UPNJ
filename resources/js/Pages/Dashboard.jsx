@@ -60,7 +60,6 @@ export default function Dashboard({
     const [selectedActive, setSelectedActive] = useState([]);
     const [selectedTahun, setSelectedTahun] = useState([]);
     const [filteredMitra, setFilteredMitra] = useState(mitra);
-    console.log(mitra);
     const [filterChart, setFilterChart] = useState("kriteriaMitra");
     const [filterPieChart, setFilterPieChart] = useState("kriteriaMitra");
 

@@ -1,6 +1,6 @@
 import { Chart } from "@/Components/Dashboard/Chart";
 import { Gallery } from "@/Components/Dashboard/Gallery";
-import { Button, Menu, MenuHandler, MenuItem, MenuList, Typography } from "@material-tailwind/react";
+import { Button, Checkbox, Menu, MenuHandler, MenuItem, MenuList, Typography } from "@material-tailwind/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import {
     ArrowLeftCircleIcon,
@@ -18,6 +18,7 @@ import LineChart from "@/Components/Dashboard/LineChart";
 import { useState } from "react";
 import axios from "axios";
 import UploadButton from "./Utils/UploadButton";
+import { IoFilter } from "react-icons/io5";
 
 export default function Index({
     agreementArchives,
@@ -32,10 +33,20 @@ export default function Index({
     seriesYears,
     seriesDurasiKerjasama,
     nullDocument,
-    nullLaporan
+    nullLaporan,
+    jenisIa,
+    durasi,
+    tahun,
 }) {
     const [filterChart, setFilterChart] = useState("jenisIA");
     const url = new URL(window.location.href);
+
+    const [filteredAgrement, setFilteredAgrement] = useState(agreementArchives);
+    const [searchAgrement, setSearchAgrement] = useState("");
+    const [selectedJenisIa, setSelectedJenisIa] = useState([]);
+    const [selectedStatus, setSelectedStatus] = useState([]);
+    const [selectedTahun, setSelectedTahun] = useState([]);
+    const [selectedDurasi, setSelectedDurasi] = useState([]);
 
     // console.log(mitra);
     const user = usePage().props.auth.user;
@@ -52,6 +63,106 @@ export default function Index({
         const year = date.getFullYear();
         return `${day}/${month}/${year}`;
     };
+
+    const updateURL = (queryParam, values) => {
+        const url = new URL(window.location.href);
+        if (values.length > 0) {
+            url.searchParams.set(queryParam, values.join(","));
+        } else {
+            url.searchParams.delete(queryParam);
+        }
+        window.history.pushState({}, "", url.toString());
+    };
+
+    const searchAgrementHandler = (e) => {
+        const filteredData = agreementArchives.filter((agreement) => {
+            return (
+            agreement.nama_kegiatan.toLowerCase().includes(e.toLowerCase()) ||
+            agreement.jenis_kegiatan.toLowerCase().includes(e.toLowerCase()) ||
+            agreement.bentuk_kegiatan.toLowerCase().includes(e.toLowerCase())
+            );
+        });
+        setSearchAgrement(e);
+        setFilteredAgrement(filteredData);
+    }
+
+    const handleCheckboxChangeJenisIa = (value) => {
+        const updatedValues = selectedJenisIa.includes(value)
+            ? selectedJenisIa.filter((item) => item !== value) // Uncheck: remove value
+            : [...selectedJenisIa, value]; // Check: add value
+
+        setSelectedJenisIa(updatedValues);
+
+        updateURL("jenis_ia", updatedValues);
+        filterData();
+    };
+
+    const handleCheckboxChangeStatus = (value) => {
+        const updatedValues = selectedStatus.includes(value)
+            ? selectedStatus.filter((item) => item !== value) // Uncheck: remove value
+            : [...selectedStatus, value]; // Check: add value
+
+        setSelectedStatus(updatedValues);
+
+        updateURL("status", updatedValues);
+        filterData();
+    };
+
+    const handleCheckboxChangeTahun = (value) => {
+        const updatedValues = selectedTahun.includes(value)
+            ? selectedTahun.filter((item) => item !== value) // Uncheck: remove value
+            : [...selectedTahun, value]; // Check: add value
+
+        setSelectedTahun(updatedValues);
+
+        updateURL("tahun", updatedValues);
+        filterData();
+    };
+
+    const handleCheckboxChangeDurasi = (value) => {
+        const updatedValues = selectedDurasi.includes(value)
+            ? selectedDurasi.filter((item) => item !== value) // Uncheck: remove value
+            : [...selectedDurasi, value]; // Check: add value
+
+        setSelectedDurasi(updatedValues);
+
+        updateURL("durasi", updatedValues);
+        filterData();
+    };
+
+    const filterData = () => {
+        const params = route().params;
+
+        if (params.length === 0) {
+            setFilteredAgrement(agreementArchives) // Show all if no filter selected
+        } else {
+            const filtered = agreementArchives.filter((agreement) => {
+                const jenisIa = params.jenis_ia 
+                    ? params.jenis_ia.split(",").includes(agreement.jenis_kegiatan)
+                    : true;
+                const status = params.status
+                    ? params.status.split(",").includes(agreement.active)
+                    : true;
+                const tahun = params.tahun
+                    ? params.tahun
+                        .split(",")
+                        .includes(agreement.waktu_kerjasama_mulai.split("-")[0])
+                    : true;
+                const durasi = params.durasi
+                    ? params.durasi.split(",").includes(agreement.durasi_kerjasama)
+                    : true;
+
+                return (
+                    jenisIa &&
+                    status &&
+                    tahun &&
+                    durasi
+                )
+            })
+            
+            setFilteredAgrement(filtered)
+        }
+    }
 
     return (
         <AuthenticatedLayout>
@@ -281,11 +392,198 @@ export default function Index({
                                 <PlusIcon className="h-8 w-8  p-1 text-white rounded-full bg-green-700" />
                             </Link>
                         </div>
+                        <div className="flex justify-between items-center">
+                            <div className="grid grid-cols-4 gap-4">
+                                <Menu
+                                    dismiss={{
+                                        itemPress: false,
+                                    }}
+                                    >
+                                    <MenuHandler>
+                                        <Button className="mt-1 flex text-wrap items-center gap-4 w-full text-left bg-gray-100 rounded-md shadow-md border border-gray-300 hover:bg-gray-200 text-black">
+                                            Jenis I.A
+                                            <IoFilter />
+                                        </Button>
+                                    </MenuHandler>
+                                    <MenuList>
+                                        {jenisIa.map((jenis) => (
+                                            <MenuItem className="p-0">
+                                            <label
+                                                htmlFor={jenis}
+                                                className="flex cursor-pointer items-center gap-2 p-2"
+                                            >
+                                                <Checkbox
+                                                ripple={false}
+                                                id={jenis}
+                                                containerProps={{ className: "p-0" }}
+                                                className="hover:before:content-none"
+                                                checked={selectedJenisIa.includes(
+                                                    jenis
+                                                )}
+                                                onChange={() =>
+                                                    handleCheckboxChangeJenisIa(
+                                                        jenis
+                                                    )
+                                                }
+                                                />
+                                                {jenis}
+                                            </label>
+                                            </MenuItem>
+                                        ))}
+                                    </MenuList>
+                                </Menu>
+                                <Menu
+                                    dismiss={{
+                                        itemPress: false,
+                                    }}
+                                    >
+                                    <MenuHandler>
+                                        <Button className="mt-1 flex items-center gap-4 w-full text-left bg-gray-100 rounded-md shadow-md border border-gray-300 hover:bg-gray-200 text-black">
+                                            Status
+                                            <IoFilter />
+                                        </Button>
+                                    </MenuHandler>
+                                    <MenuList>
+                                        <MenuItem className="p-0">
+                                            <label
+                                                htmlFor="item-1"
+                                                className="flex cursor-pointer items-center gap-2 p-2"
+                                            >
+                                                <Checkbox
+                                                ripple={false}
+                                                id="item-1"
+                                                containerProps={{ className: "p-0" }}
+                                                className="hover:before:content-none"
+                                                checked={selectedStatus.includes(
+                                                    "true"
+                                                )}
+                                                onChange={() =>
+                                                    handleCheckboxChangeStatus(
+                                                        "true"
+                                                    )
+                                                }
+                                                />
+                                                Aktif
+                                            </label>
+                                        </MenuItem>
+                                        <MenuItem className="p-0">
+                                            <label
+                                                htmlFor="item-2"
+                                                className="flex cursor-pointer items-center gap-2 p-2"
+                                            >
+                                                <Checkbox
+                                                ripple={false}
+                                                id="item-2"
+                                                containerProps={{ className: "p-0" }}
+                                                className="hover:before:content-none"
+                                                checked={selectedStatus.includes(
+                                                    "false"
+                                                )}
+                                                onChange={() =>
+                                                    handleCheckboxChangeStatus(
+                                                        "false"
+                                                    )
+                                                }
+                                                />
+                                                Non Aktif
+                                            </label>
+                                        </MenuItem>
+                                    </MenuList>
+                                </Menu>
+                                <Menu
+                                    dismiss={{
+                                        itemPress: false,
+                                    }}
+                                    >
+                                    <MenuHandler>
+                                        <Button className="mt-1 flex items-center gap-4 w-full text-left bg-gray-100 rounded-md shadow-md border border-gray-300 hover:bg-gray-200 text-black">
+                                            Tahun
+                                            <IoFilter />
+                                        </Button>
+                                    </MenuHandler>
+                                    <MenuList>
+                                        {tahun.map((tahunData) => (
+                                            <MenuItem className="p-0">
+                                            <label
+                                                htmlFor={tahunData}
+                                                className="flex cursor-pointer items-center gap-2 p-2"
+                                            >
+                                                <Checkbox
+                                                ripple={false}
+                                                id={tahunData}
+                                                containerProps={{ className: "p-0" }}
+                                                className="hover:before:content-none"
+                                                checked={selectedTahun.includes(
+                                                    tahunData
+                                                )}
+                                                onChange={() =>
+                                                    handleCheckboxChangeTahun(
+                                                        tahunData
+                                                    )
+                                                }
+                                                />
+                                                {tahunData}
+                                            </label>
+                                            </MenuItem>
+                                        ))}
+                                    </MenuList>
+                                </Menu>
+                                <Menu
+                                    dismiss={{
+                                        itemPress: false,
+                                    }}
+                                    >
+                                    <MenuHandler>
+                                        <Button className="mt-1 flex items-center gap-4 w-full text-left bg-gray-100 rounded-md shadow-md border border-gray-300 hover:bg-gray-200 text-black">
+                                            Durasi
+                                            <IoFilter />
+                                        </Button>
+                                    </MenuHandler>
+                                    <MenuList>
+                                        {durasi.map((durasiData) => (
+                                            <MenuItem className="p-0">
+                                            <label
+                                                htmlFor={durasiData}
+                                                className="flex cursor-pointer items-center gap-2 p-2"
+                                            >
+                                                <Checkbox
+                                                ripple={false}
+                                                id={durasiData}
+                                                containerProps={{ className: "p-0" }}
+                                                className="hover:before:content-none"
+                                                checked={selectedDurasi.includes(
+                                                    durasiData
+                                                )}
+                                                onChange={() =>
+                                                    handleCheckboxChangeDurasi(
+                                                        durasiData
+                                                    )
+                                                }
+                                                />
+                                                {durasiData}
+                                            </label>
+                                            </MenuItem>
+                                        ))}
+                                    </MenuList>
+                                </Menu>
+                            </div>
+                            <div className="max-w-md w-full">
+                                <input
+                                    type="text"
+                                    placeholder="Cari"
+                                    className="w-full border-2 border-gray-500 rounded-md p-2"
+                                    value={searchAgrement}
+                                    onChange={(e) =>
+                                        searchAgrementHandler(e.target.value)
+                                    }
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <div className="">
+                    <div className="flex w-full">
                         <Table
                             mitraId={mitra.id}
-                            agreementArchives={agreementArchives}
+                            agreementArchives={filteredAgrement}
                         />
                     </div>
 
