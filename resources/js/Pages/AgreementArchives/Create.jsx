@@ -250,35 +250,6 @@ export default function Create({ mitraId, mitra, durasi, jenisKegiatan }) {
                                     />
                                 </div>
                             </div>
-                            {/* <div className="flex items-center mt-3">
-                                <InputLabel
-                                    htmlFor="no_ia_pihak_2"
-                                    value="No. IA Pihak 2"
-                                    className="w-44 text-lg"
-                                />
-                                <div className="flex-auto">
-                                    <TextInput
-                                        id="no_ia_pihak_2"
-                                        type="text"
-                                        name="no_ia_pihak_2"
-                                        value={data.no_ia_pihak_2}
-                                        className="mt-1 block w-full px-4 py-2"
-                                        autoComplete="off"
-                                        isFocused={false}
-                                        onChange={(e) =>
-                                            setData(
-                                                "no_ia_pihak_2",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-
-                                    <InputError
-                                        message={errors.no_ia_pihak_2}
-                                        className="mt-2"
-                                    />
-                                </div>
-                            </div> */}
                             <div className="flex items-center mt-3">
                                 <InputLabel
                                     htmlFor="durasi_kerjasama"
@@ -286,20 +257,6 @@ export default function Create({ mitraId, mitra, durasi, jenisKegiatan }) {
                                     className="w-44 text-lg"
                                 />
                                 <div className="flex-auto">
-                                    {/* <TextInput
-                                        id="durasi_kerjasama"
-                                        type="text"
-                                        name="durasi_kerjasama"
-                                        value={data.durasi_kerjasama}
-                                        className="mt-1 block w-full px-4 py-2"
-                                        isFocused={false}
-                                        onChange={(e) =>
-                                            setData(
-                                                "durasi_kerjasama",
-                                                e.target.value
-                                            )
-                                        }
-                                    /> */}
                                     <SelectInput
                                         id="durasi_kerjasama"
                                         name="durasi_kerjasama"
