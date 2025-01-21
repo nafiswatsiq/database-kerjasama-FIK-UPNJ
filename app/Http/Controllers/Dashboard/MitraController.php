@@ -203,7 +203,7 @@ class MitraController extends Controller
         foreach (JenisKegiatan::get() as $jenis) {
             $defaultJenisKegiatan[$jenis->jenis_kegiatan] = 0;
         }
-        
+
         $countJenisKegiatan = AgreementArchives::where('mitra_id', $mitraId)->select('jenis_kegiatan', DB::raw('count(*) as total'))
             ->groupBy('jenis_kegiatan')
             ->pluck('total', 'jenis_kegiatan')
@@ -216,7 +216,7 @@ class MitraController extends Controller
             ->groupBy('year')
             ->pluck('total', 'year')
             ->toArray();
-        
+
         $defaultDurasiKerjasama = [];
         foreach (DurasiKerjasamas::get() as $durasi) {
             $defaultDurasiKerjasama[$durasi->durasi_kerjasama] = 0;
@@ -349,7 +349,7 @@ class MitraController extends Controller
         }
 
         $generated = (new DocumentGenerator())->draftDocumentPks($logoMitra, $data, $pasal);
-        
+
         if ($generated) {
             $mitra->update([
                 'draft' => $generated,
@@ -379,7 +379,7 @@ class MitraController extends Controller
             'jumlah_tanpa_dokumen' => $mitra->agreementArchives->whereNull('dokumen_kerjasama')->count(),
             'jumlah_belum_dilaporkan' => $mitra->agreementArchives->whereNull('dokumen_laporan')->count(),
         ];
-        
+
         $tableJenisIa = [];
         foreach (JenisKegiatan::get() as $key => $jenis) {
             $tableJenisIa[] = [
@@ -413,7 +413,7 @@ class MitraController extends Controller
         }
 
         $generated = (new DocumentGenerator())->laporanMitra($logoMitra, $data, $tableJenisIa, $tableTahunIa, $tableLamaIa);
-        
+
         if ($generated) {
             return response()->download($generated);
         }
@@ -437,5 +437,8 @@ class MitraController extends Controller
 
         return redirect()->back();
     }
+
+
+
 
 }

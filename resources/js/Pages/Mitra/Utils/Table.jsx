@@ -222,7 +222,7 @@ export function Table({ mitraId, agreementArchives }) {
                         (
                             {
                                 id,
-                                nama_instansi,
+                                nama_kegiatan,
                                 bentuk_kegiatan,
                                 jenis_kegiatan,
                                 waktu_kerjasama_mulai,
@@ -262,7 +262,7 @@ export function Table({ mitraId, agreementArchives }) {
                                             color="blue-gray"
                                             className="font-bold"
                                         >
-                                            {nama_instansi}
+                                            {nama_kegiatan}
                                         </Typography>
                                     </td>
                                     <td
