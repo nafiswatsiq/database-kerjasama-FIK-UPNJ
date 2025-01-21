@@ -418,4 +418,24 @@ class MitraController extends Controller
             return response()->download($generated);
         }
     }
+
+    public function updateDokumenKerjasama(Request $request, $id)
+    {
+        $request->validate([
+            'dokumen_kerjasama' => 'required|mimes:pdf,doc,docx',
+        ]);
+
+        $mitra = Mitra::findOrFail($id);
+
+        $fileDokumenKerjasama = $request->file('dokumen_kerjasama');
+        $nameDokumenKerjasama = $fileDokumenKerjasama->getClientOriginalName();
+        $pathDokumenKerjasama = $fileDokumenKerjasama->storeAs('/', $nameDokumenKerjasama, 'public');
+
+        $mitra->update([
+            'dokumen_pks' => $pathDokumenKerjasama,
+        ]);
+
+        return redirect()->back();
+    }
+
 }

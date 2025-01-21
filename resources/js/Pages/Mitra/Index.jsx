@@ -17,6 +17,7 @@ import BarChart from "@/Components/Dashboard/BarChart";
 import LineChart from "@/Components/Dashboard/LineChart";
 import { useState } from "react";
 import axios from "axios";
+import UploadButton from "./Utils/UploadButton";
 
 export default function Index({
     agreementArchives,
@@ -171,11 +172,15 @@ export default function Index({
                         <a href={route("download-draft-pks", mitra.id)} className="w-full px-4">
                             <ActionButton content="Download Draft PKS"/>
                         </a>
-                        <ActionButton content="Upload File PKS Bertandatangan " />
+                        <div className="w-full pl-4">
+                            <UploadButton content="Upload File PKS Bertandatangan" mitraId={mitra.id} />
+                        </div>
                         <a href={route("download-laporan-mitra", mitra.id)} className="w-full px-4">
                             <ActionButton content="Download Laporan Kerjasama Mitra" />
                         </a>
-                        <ActionButton content="Donwload File PKS Bertandatangan" />
+                        <a href={'/storage/'+mitra.dokumen_pks}>
+                            <ActionButton content="Donwload File PKS Bertandatangan" />
+                        </a>
                     </div>
                     <div className="flex flex-row gap-4">
                         <Link

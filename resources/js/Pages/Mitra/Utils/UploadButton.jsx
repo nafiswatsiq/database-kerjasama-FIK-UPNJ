@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Upload, CheckCircle, AlertCircle } from "lucide-react";
 import { router, useForm, usePage } from "@inertiajs/react";
 
-export default function UploadButton({ content, agrementId }) {
+export default function UploadButton({ content, mitraId }) {
     const [selectedFile, setSelectedFile] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadStatus, setUploadStatus] = useState(null);
@@ -27,7 +27,7 @@ export default function UploadButton({ content, agrementId }) {
         try {
             // Di sini Anda akan mengganti kode ini dengan actual API call
             // post(route("aggreement.update.dokumen_kerjasama", selectedFile));
-            router.post(route('aggreement.update.dokumen_kerjasama', agrementId), {
+            router.post(route('mitra.update.dokumen_mitra', mitraId), {
                 dokumen_kerjasama: selectedFile
             });
 

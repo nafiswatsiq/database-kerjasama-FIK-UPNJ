@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/mitra/{id}/delete', [MitraController::class, 'delete'])->name('mitra.delete');
         Route::get('/mitra/{mitraId}', [MitraController::class, 'detail'])->name('mitra.detail');
         Route::post('/mitra', [MitraController::class, 'store'])->name('mitra.store');
+        Route::post('/mitra/{id}/update-dokumen-kerjasama', [MitraController::class, 'updateDokumenKerjasama'])->name('mitra.update.dokumen_mitra');
         
         Route::get('/mitra/{mitraId}/agreement-archives', [AgreementArchivesController::class, 'index'])->name('agreementarchives.index');
         Route::get('/mitra/{mitraId}/agreement-archives/create', [AgreementArchivesController::class, 'create'])->name('agreementarchives.create');
