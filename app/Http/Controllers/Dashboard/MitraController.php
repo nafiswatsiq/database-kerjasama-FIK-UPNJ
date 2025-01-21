@@ -229,6 +229,9 @@ class MitraController extends Controller
 
         $seriesDurasiKerjasama = array_merge($defaultDurasiKerjasama, $countDurasiKerjasama);
 
+        $nullDocument = AgreementArchives::where('mitra_id', $mitraId)->whereNull('dokumen_kerjasama')->count();
+        $nullLaporan = AgreementArchives::where('mitra_id', $mitraId)->whereNull('dokumen_laporan')->count();
+
         return Inertia::render('Mitra/Index', [
             'agreementArchives' => $agreementArchives->get(),
             'mitra' => $mitra,
@@ -241,6 +244,8 @@ class MitraController extends Controller
             'seriesJenisKegiatan' => $seriesJenisKegiatan,
             'seriesYears' => $seriesYears,
             'seriesDurasiKerjasama' => $seriesDurasiKerjasama,
+            'nullDocument' => $nullDocument,
+            'nullLaporan' => $nullLaporan,
         ]);
     }
 
@@ -385,11 +390,16 @@ class MitraController extends Controller
         }
 
         $tableTahunIa = [];
-        foreach ($mitra->agreementArchives as $key => $ia) {
+        $getDataYear = AgreementArchives::with('mitra')
+            ->where('mitra_id', $id)
+            ->select(DB::raw('YEAR(waktu_kerjasama_mulai) as year'), DB::raw('count(*) as total'))
+            ->groupBy('year')
+            ->get();
+        foreach ($getDataYear as $key => $ia) {
             $tableTahunIa[] = [
                 'no_tahun_ia' => $key + 1,
-                'tahun_ia' => Carbon::parse($ia->waktu_kerjasama_mulai)->format('Y'),
-                'jumlah_ia' => 1,
+                'tahun_ia' => $ia->year,
+                'jumlah_ia' => $ia->total,
             ];
         }
 

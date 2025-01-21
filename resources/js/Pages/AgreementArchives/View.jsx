@@ -19,6 +19,7 @@ import {
 import { Viewer, Worker } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import React from "react";
+import UploadButton from "@/Components/AgreementArchives/UploadButton";
 
 export default function Edit({ mitraId, agreementArchive, logKegiatan }) {
     const { data } = useForm({
@@ -174,10 +175,29 @@ export default function Edit({ mitraId, agreementArchive, logKegiatan }) {
                                     "download-draft-ia",
                                     agreementArchive.id
                                 )}
-                            ></DownloadButton>
-                            <DownloadButton content="Download Draf IA Bertanda tangan" />
-                            <DownloadButton content="Upload Dokumen IA Bertanda tangan" />
-                            <DownloadButton content="Download Laporan IA Bertanda tangan" />
+                            />
+                            <DownloadButton
+                                content="Download Draf IA Bertanda tangan"
+                                link={route(
+                                    "agreementarchives.download",
+                                    agreementArchive.dokumen_kerjasama
+                                        ? agreementArchive.dokumen_kerjasama
+                                        : ""
+                                )}
+                            />
+                            <UploadButton
+                                content="Upload Dokumen IA"
+                                agrementId={agreementArchive.id}
+                            />
+                            <div className="">
+                                <DownloadButton
+                                    content="Download Laporan IA Bertanda tangan"
+                                    link={route(
+                                        "download-laporan-ia",
+                                        agreementArchive.id
+                                    )}
+                                />
+                            </div>
                         </div>
 
                         <div className="py-2">

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Upload, CheckCircle, AlertCircle } from "lucide-react";
+import { router, useForm, usePage } from "@inertiajs/react";
 
-export default function UploadButton({ content }) {
+export default function UploadButton({ content, agrementId }) {
     const [selectedFile, setSelectedFile] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadStatus, setUploadStatus] = useState(null);
@@ -25,12 +26,19 @@ export default function UploadButton({ content }) {
         // Simulasi upload dengan timeout
         try {
             // Di sini Anda akan mengganti kode ini dengan actual API call
-            post(route("aggreement.update.dokumen_kerjasama", selectedFile));
+            // post(route("aggreement.update.dokumen_kerjasama", selectedFile));
+            router.post(
+                route("aggreement.update.dokumen_kerjasama", agrementId),
+                {
+                    dokumen_kerjasama: selectedFile,
+                }
+            );
 
             // Simulasi API call
             await new Promise((resolve) => setTimeout(resolve, 2000));
 
             setUploadStatus("success");
+            setSelectedFile(null);
         } catch (error) {
             setUploadStatus("error");
         } finally {
@@ -39,8 +47,8 @@ export default function UploadButton({ content }) {
     };
 
     return (
-        <div className="max-w-md mx-auto p-4">
-            <div className="space-y-4">
+        <div className="mx-auto w-full">
+            <div className="">
                 <input
                     type="file"
                     id="document-upload"
@@ -58,7 +66,7 @@ export default function UploadButton({ content }) {
 
                     <label
                         htmlFor="document-upload"
-                        className="w-full bg-green-600 text-white py-3 px-4 rounded-md text-center cursor-pointer hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+                        className="w-full bg-green-600 text-white py-2 px-4 rounded-md text-center cursor-pointer hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
                     >
                         <Upload size={20} />
                         {content}

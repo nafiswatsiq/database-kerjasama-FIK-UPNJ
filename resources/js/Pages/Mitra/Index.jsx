@@ -29,7 +29,9 @@ export default function Index({
     galleries,
     seriesJenisKegiatan,
     seriesYears,
-    seriesDurasiKerjasama
+    seriesDurasiKerjasama,
+    nullDocument,
+    nullLaporan
 }) {
     const [filterChart, setFilterChart] = useState("jenisIA");
     const url = new URL(window.location.href);
@@ -249,8 +251,8 @@ export default function Index({
 
                             <div>
                                 <BarChart
-                                    dataSeries={[1,2]} 
-                                    dataCategories={['Active','Inactive']} 
+                                    dataSeries={[nullDocument,nullLaporan]} 
+                                    dataCategories={['Tanpa Dokumen','Tanpa Laporan']} 
                                     horizontal={true}
                                     height={250}
                                 />

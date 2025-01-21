@@ -44,4 +44,5 @@ class AgreementArchives extends Model
     {
         return $this->belongsTo(Mitra::class);
     }
+
 }

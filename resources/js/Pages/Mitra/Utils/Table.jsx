@@ -206,6 +206,15 @@ export function Table({ mitraId, agreementArchives }) {
                                 Lap I.A
                             </Typography>
                         </th>
+                        <th className="border-b border-gray-300 pb-4 pt-10">
+                            <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-bold leading-none"
+                            >
+                                Action
+                            </Typography>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -218,6 +227,7 @@ export function Table({ mitraId, agreementArchives }) {
                                 jenis_kegiatan,
                                 waktu_kerjasama_mulai,
                                 waktu_kerjasama_selesai,
+                                draft,
                                 dokumen_kerjasama,
                                 dokumen_laporan,
                             },
@@ -347,6 +357,20 @@ export function Table({ mitraId, agreementArchives }) {
                                                 "dd MMMM yyyy"
                                             )}
                                         </Typography>
+                                    </td>
+                                    <td className={`${classes} w-16`}>
+                                        <div className="flex justify-start gap-x-3">
+                                            {draft ? (
+                                                <a
+                                                    href={route(
+                                                        "agreementarchives.download",
+                                                        draft
+                                                    )}
+                                                >
+                                                    <DocumentArrowDownIcon className="h-5 w-5 text-green-500" />
+                                                </a>
+                                            ) : null}
+                                        </div>
                                     </td>
                                     <td className={`${classes} w-16`}>
                                         <div className="flex justify-start gap-x-3">
