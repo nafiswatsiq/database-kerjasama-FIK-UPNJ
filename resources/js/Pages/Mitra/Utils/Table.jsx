@@ -370,16 +370,11 @@ export function Table({ mitraId, agreementArchives }) {
                                     </td>
                                     <td className={`${classes} w-16`}>
                                         <div className="flex justify-start gap-x-3">
-                                            {dokumen_laporan ? (
                                                 <a
-                                                    href={route(
-                                                        "agreementarchives.download",
-                                                        dokumen_laporan
-                                                    )}
+                                                    href={route('download-laporan-ia', id)}
                                                 >
                                                     <DocumentArrowDownIcon className="h-5 w-5 text-green-500" />
                                                 </a>
-                                            ) : null}
                                         </div>
                                     </td>
                                     {/* <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>

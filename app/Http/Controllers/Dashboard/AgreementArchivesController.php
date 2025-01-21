@@ -430,6 +430,10 @@ class AgreementArchivesController extends Controller
         $generated = (new DocumentGeneratorIa())->generateDocument($data);
         
         if ($generated) {
+            $agrement->update([
+                'dokumen_laporan' => str_replace('storage/', '', $generated),
+            ]);
+
             return response()->download($generated);
         }
     }

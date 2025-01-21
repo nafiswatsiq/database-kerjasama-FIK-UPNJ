@@ -242,7 +242,7 @@ export function Table({ mitraId, agreementArchives}) {
           </tr>
         </thead>
         <tbody>
-          {agreementArchives.data.map(({ id, nama_instansi, no_ia_pihak_1, bidang_kerjasama, kriteria_mitra, waktu_kerjasama_mulai, waktu_kerjasama_selesai, dokumen_kerjasama, dokumen_laporan }, index) => {
+          {agreementArchives.data.map(({ id, nama_instansi, no_ia, jenis_kegiatan, kriteria_mitra, waktu_kerjasama_mulai, waktu_kerjasama_selesai, dokumen_kerjasama, dokumen_laporan }, index) => {
             const isLast = index === agreementArchives.length - 1;
             const classes = isLast ? "py-4" : "py-4 border-b border-gray-300";
  
@@ -272,7 +272,7 @@ export function Table({ mitraId, agreementArchives}) {
                     color="blue-gray"
                     className="font-bold"
                   >
-                    {no_ia_pihak_1}
+                    {no_ia}
                   </Typography>
                 </td>
                 <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>
@@ -280,7 +280,7 @@ export function Table({ mitraId, agreementArchives}) {
                     variant="small"
                     className="font-normal text-gray-600"
                   >
-                    {bidang_kerjasama}
+                    {jenis_kegiatan}
                   </Typography>
                 </td>
                 {/* <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>

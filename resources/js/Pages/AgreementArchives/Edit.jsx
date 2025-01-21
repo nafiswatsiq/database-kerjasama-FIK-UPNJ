@@ -284,7 +284,7 @@ export default function Edit({ mitraId, agreementArchive }) {
                             </div>
                             {agreementArchive.dokumen_kerjasama ? (
                                 <div className={viewDokumenKerjasama === true ? 'relative max-h-[50vh] overflow-scroll h-full' : 'relative max-h-[50vh] overflow-scroll h-0'}>
-                                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
                                         <Viewer fileUrl={route().t.url + '/storage/' +agreementArchive.dokumen_kerjasama} />
                                     </Worker>
                                 </div>
@@ -318,7 +318,7 @@ export default function Edit({ mitraId, agreementArchive }) {
                             </div>
                             {agreementArchive.dokumen_laporan ? (
                                 <div className={viewDokumenLaporan === true ? 'relative max-h-[50vh] overflow-scroll h-full' : 'relative max-h-[50vh] overflow-scroll h-0'}>
-                                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
                                         <Viewer fileUrl={route().t.url + '/storage/' +agreementArchive.dokumen_laporan} />
                                     </Worker>
                                 </div>
