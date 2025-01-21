@@ -24,7 +24,7 @@ import UploadButton from "@/Components/AgreementArchives/UploadButton";
 const drafIA = "../../../../dokumen/template_draft_ia.docx";
 
 export default function Edit({ mitraId, agreementArchive, logKegiatan }) {
-    console.log(agreementArchive)
+    console.log(agreementArchive);
     const { data } = useForm({
         nama_instansi: agreementArchive.nama_instansi,
         nama_kegiatan: agreementArchive.nama_kegiatan,
@@ -174,12 +174,32 @@ export default function Edit({ mitraId, agreementArchive, logKegiatan }) {
                         <div className="grid grid-cols-2">
                             <DownloadButton
                                 content="Download Draft IA"
-                                link={route('download-draft-ia', agreementArchive.id)}
+                                link={route(
+                                    "download-draft-ia",
+                                    agreementArchive.id
+                                )}
                             ></DownloadButton>
-                            <DownloadButton content="Download Draf IA Bertanda tangan" link={route('agreementarchives.download', agreementArchive.dokumen_kerjasama)}/>
-                            <UploadButton content="Upload Dokumen IA" agrementId={agreementArchive.id}/>
+                            <DownloadButton
+                                content="Download Draf IA Bertanda tangan"
+                                link={route(
+                                    "agreementarchives.download",
+                                    agreementArchive.dokumen_kerjasama
+                                        ? agreementArchive.dokumen_kerjasama
+                                        : ""
+                                )}
+                            />
+                            <UploadButton
+                                content="Upload Dokumen IA"
+                                agrementId={agreementArchive.id}
+                            />
                             <div className="">
-                                <DownloadButton content="Download Laporan IA Bertanda tangan" link={route('download-laporan-ia', agreementArchive.id)}/>
+                                <DownloadButton
+                                    content="Download Laporan IA Bertanda tangan"
+                                    link={route(
+                                        "download-laporan-ia",
+                                        agreementArchive.id
+                                    )}
+                                />
                             </div>
                         </div>
 
