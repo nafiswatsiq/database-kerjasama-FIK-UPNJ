@@ -344,4 +344,36 @@ class AgreementArchivesController extends Controller
             return response()->download($generated);
         }
     }
+
+    public function draftDocumentIa($id)
+    {
+        $agrement = AgreementArchives::with('mitra')->findOrFail($id);
+        $logoMitra = public_path('storage/' . $agrement->mitra->logo);
+        $data = [
+            'logo_mitra' => $logoMitra,
+            'nama_mitra' => $agrement->mitra->nama_mitra,
+            'no_ia' => $agrement->no_ia,
+            'nama_kegiatan' => $agrement->nama_kegiatan,
+            'status' => $agrement->mitra->waktu_kerjasama_selesai > now() ? 'Aktif' : 'Inaktif',
+            'waktu_kerjasama_mulai' => $agrement->waktu_kerjasama_mulai,
+            'waktu_kerjasama_selesai' => $agrement->waktu_kerjasama_selesai,
+            'deskripsi_kegiatan' => $agrement->deskripsi_kegiatan,
+            'pihak_1' => $agrement->pihak_1,
+            'jabatan_pihak_1' => $agrement->jabatan_pihak_1,
+            'pihak_2' => $agrement->pihak_2,
+            'jabatan_pihak_2' => $agrement->jabatan_pihak_2,
+            'ringkasan_luaran' => $agrement->ringkasan_luaran,
+            // Tambahkan data lain sesuai kebutuhan
+        ];
+
+        $generated = (new DocumentGeneratorIa())->generateDocumentDraftIa($data);
+        
+        $agrement->update([
+            'draft' => str_replace('storage/', '', $generated),
+        ]);
+
+        if ($generated) {
+            return response()->download($generated);
+        }
+    }
 }

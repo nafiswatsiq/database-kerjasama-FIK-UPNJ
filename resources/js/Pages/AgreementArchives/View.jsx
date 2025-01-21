@@ -166,7 +166,7 @@ export default function Edit({ mitraId, agreementArchive }) {
                         <div className="grid grid-cols-2">
                             <DownloadButton
                                 content="Download Draft IA"
-                                link={drafIA}
+                                link={route('download-draft-ia', agreementArchive.id)}
                             ></DownloadButton>
                             <DownloadButton content="Download Draf IA Bertanda tangan" link={route('agreementarchives.download', agreementArchive.dokumen_kerjasama)}/>
                             <UploadButton content="Upload Dokumen IA" agrementId={agreementArchive.id}/>

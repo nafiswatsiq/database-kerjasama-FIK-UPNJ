@@ -15,11 +15,20 @@ class DocumentGeneratorIa
         //
     }
 
-    public function generateFromTemplate($templatePath, $outputPath, array $data)
+    public function generateFromTemplate($templatePath, $outputPath, array $data, $logoMitra = '')
     {
         try {
             // Load template
             $templateProcessor = new TemplateProcessor($templatePath);
+            
+            if ($logoMitra) {
+                $templateProcessor->setImageValue('logo_mitra', [
+                    'path' => $logoMitra,
+                    'width' => 100,
+                    'height' => 100,
+                    'ratio' => false,
+                ]);
+            }
             
             // Replace variables in template
             foreach ($data as $key => $value) {
@@ -49,6 +58,29 @@ class DocumentGeneratorIa
             $templatePath,
             $outputPath,
             $data
+        );
+        
+        if ($generated) {
+            return 'storage/'.$name;
+        }
+        
+        return response()->json(['error' => 'Gagal generate dokumen'], 500);
+    }
+
+    public function generateDocumentDraftIa($data)
+    {
+        // Path ke template RTF Anda
+        $templatePath = 'templates/template_draft_ia.docx';
+        
+        // Path untuk menyimpan file hasil
+        $name = 'generated_draft_ia_' . time() . '.docx';
+        $outputPath = storage_path('app/public/' . $name);
+        
+        $generated = $this->generateFromTemplate(
+            $templatePath,
+            $outputPath,
+            $data,
+            $data['logo_mitra']
         );
         
         if ($generated) {
