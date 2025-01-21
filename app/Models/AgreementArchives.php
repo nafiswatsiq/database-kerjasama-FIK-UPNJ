@@ -39,4 +39,9 @@ class AgreementArchives extends Model
     {
         return $this->hasMany(Documentation::class);
     }
+
+    public function mitra()
+    {
+        return $this->belongsTo(Mitra::class);
+    }
 }

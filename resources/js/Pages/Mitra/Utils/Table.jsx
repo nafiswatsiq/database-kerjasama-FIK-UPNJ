@@ -213,7 +213,7 @@ export function Table({ mitraId, agreementArchives }) {
                         (
                             {
                                 id,
-                                nama_instansi,
+                                nama_kegiatan,
                                 bentuk_kegiatan,
                                 jenis_kegiatan,
                                 waktu_kerjasama_mulai,
@@ -252,7 +252,7 @@ export function Table({ mitraId, agreementArchives }) {
                                             color="blue-gray"
                                             className="font-bold"
                                         >
-                                            {nama_instansi}
+                                            {nama_kegiatan}
                                         </Typography>
                                     </td>
                                     <td
@@ -286,6 +286,11 @@ export function Table({ mitraId, agreementArchives }) {
                                                 </span>
                                             ) : jenis_kegiatan === "Abdimas" ? (
                                                 <span className="border px-3 py-0.5 rounded-md bg-orange-50 text-orange-500">
+                                                    {jenis_kegiatan}
+                                                </span>
+                                            ) : jenis_kegiatan ===
+                                              "Penelitian" ? (
+                                                <span className="border px-3 py-0.5 rounded-md bg-green-50 text-green-500">
                                                     {jenis_kegiatan}
                                                 </span>
                                             ) : null}
