@@ -389,7 +389,7 @@ export default function Index({
                                     mitra.id
                                 )}
                             >
-                                <PlusIcon className="h-8 w-8  p-1 text-white rounded-full bg-green-700" />
+                                <PlusIcon className="h-8 w-24  p-1 text-white rounded-xl bg-green-700" />
                             </Link>
                         </div>
                         <div className="flex justify-between items-center">
@@ -587,7 +587,7 @@ export default function Index({
                         />
                     </div>
 
-                    <div className="overflow-hidden">
+                    {/* <div className="overflow-hidden">
                         <div className="border-t-2 py-4 border-gray-500">
                             <h1 className="font-medium text-xl uppercase">
                                 Gallery
@@ -596,7 +596,7 @@ export default function Index({
                     </div>
                     <div>
                         <Gallery data={galleries} />
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </AuthenticatedLayout>
