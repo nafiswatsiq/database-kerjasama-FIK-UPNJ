@@ -106,7 +106,8 @@ Route::middleware('auth')->group(function () {
         Route::get('download-laporan-mitra/{id}', [MitraController::class, 'downloadLaporanMitra'])->name('download-laporan-mitra');
         Route::get('download-draft-ia/{id}', [AgreementArchivesController::class, 'draftDocumentIa'])->name('download-draft-ia');
         Route::get('download-rekap-ia/{id}', [AgreementArchivesController::class, 'downloadRekapIa'])->name('download-rekap-ia');
-        Route::get('log-kegiatan/donwload-draft-laporan/{id}', [AgreementArchivesController::class, 'downloadDraftLaporan'])->name('download-draft-laporan');        Route::get('download-laporan-dashboard', [Dashboard::class, 'downloadLaporanDashboard'])->name('download-laporan-dashboard');
+        Route::get('log-kegiatan/donwload-draft-laporan/{id}', [AgreementArchivesController::class, 'downloadDraftLaporan'])->name('download-draft-laporan');        
+        Route::get('download-laporan-dashboard', [Dashboard::class, 'downloadLaporanDashboard'])->name('download-laporan-dashboard');
         Route::get('download-draft-ia/{id}', [AgreementArchivesController::class, 'draftDocumentIa'])->name('download-draft-ia');
         Route::get('download-laporan-ia/{id}', [AgreementArchivesController::class, 'downloadLaporanIa'])->name('download-laporan-ia');
 
