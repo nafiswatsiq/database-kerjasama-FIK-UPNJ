@@ -58,10 +58,15 @@ class MitraController extends Controller
             'pic_mitra' => 'required',
             'jabatan_pic_mitra' => 'required',
             'lokasi' => 'required',
-            'hari_tanggal' => 'required',
-            'waktu_kerjasama_mulai' => 'required',
+            'hari_tanggal' => 'required|before:waktu_kerjasama_selesai|before:waktu_kerjasama_mulai',
+            'waktu_kerjasama_mulai' => 'required|before:waktu_kerjasama_selesai',
             'waktu_kerjasama_selesai' => 'required',
-        ]);
+        ],
+    [
+        'hari_tanggal.before' => 'Tanggal kerjasama harus sebelum tanggal selesai kerjasama',
+        'hari_tanggal.before' => 'Tanggal kerjasama harus sebelum tanggal mulai kerjasama',
+        'waktu_kerjasama_mulai.before' => 'Tanggal mulai kerjasama harus sebelum tanggal selesai kerjasama',
+    ]);
 
         if ($request->file('logo')) {
             $fileDokumenPks = $request->file('logo');
@@ -305,9 +310,12 @@ class MitraController extends Controller
             'pic_mitra' => 'required',
             'kriteria_mitra' => 'required',
             'asal_mitra' => 'required',
-            'waktu_kerjasama_mulai' => 'required',
+            'waktu_kerjasama_mulai' => 'required|before:waktu_kerjasama_selesai',
             'waktu_kerjasama_selesai' => 'required',
-        ]);
+        ],
+            [
+                'waktu_kerjasama_mulai.before' => 'Tanggal mulai kerjasama harus sebelum tanggal selesai kerjasama',
+            ]);
 
         $mitra = Mitra::findOrFail($id);
 
