@@ -45,7 +45,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/mitra/{mitraId}/agreement-archives/{id}', [AgreementArchivesController::class, 'view'])->name('agreementarchives.view');
 
         Route::get('/mitra/{mitraId}/agreement-archives/{id}/log-kegiatan', [AgreementArchivesController::class, 'logKegiatan'])->name('agreementarchives.logKegiatan');
-        Route::post('/mitra/{mitraId}/agreement-archives/{id}/log-kegiatan', [AgreementArchivesController::class, 'createLogKegiatan'])->name('agreementarchives.storeLogKegiatan');
+        Route::get('/mitra/{mitraId}/agreement-archives/{id}/log-kegiatan/input-lap-ia', [AgreementArchivesController::class, 'inputLapIa'])->name('agreementarchives.logKegiatan.inputLapIa');
+        Route::post('/mitra/{mitraId}/agreement-archives/{id}/log-kegiatan/input-lap-ia', [AgreementArchivesController::class, 'storeLapIa'])->name('agreementarchives.storeLapIa');
+
+        Route::post('/mitra/{mitraId}/agreement-archives/{id}/log-kegiatan/create', [AgreementArchivesController::class, 'createLogKegiatan'])->name('agreementarchives.storeLogKegiatan');
         Route::post('/agreement-archives/{id}/update-dokumen-kerjasama', [AgreementArchivesController::class, 'updateDokumenKerjasama'])->name('aggreement.update.dokumen_kerjasama');
         Route::post('/agreement-archives/{id}/update-dokumen-laporan', [AgreementArchivesController::class, 'updateDokumenLaporan'])->name('aggreement.update.dokumen_laporan');
 
