@@ -1,6 +1,13 @@
 import { Chart } from "@/Components/Dashboard/Chart";
 import { Gallery } from "@/Components/Dashboard/Gallery";
-import { Button, Menu, MenuHandler, MenuItem, MenuList, Typography } from "@material-tailwind/react";
+import {
+    Button,
+    Menu,
+    MenuHandler,
+    MenuItem,
+    MenuList,
+    Typography,
+} from "@material-tailwind/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import {
     ArrowLeftCircleIcon,
@@ -32,15 +39,12 @@ export default function Index({
     seriesYears,
     seriesDurasiKerjasama,
     nullDocument,
-    nullLaporan
+    nullLaporan,
 }) {
     const [filterChart, setFilterChart] = useState("jenisIA");
     const url = new URL(window.location.href);
-
-    // console.log(mitra);
     const user = usePage().props.auth.user;
     const date = new Date();
-    // console.log(agreementArchives);
     const storageImage = (path) => {
         return `/storage/${path.replace("public/", "")}`;
     };
@@ -67,9 +71,8 @@ export default function Index({
                             <h1 className="font-medium text-xl uppercase mx-4">
                                 {mitra.nama_mitra}
                             </h1>
-                            {mitra.waktu_kerjasama_mulai >
-                            mitra.waktu_kerjasama_selesai ? (
-                                <span className="w-8 h-8 border border-black px-3 py-1 rounded-full bg-red-50 text-red-500"></span>
+                            {date > new Date(mitra.waktu_kerjasama_selesai) ? (
+                                <span className="w-8 h-8 border border-black px-3 py-1 rounded-full bg-red-500 text-white"></span>
                             ) : (
                                 <span className="w-8 h-8 border border-black px-3 py-1 rounded-full bg-green-500 text-white">
                                     {" "}
@@ -169,16 +172,25 @@ export default function Index({
 
                     {/* Section Button */}
                     <div className="grid grid-cols-2">
-                        <a href={route("download-draft-pks", mitra.id)} className="w-full px-4">
-                            <ActionButton content="Download Draft PKS"/>
+                        <a
+                            href={route("download-draft-pks", mitra.id)}
+                            className="w-full px-4"
+                        >
+                            <ActionButton content="Download Draft PKS" />
                         </a>
                         <div className="w-full pl-4">
-                            <UploadButton content="Upload File PKS Bertandatangan" mitraId={mitra.id} />
+                            <UploadButton
+                                content="Upload File PKS Bertandatangan"
+                                mitraId={mitra.id}
+                            />
                         </div>
-                        <a href={route("download-laporan-mitra", mitra.id)} className="w-full px-4">
+                        <a
+                            href={route("download-laporan-mitra", mitra.id)}
+                            className="w-full px-4"
+                        >
                             <ActionButton content="Download Laporan Kerjasama Mitra" />
                         </a>
-                        <a href={'/storage/'+mitra.dokumen_pks}>
+                        <a href={"/storage/" + mitra.dokumen_pks}>
                             <ActionButton content="Donwload File PKS Bertandatangan" />
                         </a>
                     </div>
@@ -189,15 +201,25 @@ export default function Index({
                         >
                             <div className="p-4 text-gray-900">
                                 <div className="border p-3 rounded-xl border-gray-900">
-                                    <p className="font-bold text-center text-lg">Status I.A</p>
+                                    <p className="font-bold text-center text-lg">
+                                        Status I.A
+                                    </p>
                                     <div className="grid grid-cols-2">
                                         <div className=" text-green-600">
-                                            <p className="text-center">Active</p>
-                                            <p className="text-center font-semibold mt-1 text-lg">{activeAgreement}</p>
+                                            <p className="text-center">
+                                                Active
+                                            </p>
+                                            <p className="text-center font-semibold mt-1 text-lg">
+                                                {activeAgreement}
+                                            </p>
                                         </div>
                                         <div className="text-red-500">
-                                            <p className="text-center">Inactive</p>
-                                            <p className="text-center font-semibold mt-1 text-lg">{inactiveAgreement}</p>
+                                            <p className="text-center">
+                                                Inactive
+                                            </p>
+                                            <p className="text-center font-semibold mt-1 text-lg">
+                                                {inactiveAgreement}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -213,51 +235,74 @@ export default function Index({
                         <div className="w-5/12 bg-white rounded-2xl shadow-lg p-4">
                             <Menu>
                                 <MenuHandler>
-                                    <Button
-                                        className="w-full bg-white text-black border-2 border-black"    
-                                    >Grafik Berdasarkan</Button>
+                                    <Button className="w-full bg-white text-black border-2 border-black">
+                                        Grafik Berdasarkan
+                                    </Button>
                                 </MenuHandler>
                                 <MenuList>
                                     <MenuItem
-                                        onClick={() => setFilterChart("jenisIA")}
-                                    >Berdasarkan Jenis I.A</MenuItem>
+                                        onClick={() =>
+                                            setFilterChart("jenisIA")
+                                        }
+                                    >
+                                        Berdasarkan Jenis I.A
+                                    </MenuItem>
                                     <MenuItem
                                         onClick={() => setFilterChart("tahun")}
-                                    >Berdasarkan Tahun</MenuItem>
+                                    >
+                                        Berdasarkan Tahun
+                                    </MenuItem>
                                     <MenuItem
-                                        onClick={() => setFilterChart("lamaKegiatan")}
-                                    >Berdasarkan Lama Kegiatan</MenuItem>
+                                        onClick={() =>
+                                            setFilterChart("lamaKegiatan")
+                                        }
+                                    >
+                                        Berdasarkan Lama Kegiatan
+                                    </MenuItem>
                                 </MenuList>
                             </Menu>
                             <div>
                                 {filterChart === "jenisIA" ? (
                                     <BarChart
-                                        dataSeries={seriesJenisKegiatan} 
-                                        dataCategories={Object.keys(seriesJenisKegiatan)} 
+                                        dataSeries={seriesJenisKegiatan}
+                                        dataCategories={Object.keys(
+                                            seriesJenisKegiatan
+                                        )}
                                         horizontal={false}
                                         height={250}
                                     />
                                 ) : filterChart === "tahun" ? (
                                     <LineChart
-                                        dataSeries={Object.values(seriesYears)} 
-                                        dataCategories={Object.keys(seriesYears)} 
+                                        dataSeries={Object.values(seriesYears)}
+                                        dataCategories={Object.keys(
+                                            seriesYears
+                                        )}
                                     />
                                 ) : filterChart === "lamaKegiatan" ? (
                                     <Chart
-                                        label={Object.keys(seriesDurasiKerjasama)}
-                                        series={Object.values(seriesDurasiKerjasama)} 
+                                        label={Object.keys(
+                                            seriesDurasiKerjasama
+                                        )}
+                                        series={Object.values(
+                                            seriesDurasiKerjasama
+                                        )}
                                         height={250}
                                     />
                                 ) : null}
                             </div>
                         </div>
                         <div className="w-4/12 bg-white rounded-2xl shadow-lg p-4">
-                            <p className="text-red-500 font-semibold text-lg text-center">I.A Perlu Tindakan</p>
+                            <p className="text-red-500 font-semibold text-lg text-center">
+                                I.A Perlu Tindakan
+                            </p>
 
                             <div>
                                 <BarChart
-                                    dataSeries={[nullDocument,nullLaporan]} 
-                                    dataCategories={['Tanpa Dokumen','Tanpa Laporan']} 
+                                    dataSeries={[nullDocument, nullLaporan]}
+                                    dataCategories={[
+                                        "Tanpa Dokumen",
+                                        "Tanpa Laporan",
+                                    ]}
                                     horizontal={true}
                                     height={250}
                                 />

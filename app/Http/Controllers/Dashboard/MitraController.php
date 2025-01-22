@@ -58,8 +58,8 @@ class MitraController extends Controller
             'pic_mitra' => 'required',
             'jabatan_pic_mitra' => 'required',
             'lokasi' => 'required',
-            'hari_tanggal' => 'required',
-            'waktu_kerjasama_mulai' => 'required',
+            'hari_tanggal' => 'required|before:waktu_kerjasama_selesai',
+            'waktu_kerjasama_mulai' => 'required|before:waktu_kerjasama_selesai',
             'waktu_kerjasama_selesai' => 'required',
         ]);
 
@@ -268,8 +268,8 @@ class MitraController extends Controller
             'pic_fik' => 'required',
             'pic_mitra' => 'required',
             'kriteria_mitra' => 'required',
-            'asal_mitra' => 'required',
-            'waktu_kerjasama_mulai' => 'required',
+            'asal_mitra' => 'required|before:waktu_kerjasama_selesai',
+            'waktu_kerjasama_mulai' => 'required|before:waktu_kerjasama_selesai',
             'waktu_kerjasama_selesai' => 'required',
         ]);
 

@@ -12,6 +12,7 @@ import { data } from "autoprefixer";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 export default function CardAgreement({ data, user }) {
+    const date = new Date();
     const storageImage = (path) => {
         return `/storage/${path.replace("public/", "")}`;
     };
@@ -79,7 +80,7 @@ export default function CardAgreement({ data, user }) {
                         variant="small"
                         className="text-gray-600 text-xs font-medium"
                     >
-                        {new Date(data.waktu_kerjasama_selesai) > new Date() ? (
+                        {date < new Date(data.waktu_kerjasama_selesai) ? (
                             <span className="border px-3 py-1 rounded-xl bg-green-500 text-white">
                                 Aktif
                             </span>

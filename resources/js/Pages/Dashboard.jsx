@@ -44,7 +44,7 @@ export default function Dashboard({
     years,
     seriesYears,
     mitraEndingInSixMonths,
-    mitraEndingInOneYear
+    mitraEndingInOneYear,
 }) {
     const user = usePage().props.auth.user;
     const date = new Date();
@@ -60,7 +60,6 @@ export default function Dashboard({
     const [selectedActive, setSelectedActive] = useState([]);
     const [selectedTahun, setSelectedTahun] = useState([]);
     const [filteredMitra, setFilteredMitra] = useState(mitra);
-    console.log(mitra);
     const [filterChart, setFilterChart] = useState("kriteriaMitra");
     const [filterPieChart, setFilterPieChart] = useState("kriteriaMitra");
 
@@ -467,31 +466,52 @@ export default function Dashboard({
                                         </div> */}
                                         <Menu>
                                             <MenuHandler>
-                                                <Button
-                                                    className="w-full bg-white border-2 text-gray-900"
-                                                >Filter</Button>
+                                                <Button className="w-full bg-white border-2 text-gray-900">
+                                                    Filter
+                                                </Button>
                                             </MenuHandler>
                                             <MenuList>
                                                 <MenuItem
-                                                    onClick={() => setFilterPieChart('kriteriaMitra')}
-                                                >Berdasarkan Kriteria Mitra</MenuItem>
+                                                    onClick={() =>
+                                                        setFilterPieChart(
+                                                            "kriteriaMitra"
+                                                        )
+                                                    }
+                                                >
+                                                    Berdasarkan Kriteria Mitra
+                                                </MenuItem>
                                                 <MenuItem
-                                                    onClick={() => setFilterPieChart('asal')}
-                                                >Berdasarkan Asal</MenuItem>
+                                                    onClick={() =>
+                                                        setFilterPieChart(
+                                                            "asal"
+                                                        )
+                                                    }
+                                                >
+                                                    Berdasarkan Asal
+                                                </MenuItem>
                                                 <MenuItem
-                                                    onClick={() => setFilterPieChart('active')}
-                                                >Berdasarkan Aktif</MenuItem>
+                                                    onClick={() =>
+                                                        setFilterPieChart(
+                                                            "active"
+                                                        )
+                                                    }
+                                                >
+                                                    Berdasarkan Aktif
+                                                </MenuItem>
                                             </MenuList>
                                         </Menu>
                                         <div className="p-4 text-gray-900">
-                                            {filterPieChart == 'kriteriaMitra' ? (
+                                            {filterPieChart ==
+                                            "kriteriaMitra" ? (
                                                 <Chart
-                                                    label={Object.values(kriteriaMitra)}
+                                                    label={Object.values(
+                                                        kriteriaMitra
+                                                    )}
                                                     series={Object.values(
                                                         seriesKriteriaMitra
                                                     )}
                                                 />
-                                            ): filterPieChart == 'asal' ? (
+                                            ) : filterPieChart == "asal" ? (
                                                 <Chart
                                                     label={[
                                                         "Nasional",
@@ -501,19 +521,25 @@ export default function Dashboard({
                                                         seriesAsalMitra
                                                     )}
                                                 />
-                                            ): filterPieChart == 'active' ? (
+                                            ) : filterPieChart == "active" ? (
                                                 <Chart
-                                                    label={["Active", "Inactive"]}
+                                                    label={[
+                                                        "Active",
+                                                        "Inactive",
+                                                    ]}
                                                     series={[
                                                         activeMitra,
                                                         inactiveMitra,
                                                     ]}
                                                 />
-                                            ): null}
+                                            ) : null}
                                         </div>
                                     </div>
                                 </div>
-                                <a href={route('download-laporan-dashboard')} className="bg-green-400 border-2 border-gray-400 w-full h-fit py-2 text-white P-3 rounded-lg text-center">
+                                <a
+                                    href={route("download-laporan-dashboard")}
+                                    className="bg-green-400 border-2 border-gray-400 w-full h-fit py-2 text-white P-3 rounded-lg text-center"
+                                >
                                     DOWNLOAD REPORT DASHBOARD & KERJA SAMA
                                 </a>
                             </div>
