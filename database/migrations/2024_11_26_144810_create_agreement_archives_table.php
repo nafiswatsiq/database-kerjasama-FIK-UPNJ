@@ -36,6 +36,7 @@ return new class extends Migration
             // $table->string('asal_mitra');
             // $table->string('ruang_lingkup_kerjasama');
             $table->string('draft')->nullable();
+            $table->string('dokumen_kerjasama')->nullable();
             $table->string('dokumen_ia_bertandatangan')->nullable();
             $table->string('dokumen_laporan')->nullable();
             $table->timestamps();
