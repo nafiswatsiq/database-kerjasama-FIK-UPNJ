@@ -49,4 +49,9 @@ class AgreementArchives extends Model
     {
         return $this->hasMany(LogKegiatan::class);
     }
+
+    public function laporanIa()
+    {
+        return $this->hasOne(laporanIa::class);
+    }
 }

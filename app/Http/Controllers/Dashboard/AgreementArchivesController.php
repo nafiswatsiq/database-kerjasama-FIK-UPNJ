@@ -367,8 +367,9 @@ class AgreementArchivesController extends Controller
             'no_ia' => $agreementArchives->no_ia,
             'ruang_lingkup' => $mitra->jenis_kerjasama,
             'waktu_pelaksanaan' => $agreementArchives->durasi_kerjasama . " " . $agreementArchives->tahun_ajaran . " " . $agreementArchives->tahun_ajaran_1 . "/" . $agreementArchives->tahun_ajaran_2,
+            'hasil_pelaksanaan' => $agreementArchives->laporanIa->hasil,
         ];
-
+        
         $kegiatans= [];
         foreach($logKegiatans as $kegiatan){
             $kegiatans[] = [
