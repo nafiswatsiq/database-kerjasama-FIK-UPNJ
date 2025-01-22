@@ -7,21 +7,22 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ExpiredMitra extends Notification
+class NullLaporanIa extends Notification
 {
     use Queueable;
-    protected $mitraId; 
-    protected $mitra; 
-    protected $expiredDate; 
+
+    public $mitraId;
+    public $nama_mitra;
+    public $nama_instansi;
     /**
      * Create a new notification instance.
      */
-    public function __construct($mitraId, $mitra, $expiredDate)
+    public function __construct($mitraId, $nama_mitra, $nama_instansi)
     {
         $this->mitraId = $mitraId;
-        $this->mitra = $mitra;
-        $this->expiredDate = $expiredDate;
-        logger()->info('Mitra '.$this->mitra.' akan berakhir pada tanggal '.$this->expiredDate);
+        $this->nama_mitra = $nama_mitra;
+        $this->nama_instansi = $nama_instansi;
+        logger()->info('Laporan IA dengan Mitra '.$this->nama_mitra.' di '.$this->nama_instansi.' belum diunggah');
     }
 
     /**
@@ -54,8 +55,8 @@ class ExpiredMitra extends Notification
     {
         return [
             'mitra_id' => $this->mitraId,
-            'type' => 'expired-'.$this->mitraId,
-            'data' =>' Kerjasama dengan mitra '. $this->mitra.' akan berakhir pada tanggal '.$this->expiredDate,
+            'type' => 'null-laporan-ia-'.$this->mitraId,
+            'data' =>' Laporan IA untuk Mitra '. $this->nama_mitra.' di '.$this->nama_instansi.' belum dibuat',
         ];
     }
 }
