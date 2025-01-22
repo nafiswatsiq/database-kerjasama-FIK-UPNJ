@@ -178,7 +178,7 @@ export default function Edit({ mitraId, agreementArchive, logKegiatan }) {
                                     "download-draft-ia",
                                     agreementArchive.id
                                 )}
-                            ></DownloadButton>
+                            />
                             <DownloadButton
                                 content="Download Draf IA Bertanda tangan"
                                 link={route(
@@ -191,6 +191,7 @@ export default function Edit({ mitraId, agreementArchive, logKegiatan }) {
                             <UploadButton
                                 content="Upload Dokumen IA"
                                 agrementId={agreementArchive.id}
+                                link={"aggreement.update.dokumen_kerjasama"}
                             />
                             <div className="">
                                 <DownloadButton

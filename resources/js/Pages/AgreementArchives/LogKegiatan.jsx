@@ -3,6 +3,7 @@ import InputLabel from "@/Components/InputLabel";
 import InputError from "@/Components/InputError";
 import TextInput from "@/Components/TextInput";
 import UploadButton from "@/Components/AgreementArchives/UploadButton";
+import DownloadButton from "@/Components/AgreementArchives/DownloadButton";
 import {
     ArrowLeftCircleIcon,
     TrashIcon,
@@ -323,7 +324,15 @@ export default function LogKegiatan({ mitra, agreementArchive, logKegiatans }) {
                             <p className="font-bold text-base mb-4">
                                 2. UNDUH LAPORAN{" "}
                             </p>
-                            <a
+                            <DownloadButton
+                                content="Download Draf Laporan"
+                                link={route(
+                                    "download-draft-laporan",
+                                    agreementArchive.id
+                                )}
+                                className="w-1/3"
+                            />
+                            {/* <a
                                 href={route(
                                     "download-draft-laporan",
                                     agreementArchive.id
@@ -331,13 +340,19 @@ export default function LogKegiatan({ mitra, agreementArchive, logKegiatans }) {
                                 className="text-white bg-green-500 hover:bg-green-700 transition-transform py-3 px-10 text-center text-base rounded-full "
                             >
                                 Donwload Draft Laporan
-                            </a>
+                            </a> */}
                         </div>
                         <div className="py-4">
                             <p className="font-bold text-base mb-4">
                                 3. UNGGAH LAPORAN{" "}
                             </p>
-                            <UploadButton content="Unggah Laporan" />
+                            <UploadButton
+                                content="Unggah Laporan"
+                                agrementId={agreementArchive.id}
+                                // documentName={"dokumen_laporan"}
+                                link={"aggreement.update.dokumen_laporan"}
+                                className={"w-1/3"}
+                            />
                         </div>
                     </div>
                 </div>
