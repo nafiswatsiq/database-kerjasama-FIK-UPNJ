@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Documentation;
-use App\Models\KriteriaMitra;
+use Carbon\Carbon;
 use App\Models\User;
 use Inertia\Inertia;
-use Illuminate\Http\Request;
-use App\Models\AgreementArchives;
-use App\Models\JenisKerjasama;
 use App\Models\Mitra;
-use App\Services\DocumentGeneratorDashboard;
-use Carbon\Carbon;
+use Illuminate\Http\Request;
+use App\Models\Documentation;
+use App\Models\KriteriaMitra;
+use App\Models\JenisKerjasama;
+use App\Models\AgreementArchives;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\Services\DocumentGeneratorDashboard;
 
 class Dashboard extends Controller
 {
@@ -165,5 +166,13 @@ class Dashboard extends Controller
         if ($generated) {
             return response()->download($generated);
         }
+    }
+    
+    public function deleteAllNotification()
+    {
+        $user = User::find(Auth::id());
+        $user->notifications()->delete();
+
+        return redirect()->back();
     }
 }

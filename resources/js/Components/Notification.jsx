@@ -1,5 +1,5 @@
 
-import { BellIcon } from "@heroicons/react/24/outline";
+import { BellIcon, DocumentIcon, DocumentTextIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import { Link, usePage } from "@inertiajs/react";
 import {
@@ -57,6 +57,19 @@ export default function Notification() {
         </IconButton> */}
       </MenuHandler>
       <MenuList className="flex flex-col gap-2">
+          <MenuItem className="py-2 pl-2 pr-8 hover:!bg-white">
+            <Link 
+              href={route('delete-all-notification')}
+            className="flex items-center gap-4 justify-end">
+              <TrashIcon className="h-6 w-6 text-red-500" />
+              {/* <ExclamationCircleIcon className="h-10 w-10 text-red-600" />
+              <div className="flex flex-col gap-1">
+                <Typography variant="small" color="gray" className="font-semibold">
+                  No Notification
+                </Typography>
+              </div> */}
+            </Link>
+          </MenuItem>
         {notification.count === 0 && (
           <MenuItem className="py-2 pl-2 pr-8">
             <Link className="flex items-center gap-4">
@@ -72,7 +85,13 @@ export default function Notification() {
         {notification.data.map((item) => (
           <MenuItem className="py-2 pl-2 pr-8">
             <Link href={route('mitra.detail', `${item.data.mitra_id}`)} className="flex items-center gap-4">
-              <ExclamationCircleIcon className="h-10 w-10 text-red-600" />
+              {item.data.type === 'expired-'+item.data.mitra_id ? (
+                <ExclamationCircleIcon className="h-10 w-10 text-red-600" />
+              ):item.data.type === 'null-dokumen-'+item.data.mitra_id ? (
+                <DocumentIcon className="h-10 w-10 text-red-600" />
+              ):item.data.type === 'null-laporan-ia-'+item.data.mitra_id ? (
+                <DocumentTextIcon className="h-10 w-10 text-red-600" />
+              ):null}
               <div className="flex flex-col gap-1">
                 <Typography variant="small" color="gray" className="font-semibold max-w-60">
                   {item.data.data}

@@ -111,6 +111,7 @@ Route::middleware('auth')->group(function () {
         Route::get('download-draft-ia/{id}', [AgreementArchivesController::class, 'draftDocumentIa'])->name('download-draft-ia');
         Route::get('download-laporan-ia/{id}', [AgreementArchivesController::class, 'downloadLaporanIa'])->name('download-laporan-ia');
 
+        Route::get('delete-all-notification', [Dashboard::class, 'deleteAllNotification'])->name('delete-all-notification');
 
         Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
     });
