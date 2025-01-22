@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Mitra;
+use App\Models\laporanIa;
 use App\Models\LogKegiatan;
 use Illuminate\Http\Request;
 use App\Models\JenisKegiatan;
@@ -15,8 +16,8 @@ use App\Models\AgreementArchives;
 use App\Notifications\ExpiredMitra;
 use App\Services\DocumentGenerator;
 use App\Http\Controllers\Controller;
-use App\Services\DocumentGeneratorIa;
 use Illuminate\Support\Facades\Auth;
+use App\Services\DocumentGeneratorIa;
 use Illuminate\Support\Facades\Storage;
 
 class AgreementArchivesController extends Controller
@@ -385,27 +386,32 @@ class AgreementArchivesController extends Controller
 
     public function downloadDraftLaporan($id){
         $agreementArchive = AgreementArchives::findOrFail($id);
-        $data = [
-            'nama_mitra' => $agreementArchive->nama_mitra,
-            'jenis_ia' => $agreementArchive->nama_kegiatan,
-            'durasi' => $agreementArchive->durasi_kerjasama,
-            'tahun_ajaran' => $agreementArchive->tahun_ajaran,
-            'tahun_ajaran_1' => $agreementArchive->tahun_ajaran_1,
-            'tahun_ajaran_2' => $agreementArchive->tahun_ajaran_2,
-            'no_pks' => $agreementArchive->mitra->no_pks_mitra,
-            'no_ia' => $agreementArchive->no_ia,
-            'ruang_lingkup' => $agreementArchive->mitra->jenis_kerjasama,
-            'tanggal_pelaksanaan' => Carbon::parse($agreementArchive->created_at)->locale('id')->isoFormat('D MMMM Y'),
-            'pihak_1' => $agreementArchive->pihak_1,
-            'jabatan_ia_pihak_1' => $agreementArchive->jabatan_pihak_1,
-            'jabatan_pic_mitra' => $agreementArchive->mitra->jabatan_pic_mitra,
-            'pic_mitra' => $agreementArchive->mitra->pic_mitra,
-        ];
+        // $data = [
+        //     'nama_mitra' => $agreementArchive->nama_mitra,
+        //     'jenis_ia' => $agreementArchive->nama_kegiatan,
+        //     'durasi' => $agreementArchive->durasi_kerjasama,
+        //     'tahun_ajaran' => $agreementArchive->tahun_ajaran,
+        //     'tahun_ajaran_1' => $agreementArchive->tahun_ajaran_1,
+        //     'tahun_ajaran_2' => $agreementArchive->tahun_ajaran_2,
+        //     'no_pks' => $agreementArchive->mitra->no_pks_mitra,
+        //     'no_ia' => $agreementArchive->no_ia,
+        //     'ruang_lingkup' => $agreementArchive->mitra->jenis_kerjasama,
+        //     'tanggal_pelaksanaan' => Carbon::parse($agreementArchive->created_at)->locale('id')->isoFormat('D MMMM Y'),
+        //     'pihak_1' => $agreementArchive->pihak_1,
+        //     'jabatan_ia_pihak_1' => $agreementArchive->jabatan_pihak_1,
+        //     'jabatan_pic_mitra' => $agreementArchive->mitra->jabatan_pic_mitra,
+        //     'pic_mitra' => $agreementArchive->mitra->pic_mitra,
+        // ];
 
-        $generated = (new DocumentGenerator())->draftLapIa($data);
-        if($generated){
-            return response()->download($generated);
+        // $generated = (new DocumentGenerator())->draftLapIa($data);
+        // if($generated){
+        //     return response()->download($generated);
+        // }
+        $logKegiatan = LogKegiatan::where('agreement_archives_id', $id)->first();
+        if($logKegiatan->laporan == null){
+            return redirect()->back();
         }
+        return response()->download($logKegiatan->laporan);
     }
 
     public function view($mitraId, $id)
@@ -503,7 +509,7 @@ class AgreementArchivesController extends Controller
     {
         $mitra = Mitra::findOrFail($mitraId);
         $agreementArchive = AgreementArchives::findOrFail($id);
-        $logKegiatans = LogKegiatan::where('agreement_archives_id', $id)->where('mitra_id' , $mitraId)->get();
+        $logKegiatans = LogKegiatan::where('agreement_archives_id', $id)->where('mitra_id' , $mitraId)->first();
         return Inertia::render('AgreementArchives/LogKegiatan' , [
             'mitra' => $mitra,
             'agreementArchive' => $agreementArchive,
@@ -536,6 +542,67 @@ class AgreementArchivesController extends Controller
         return redirect()->back()->with('success', 'Log kegiatan berhasil disimpan');
 
     }
+
+    public function inputLapIa($mitraId ,$agreementArchivesId)
+    {
+        $agreementArchive = AgreementArchives::findOrFail($agreementArchivesId);
+        $mitra = Mitra::findOrFail($mitraId);
+        $logKegiatans = $agreementArchive->logKegiatan;
+        return Inertia::render('AgreementArchives/InputLaporanIa', [
+            'agreementArchive' => $agreementArchive,
+            'mitra' => $mitra,
+            'logKegiatans' => $logKegiatans,
+        ]);
+    }
+
+    public function storeLapIa(Request $request , $mitraId , $agreementArchivesId){
+        $logKegiatans = LogKegiatan::where('agreement_archives_id' , $agreementArchivesId)->get();
+        $logKegiatanId = [];
+        foreach ($logKegiatans as $item){
+            $logKegiatanId[] = $item->id;
+        }
+        $logKegiatanId = json_encode($logKegiatanId);
+        $request->validate([
+            'tanggal_kegiatan' => 'required',
+            'nip' => 'required',
+            'hasil_kegiatan' => 'required',
+        ]);
+        $lapIa = laporanIa::create([
+            'agreement_archives_id' => $agreementArchivesId,
+            'tanggal' => $request->tanggal_kegiatan,
+            'nip' => $request->nip,
+            'hasil' => $request->hasil_kegiatan,
+            'log_kegiatan_id' => $logKegiatanId,
+        ]);
+
+        $data = [
+            'nama_mitra' => $lapIa->agreementArchives->mitra->nama_mitra,
+            'nama_kegiatan' => $lapIa->agreementArchives->nama_kegiatan,
+            'durasi' => $lapIa->agreementArchives->durasi_kerjasama,
+            'tahun_ajaran' => $lapIa->agreementArchives->tahun_ajaran,
+            'tahun_ajaran_1' => $lapIa->agreementArchives->tahun_ajaran_1,
+            'tahun_ajaran_2' => $lapIa->agreementArchives->tahun_ajaran_2,
+            'no_pks_mitra' => $lapIa->agreementArchives->mitra->no_pks_mitra,
+            'no_ia' => $lapIa->agreementArchives->no_ia,
+            'ruang_lingkup' => $lapIa->agreementArchives->mitra->jenis_kerjasama,
+            'pihak_1' => $lapIa->agreementArchives->pihak_1,
+            'jabatan_pic_fik ' => $lapIa->agreementArchives->mitra->jabatan_pic_fik,
+            'jabatan_pic_mitra' => $lapIa->agreementArchives->mitra->jabatan_pic_mitra,
+            'pic_mitra' => $lapIa->agreementArchives->mitra->pic_mitra,
+            'tanggal' => Carbon::parse($lapIa->tanggal)->locale('id')->isoFormat('D MMMM Y'),
+            'nip' => $request->nip,
+            'hasil' => $request->hasil_kegiatan,
+        ];
+
+        $generated = (new DocumentGenerator())->draftLapIa($data);
+        if($generated){
+            $logKegiatans->first()->update([
+                'laporan' => $generated,
+            ]);
+        }
+        return redirect()->route('agreementarchives.logKegiatan' , [$mitraId , $agreementArchivesId]);
+    }
+
 
     public function updateDokumenLaporan(Request $request, $id)
     {

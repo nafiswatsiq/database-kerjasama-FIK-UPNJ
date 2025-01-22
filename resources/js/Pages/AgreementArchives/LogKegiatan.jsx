@@ -309,12 +309,18 @@ export default function LogKegiatan({ mitra, agreementArchive, logKegiatans }) {
                                 1. INPUT LAPORAN{" "}
                             </p>
                             {logKegiatans.laporan != null ? (
-                                <Link className="flex gap-2 text-green-500 text-base items-center ">
+                                <Link className="flex gap-2 text-green-500 text-base items-center">
                                     <CheckIcon className="w-8 h-8 text-green-500" />
                                     Sudah Terlaksana
                                 </Link>
                             ) : (
-                                <Link className="flex gap-2 text-red-500 text-base items-center">
+                                <Link
+                                    className="flex gap-2 text-red-500 text-base items-center"
+                                    href={route(
+                                        "agreementarchives.logKegiatan.inputLapIa",
+                                        [mitra.id, agreementArchive.id]
+                                    )}
+                                >
                                     <IoAlertCircleOutline className="w-8 flex h-8 text-red-500" />
                                     Belum Terlaksana
                                 </Link>

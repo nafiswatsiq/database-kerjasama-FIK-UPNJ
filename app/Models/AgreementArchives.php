@@ -44,4 +44,9 @@ class AgreementArchives extends Model
     {
         return $this->belongsTo(Mitra::class);
     }
+
+    public function logKegiatan()
+    {
+        return $this->hasMany(LogKegiatan::class);
+    }
 }

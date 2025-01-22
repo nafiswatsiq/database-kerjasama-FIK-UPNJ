@@ -24,7 +24,6 @@ import UploadButton from "@/Components/AgreementArchives/UploadButton";
 const drafIA = "../../../../dokumen/template_draft_ia.docx";
 
 export default function Edit({ mitraId, agreementArchive, logKegiatan }) {
-    console.log(agreementArchive);
     const { data } = useForm({
         nama_instansi: agreementArchive.nama_instansi,
         nama_kegiatan: agreementArchive.nama_kegiatan,
