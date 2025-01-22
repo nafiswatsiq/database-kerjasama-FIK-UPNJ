@@ -23,8 +23,7 @@ import UploadButton from "@/Components/AgreementArchives/UploadButton";
 
 const drafIA = "../../../../dokumen/template_draft_ia.docx";
 
-export default function Edit({ mitraId, agreementArchive }) {
-    console.log(agreementArchive)
+export default function Edit({ mitraId, agreementArchive, logKegiatan }) {
     const { data } = useForm({
         nama_instansi: agreementArchive.nama_instansi,
         nama_kegiatan: agreementArchive.nama_kegiatan,
@@ -62,6 +61,11 @@ export default function Edit({ mitraId, agreementArchive }) {
         const year = date.getFullYear();
         return `${day}/${month}/${year}`;
     };
+    const storageImage = (path) => {
+        console.log(path);
+        return `/storage/${path.replace("public/log-kegiatan/", "")}`;
+    };
+
     return (
         <AuthenticatedLayout>
             <Head title={data.nama_kegiatan} />
@@ -85,7 +89,7 @@ export default function Edit({ mitraId, agreementArchive }) {
                         >
                             <span>IA</span>
                         </Link>
-                        <a href="#">{data.nama_kegiatan}</a>
+                        <a href="">{data.nama_kegiatan}</a>
                     </Breadcrumbs>
                     <div className="overflow-hidden">
                         <div className="border-b-2 pb-4 border-gray-500 flex items-center">
@@ -129,12 +133,15 @@ export default function Edit({ mitraId, agreementArchive }) {
                                     >
                                         Kritieria IA
                                     </Typography>
-                                    <Typography
-                                        variant="small"
+                                    <a
+                                        href={route(
+                                            "download-rekap-ia",
+                                            agreementArchive.id
+                                        )}
                                         className="px-5 py-1 text-xs rounded-full bg-green-500 text-white border-black border-[1px]"
                                     >
                                         Download Rekap IA
-                                    </Typography>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -166,19 +173,78 @@ export default function Edit({ mitraId, agreementArchive }) {
                         <div className="grid grid-cols-2">
                             <DownloadButton
                                 content="Download Draft IA"
-                                link={drafIA}
-                            ></DownloadButton>
-                            <DownloadButton content="Download Draf IA Bertanda tangan" link={route('agreementarchives.download', agreementArchive.dokumen_kerjasama)}/>
-                            <UploadButton content="Upload Dokumen IA" agrementId={agreementArchive.id}/>
+                                link={route(
+                                    "download-draft-ia",
+                                    agreementArchive.id
+                                )}
+                            />
+                            <DownloadButton
+                                content="Download Draf IA Bertanda tangan"
+                                link={route(
+                                    "agreementarchives.download",
+                                    agreementArchive.dokumen_kerjasama
+                                        ? agreementArchive.dokumen_kerjasama
+                                        : ""
+                                )}
+                            />
+                            <UploadButton
+                                content="Upload Dokumen IA"
+                                agrementId={agreementArchive.id}
+                                link={"aggreement.update.dokumen_kerjasama"}
+                            />
                             <div className="">
-                                <DownloadButton content="Download Laporan IA Bertanda tangan" link={route('download-laporan-ia', agreementArchive.id)}/>
+                                <DownloadButton
+                                    content="Download Laporan IA Bertanda tangan"
+                                    link={route(
+                                        "download-laporan-ia",
+                                        agreementArchive.id
+                                    )}
+                                />
                             </div>
                         </div>
 
                         <div className="py-2">
-                            <h1 className="font-bold uppercase text-xl border-b-[1px] border-black pb-2">
+                            <Link
+                                href={route("agreementarchives.logKegiatan", [
+                                    mitraId,
+                                    agreementArchive.id,
+                                ])}
+                                className="flex font-bold uppercase text-xl border-b-[1px] border-black pb-2"
+                            >
                                 Log Kegiatan
-                            </h1>
+                            </Link>
+                            <div className="flex flex-row gap-x-4 mt-2">
+                                {logKegiatan.map((log, index) => (
+                                    <div
+                                        key={index}
+                                        className="flex flex-row gap-x-2"
+                                    >
+                                        <div className="flex flex-col gap-y-1">
+                                            <p>Tahapan {index + 1}</p>
+                                            <p className="font-bold">
+                                                Nama Kegiatan :
+                                                {log.nama_kegiatan}
+                                            </p>
+                                            <p>
+                                                Tanggal Kegiatan :
+                                                {formatDate(
+                                                    log.tanggal_kegiatan
+                                                )}
+                                            </p>
+                                            <p>
+                                                Dokumentasi Kegiatan :
+                                                <img
+                                                    src={storageImage(
+                                                        log.dokumentasi
+                                                    )}
+                                                    className="w-16 h-auto"
+                                                    alt=""
+                                                />
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

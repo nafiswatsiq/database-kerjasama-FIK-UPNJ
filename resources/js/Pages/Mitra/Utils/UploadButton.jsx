@@ -2,12 +2,7 @@ import React, { useState } from "react";
 import { Upload, CheckCircle, AlertCircle } from "lucide-react";
 import { router, useForm, usePage } from "@inertiajs/react";
 
-export default function UploadButton({
-    content,
-    link,
-    agrementId,
-    className = null,
-}) {
+export default function UploadButton({ content, mitraId }) {
     const [selectedFile, setSelectedFile] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadStatus, setUploadStatus] = useState(null);
@@ -32,9 +27,8 @@ export default function UploadButton({
         try {
             // Di sini Anda akan mengganti kode ini dengan actual API call
             // post(route("aggreement.update.dokumen_kerjasama", selectedFile));
-            router.post(route(link, agrementId), {
-                dokumen_laporan: selectedFile,
-                dokumen_kerjasama: selectedFile,
+            router.post(route('mitra.update.dokumen_mitra', mitraId), {
+                dokumen_kerjasama: selectedFile
             });
 
             // Simulasi API call
@@ -53,7 +47,7 @@ export default function UploadButton({
     };
 
     return (
-        <div className={className ? className : "m-auto w-full max-w-[592px]"}>
+        <div className="mx-auto w-full">
             <div className="">
                 <input
                     type="file"
@@ -72,7 +66,7 @@ export default function UploadButton({
 
                     <label
                         htmlFor="document-upload"
-                        className="w-full bg-green-600 text-white py-[6px] px-10 rounded-xl text-center cursor-pointer hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+                        className="w-full bg-green-600 text-white py-2 px-4 rounded-md text-center cursor-pointer hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
                     >
                         <Upload size={20} />
                         {content}
@@ -82,7 +76,7 @@ export default function UploadButton({
                         <button
                             onClick={handleUpload}
                             disabled={isUploading}
-                            className="w-full bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600 transition-colors disabled:bg-gray-400"
+                            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors disabled:bg-gray-400"
                         >
                             {isUploading ? "Mengupload..." : "Kirim Dokumen"}
                         </button>

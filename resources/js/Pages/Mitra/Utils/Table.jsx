@@ -222,7 +222,7 @@ export function Table({ mitraId, agreementArchives }) {
                         (
                             {
                                 id,
-                                nama_instansi,
+                                nama_kegiatan,
                                 bentuk_kegiatan,
                                 jenis_kegiatan,
                                 waktu_kerjasama_mulai,
@@ -262,7 +262,7 @@ export function Table({ mitraId, agreementArchives }) {
                                             color="blue-gray"
                                             className="font-bold"
                                         >
-                                            {nama_instansi}
+                                            {nama_kegiatan}
                                         </Typography>
                                     </td>
                                     <td
@@ -370,16 +370,11 @@ export function Table({ mitraId, agreementArchives }) {
                                     </td>
                                     <td className={`${classes} w-16`}>
                                         <div className="flex justify-start gap-x-3">
-                                            {dokumen_laporan ? (
                                                 <a
-                                                    href={route(
-                                                        "agreementarchives.download",
-                                                        dokumen_laporan
-                                                    )}
+                                                    href={route('download-laporan-ia', id)}
                                                 >
                                                     <DocumentArrowDownIcon className="h-5 w-5 text-green-500" />
                                                 </a>
-                                            ) : null}
                                         </div>
                                     </td>
                                     {/* <td className={`${classes} cursor-pointer`} onClick={() => handleView(id)}>

@@ -33,7 +33,8 @@ Route::middleware('auth')->group(function () {
         Route::delete('/mitra/{id}/delete', [MitraController::class, 'delete'])->name('mitra.delete');
         Route::get('/mitra/{mitraId}', [MitraController::class, 'detail'])->name('mitra.detail');
         Route::post('/mitra', [MitraController::class, 'store'])->name('mitra.store');
-        
+        Route::post('/mitra/{id}/update-dokumen-kerjasama', [MitraController::class, 'updateDokumenKerjasama'])->name('mitra.update.dokumen_mitra');
+
         Route::get('/mitra/{mitraId}/agreement-archives', [AgreementArchivesController::class, 'index'])->name('agreementarchives.index');
         Route::get('/mitra/{mitraId}/agreement-archives/create', [AgreementArchivesController::class, 'create'])->name('agreementarchives.create');
         Route::post('/mitra/{mitraId}/agreement-archives', [AgreementArchivesController::class, 'store'])->name('agreementarchives.store');
@@ -42,7 +43,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/mitra/{mitraId}/agreement-archives/{id}/edit', [AgreementArchivesController::class, 'edit'])->name('agreementarchives.edit');
         Route::post('agreement-archives/{id}', [AgreementArchivesController::class, 'update'])->name('agreementarchives.update');
         Route::get('/mitra/{mitraId}/agreement-archives/{id}', [AgreementArchivesController::class, 'view'])->name('agreementarchives.view');
+
+        Route::get('/mitra/{mitraId}/agreement-archives/{id}/log-kegiatan', [AgreementArchivesController::class, 'logKegiatan'])->name('agreementarchives.logKegiatan');
+        Route::get('/mitra/{mitraId}/agreement-archives/{id}/log-kegiatan/input-lap-ia', [AgreementArchivesController::class, 'inputLapIa'])->name('agreementarchives.logKegiatan.inputLapIa');
+        Route::post('/mitra/{mitraId}/agreement-archives/{id}/log-kegiatan/input-lap-ia', [AgreementArchivesController::class, 'storeLapIa'])->name('agreementarchives.storeLapIa');
+
+        Route::post('/mitra/{mitraId}/agreement-archives/{id}/log-kegiatan/create', [AgreementArchivesController::class, 'createLogKegiatan'])->name('agreementarchives.storeLogKegiatan');
         Route::post('/agreement-archives/{id}/update-dokumen-kerjasama', [AgreementArchivesController::class, 'updateDokumenKerjasama'])->name('aggreement.update.dokumen_kerjasama');
+        Route::post('/agreement-archives/{id}/update-dokumen-laporan', [AgreementArchivesController::class, 'updateDokumenLaporan'])->name('aggreement.update.dokumen_laporan');
 
         Route::get('/users', [UsersController::class, 'index'])->name('users.index');
         Route::get('/users/create', [UsersController::class, 'create'])->name('users.create');
@@ -96,7 +104,10 @@ Route::middleware('auth')->group(function () {
 
         Route::get('download-draft-pks/{id}', [MitraController::class, 'draftDocumentPks'])->name('download-draft-pks');
         Route::get('download-laporan-mitra/{id}', [MitraController::class, 'downloadLaporanMitra'])->name('download-laporan-mitra');
-        Route::get('download-laporan-dashboard', [Dashboard::class, 'downloadLaporanDashboard'])->name('download-laporan-dashboard');
+        Route::get('download-draft-ia/{id}', [AgreementArchivesController::class, 'draftDocumentIa'])->name('download-draft-ia');
+        Route::get('download-rekap-ia/{id}', [AgreementArchivesController::class, 'downloadRekapIa'])->name('download-rekap-ia');
+        Route::get('log-kegiatan/donwload-draft-laporan/{id}', [AgreementArchivesController::class, 'downloadDraftLaporan'])->name('download-draft-laporan');        Route::get('download-laporan-dashboard', [Dashboard::class, 'downloadLaporanDashboard'])->name('download-laporan-dashboard');
+        Route::get('download-draft-ia/{id}', [AgreementArchivesController::class, 'draftDocumentIa'])->name('download-draft-ia');
         Route::get('download-laporan-ia/{id}', [AgreementArchivesController::class, 'downloadLaporanIa'])->name('download-laporan-ia');
 
 

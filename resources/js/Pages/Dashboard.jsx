@@ -60,7 +60,6 @@ export default function Dashboard({
     const [selectedActive, setSelectedActive] = useState([]);
     const [selectedTahun, setSelectedTahun] = useState([]);
     const [filteredMitra, setFilteredMitra] = useState(mitra);
-    console.log(mitra);
     const [filterChart, setFilterChart] = useState("kriteriaMitra");
     const [filterPieChart, setFilterPieChart] = useState("kriteriaMitra");
 
@@ -285,8 +284,8 @@ export default function Dashboard({
                         </div>
                     </div>
                     <div className="flex flex-col gap-2 items-center">
-                        <div className="flex gap-4">
-                            <div className="col-span-4 w-[45%] bg-white sm:rounded-2xl shadow-lg">
+                        <div className="flex gap-4 w-full">
+                            <div className="w-7/12 bg-white sm:rounded-2xl shadow-lg">
                                 <div className="px-5 pt-5">
                                     <Menu>
                                         <MenuHandler>
@@ -380,40 +379,9 @@ export default function Dashboard({
                                     />
                                 ) : null}
                             </div>
-                            <div className="flex flex-col gap-2 ">
+                            <div className="flex flex-col gap-2 w-5/12">
                                 <div className="flex gap-2">
-                                    {/* <div className="overflow-hidden bg-white sm:rounded-2xl h-fit shadow-lg border-2 border-gray-500 rounded-2xl">
-                                <div className="grid grid-cols-2">
-                                    <div className="p-5 text-center relative border-2 rounded-tl-2xl border-gray-700">
-                                    <p className="text-green-400 absolute left-4 top-2">Aktif</p>
-                                        <p className="font-bold text-green-400 text-4xl">
-                                            {totalMitra}
-                                        </p>
-                                    </div>
-                                    <div className=" p-5 text-center ">
-                                        <p className="font-bold text-2xl">
-                                            Total Mitra
-                                        </p>
-                                    </div>
-                                    <div className="p-5 text-center border-2 border-gray-700 text-green-500">
-                                        <p className="font-bold text-2xl">
-                                            {activeMitra}
-                                        </p>
-                                        <p className="font-bold text-xl">
-                                            Active
-                                        </p>
-                                    </div>
-                                    <div className="p-5 text-center border-2 border-gray-700 text-red-500">
-                                        <p className="font-bold text-2xl">
-                                            {inactiveMitra}
-                                        </p>
-                                        <p className="font-bold text-xl">
-                                            Inactive
-                                        </p>
-                                    </div>
-                                </div>
-                            </div> */}
-                                    <div class="w-[50%] h-fit relative max-w-sm mx-auto bg-white rounded-lg shadow-lg p-4 grid grid-cols-2 gap-2">
+                                    <div class="w-full h-fit relative max-w-sm mx-auto bg-white rounded-lg shadow-lg p-4 grid grid-cols-2 gap-2">
                                         <div class="flex flex-col items-center justify-center border-r border-b border-gray-300 p-4">
                                             <p class="text-green-500 font-bold text-4xl">
                                                 {activeMitra}
@@ -461,6 +429,7 @@ export default function Dashboard({
                                         </div>
                                     </div>
 
+                                </div>
                                     <div className="mt-4 overflow-hidden h-fit p-4 bg-white sm:rounded-2xl shadow-lg">
                                         {/* <div className="border-2 border-gray-700 text-nowrap text-sm w-full p-2 rounded-full">
                                             <p>Berdasarkan kriteria mitra</p>
@@ -490,6 +459,7 @@ export default function Dashboard({
                                                     series={Object.values(
                                                         seriesKriteriaMitra
                                                     )}
+                                                    height={200}
                                                 />
                                             ): filterPieChart == 'asal' ? (
                                                 <Chart
@@ -500,6 +470,7 @@ export default function Dashboard({
                                                     series={Object.values(
                                                         seriesAsalMitra
                                                     )}
+                                                    height={200}
                                                 />
                                             ): filterPieChart == 'active' ? (
                                                 <Chart
@@ -508,11 +479,11 @@ export default function Dashboard({
                                                         activeMitra,
                                                         inactiveMitra,
                                                     ]}
+                                                    height={200}
                                                 />
                                             ): null}
                                         </div>
                                     </div>
-                                </div>
                                 <a href={route('download-laporan-dashboard')} className="bg-green-400 border-2 border-gray-400 w-full h-fit py-2 text-white P-3 rounded-lg text-center">
                                     DOWNLOAD REPORT DASHBOARD & KERJA SAMA
                                 </a>
@@ -1082,6 +1053,19 @@ export default function Dashboard({
                     {/* <div>
                         <Gallery data={galleries}/>
                     </div> */}
+                </div>
+                <div className="w-full bg-orange-500 mt-12 py-8">
+                    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-center gap-1">
+                        {mitra.map((item, index) => (
+                            <div key={index} className="w-14 h-14 bg bg-white rounded-full">
+                                <img
+                                    src={'storage/'+item.logo}
+                                    alt={item.nama}
+                                    className="w-full h-full object-cover rounded-full"
+                                />
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </AuthenticatedLayout>

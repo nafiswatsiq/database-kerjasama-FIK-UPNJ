@@ -52,6 +52,10 @@ export default function CardAgreement({ data, user }) {
             });
     };
 
+    const handleOpenNewTab = (href) => {
+        window.open('storage/'+href, '_blank');
+    };
+
     return (
         <Link href={route("mitra.detail", data.id)}>
             <div className="p-5 border rounded-xl shadow bg-white">
@@ -104,9 +108,13 @@ export default function CardAgreement({ data, user }) {
                 <div className="flex justify-between items-center">
                     {user.is_admin ? (
                         <div className="flex gap-2">
-                            <Link href={route("mitra.edit", data.id)}>
-                                <HiOutlineDocumentArrowDown className="w-8 h-auto rounded-full p-1 text-green-500 border-solid border-[1px] border-gray-800" />
-                            </Link>
+                            {data.dokumen_pks ? (
+                                <Link href="#" 
+                                onClick={(e) => { e.preventDefault(); handleOpenNewTab(data.dokumen_pks) }}
+                                >
+                                    <HiOutlineDocumentArrowDown className="w-8 h-auto rounded-full p-1 text-green-500 border-solid border-[1px] border-gray-800" />
+                                </Link>
+                            ) : null}
                             <Link href={route("mitra.edit", data.id)}>
                                 <PencilSquareIcon className="w-8 h-auto rounded-full p-1 text-blue-800 border-solid border-[1px] border-gray-800" />
                             </Link>

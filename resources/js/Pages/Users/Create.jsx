@@ -21,15 +21,16 @@ export default function Create() {
         e.preventDefault();
 
         post(route('users.store'), {
+            onSuccess: () => {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Data berhasil disimpan',
+                    didOpen: () => setSwalShown(true),
+                    didClose: () => setSwalShown(false),
+                });
+            },
             onFinish: () => reset('password'),
         });
-
-        Swal.fire({
-            title: 'Success!',
-            text: 'Data berhasil disimpan',
-            didOpen: () => setSwalShown(true),
-            didClose: () => setSwalShown(false),
-        })
     }
 
     return (

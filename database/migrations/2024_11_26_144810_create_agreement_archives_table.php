@@ -18,8 +18,6 @@ return new class extends Migration
             $table->string('nama_instansi');
             $table->text('nama_kegiatan');
             $table->text('deskripsi_kegiatan');
-            // $table->string('no_ia_pihak_1');
-            // $table->string('no_ia_pihak_2');
             $table->string('no_ia');
             $table->date('waktu_kerjasama_mulai');
             $table->date('waktu_kerjasama_selesai');
@@ -38,7 +36,7 @@ return new class extends Migration
             // $table->string('asal_mitra');
             // $table->string('ruang_lingkup_kerjasama');
             $table->string('draft')->nullable();
-            $table->string('dokumen_kerjasama')->nullable();
+            $table->string('dokumen_ia_bertandatangan')->nullable();
             $table->string('dokumen_laporan')->nullable();
             $table->timestamps();
         });

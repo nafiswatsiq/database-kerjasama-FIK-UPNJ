@@ -203,7 +203,7 @@ class MitraController extends Controller
         foreach (JenisKegiatan::get() as $jenis) {
             $defaultJenisKegiatan[$jenis->jenis_kegiatan] = 0;
         }
-        
+
         $countJenisKegiatan = AgreementArchives::where('mitra_id', $mitraId)->select('jenis_kegiatan', DB::raw('count(*) as total'))
             ->groupBy('jenis_kegiatan')
             ->pluck('total', 'jenis_kegiatan')
@@ -216,7 +216,7 @@ class MitraController extends Controller
             ->groupBy('year')
             ->pluck('total', 'year')
             ->toArray();
-        
+
         $defaultDurasiKerjasama = [];
         foreach (DurasiKerjasamas::get() as $durasi) {
             $defaultDurasiKerjasama[$durasi->durasi_kerjasama] = 0;
@@ -232,8 +232,41 @@ class MitraController extends Controller
         $nullDocument = AgreementArchives::where('mitra_id', $mitraId)->whereNull('dokumen_kerjasama')->count();
         $nullLaporan = AgreementArchives::where('mitra_id', $mitraId)->whereNull('dokumen_laporan')->count();
 
+        $jenisIa = JenisKegiatan::all()->pluck('jenis_kegiatan')->toArray();
+
+        $agreementArchives = $agreementArchives->get()
+            ->map(function ($agrement) {
+                return [
+                    'id' => $agrement->id,
+                    'nama_instansi' => $agrement->nama_instansi,
+                    'nama_kegiatan' => $agrement->nama_kegiatan,
+                    'deskripsi_kegiatan' => $agrement->deskripsi_kegiatan,
+                    'no_ia' => $agrement->no_ia,
+                    'waktu_kerjasama_mulai' => $agrement->waktu_kerjasama_mulai,
+                    'waktu_kerjasama_selesai' => $agrement->waktu_kerjasama_selesai,
+                    'durasi_kerjasama' => $agrement->durasi_kerjasama,
+                    'tahun_ajaran' => $agrement->tahun_ajaran,
+                    'tahun_ajaran_1' => $agrement->tahun_ajaran_1,
+                    'tahun_ajaran_2' => $agrement->tahun_ajaran_2,
+                    'jenis_kegiatan' => $agrement->jenis_kegiatan,
+                    'pihak_1' => $agrement->pihak_1,
+                    'pihak_2' => $agrement->pihak_2,
+                    'jabatan_pihak_1' => $agrement->jabatan_pihak_1,
+                    'jabatan_pihak_2' => $agrement->jabatan_pihak_2,
+                    'bentuk_kegiatan' => $agrement->bentuk_kegiatan,
+                    'ringkasan_luaran' => $agrement->ringkasan_luaran,
+                    'draft' => $agrement->draft,
+                    'dokumen_kerjasama' => $agrement->dokumen_kerjasama,
+                    'dokumen_laporan' => $agrement->dokumen_laporan,
+                    'active' => $agrement->waktu_kerjasama_selesai > now() ? 'true' : 'false',
+                ];
+            });
+        $durasi = DurasiKerjasamas::all()->pluck('durasi_kerjasama')->toArray();
+        $tahun = AgreementArchives::select(DB::raw('YEAR(waktu_kerjasama_mulai) as year'))->pluck('year')->toArray();
+        $tahun = array_unique($tahun);
+
         return Inertia::render('Mitra/Index', [
-            'agreementArchives' => $agreementArchives->get(),
+            'agreementArchives' => $agreementArchives,
             'mitra' => $mitra,
             'totalAgreement' => $totalAgreement,
             'activeAgreement' => $activeAgreement,
@@ -246,6 +279,9 @@ class MitraController extends Controller
             'seriesDurasiKerjasama' => $seriesDurasiKerjasama,
             'nullDocument' => $nullDocument,
             'nullLaporan' => $nullLaporan,
+            'jenisIa' => $jenisIa,
+            'durasi' => $durasi,
+            'tahun' => $tahun,
         ]);
     }
 
@@ -349,7 +385,7 @@ class MitraController extends Controller
         }
 
         $generated = (new DocumentGenerator())->draftDocumentPks($logoMitra, $data, $pasal);
-        
+
         if ($generated) {
             $mitra->update([
                 'draft' => $generated,
@@ -379,7 +415,7 @@ class MitraController extends Controller
             'jumlah_tanpa_dokumen' => $mitra->agreementArchives->whereNull('dokumen_kerjasama')->count(),
             'jumlah_belum_dilaporkan' => $mitra->agreementArchives->whereNull('dokumen_laporan')->count(),
         ];
-        
+
         $tableJenisIa = [];
         foreach (JenisKegiatan::get() as $key => $jenis) {
             $tableJenisIa[] = [
@@ -413,9 +449,32 @@ class MitraController extends Controller
         }
 
         $generated = (new DocumentGenerator())->laporanMitra($logoMitra, $data, $tableJenisIa, $tableTahunIa, $tableLamaIa);
-        
+
         if ($generated) {
             return response()->download($generated);
         }
     }
+
+    public function updateDokumenKerjasama(Request $request, $id)
+    {
+        $request->validate([
+            'dokumen_kerjasama' => 'required|mimes:pdf,doc,docx',
+        ]);
+
+        $mitra = Mitra::findOrFail($id);
+
+        $fileDokumenKerjasama = $request->file('dokumen_kerjasama');
+        $nameDokumenKerjasama = $fileDokumenKerjasama->getClientOriginalName();
+        $pathDokumenKerjasama = $fileDokumenKerjasama->storeAs('/', $nameDokumenKerjasama, 'public');
+
+        $mitra->update([
+            'dokumen_pks' => $pathDokumenKerjasama,
+        ]);
+
+        return redirect()->back();
+    }
+
+
+
+
 }
