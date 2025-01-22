@@ -363,7 +363,9 @@ export default function Index({
                             </div>
                         </div>
                         <div className="w-4/12 bg-white rounded-2xl shadow-lg p-4">
-                            <p className="text-red-500 font-semibold text-lg text-center">I.A Perlu Tindakan</p>
+                            <Link href={route('agreementarchives.index', mitra.id) + '?filter=no-document&page=1'}>
+                                <p className="text-red-500 font-semibold text-lg text-center">I.A Perlu Tindakan</p>
+                            </Link>
 
                             <div>
                                 <BarChart
@@ -383,14 +385,16 @@ export default function Index({
                                     Galeri I.A
                                 </h1>
                             </Link>
-                            <Link
-                                href={route(
-                                    "agreementarchives.create",
-                                    mitra.id
-                                )}
-                            >
-                                <PlusIcon className="h-8 w-24  p-1 text-white rounded-xl bg-green-700" />
-                            </Link>
+                            {user.is_admin === 1 && (
+                                <Link
+                                    href={route(
+                                        "agreementarchives.create",
+                                        mitra.id
+                                    )}
+                                >
+                                    <PlusIcon className="h-8 w-24  p-1 text-white rounded-xl bg-green-700" />
+                                </Link>
+                            )}
                         </div>
                         <div className="flex justify-between items-center">
                             <div className="grid grid-cols-4 gap-4">
@@ -567,7 +571,7 @@ export default function Index({
                                     </MenuList>
                                 </Menu>
                             </div>
-                            <div className="max-w-md w-full">
+                            <div className="max-w-xs w-full">
                                 <input
                                     type="text"
                                     placeholder="Cari"
