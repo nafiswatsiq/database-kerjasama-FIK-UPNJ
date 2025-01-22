@@ -537,5 +537,20 @@ class AgreementArchivesController extends Controller
 
     }
 
+    public function updateDokumenLaporan(Request $request, $id)
+    {
+        $request->validate([
+            'dokumen_laporan' => 'required|mimes:pdf,doc,docx',
+        ]);
+        $file = $request->file('dokumen_laporan');
+        $filename = $file->getClientOriginalName();
+        $path = $file->storeAs('/', $filename, 'public');
+        $agreementArchive = AgreementArchives::findOrFail($id);
+        $agreementArchive->update([
+            'dokumen_laporan' => $path,
+        ]);
+        return redirect()->back();
+    }
+
 
 }
