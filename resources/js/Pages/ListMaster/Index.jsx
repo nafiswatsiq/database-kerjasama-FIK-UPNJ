@@ -43,16 +43,17 @@ export default function Index({
         e.preventDefault();
 
         post(route("list-master.kriteria_mitra_store"), {
+            onSuccess: () => {
+                Swal.fire({
+                    title: "Success!",
+                    text: "Data berhasil disimpan",
+                    didOpen: () => setSwalShown(true),
+                    didClose: () => setSwalShown(false),
+                });
+            },
             onFinish: () => {
                 reset("kriteria_mitra");
             },
-        });
-
-        Swal.fire({
-            title: "Success!",
-            text: "Data berhasil disimpan",
-            didOpen: () => setSwalShown(true),
-            didClose: () => setSwalShown(false),
         });
     };
 
@@ -118,16 +119,17 @@ export default function Index({
         e.preventDefault();
 
         post(route("list-master.jenis_kegiatan_store"), {
+            onSuccess: () => {
+                Swal.fire({
+                    title: "Success!",
+                    text: "Data berhasil disimpan",
+                    didOpen: () => setSwalShown(true),
+                    didClose: () => setSwalShown(false),
+                });
+            },
             onFinish: () => {
                 reset("jenis_kegiatan");
             },
-        });
-
-        Swal.fire({
-            title: "Success!",
-            text: "Data berhasil disimpan",
-            didOpen: () => setSwalShown(true),
-            didClose: () => setSwalShown(false),
         });
     };
 
@@ -160,16 +162,17 @@ export default function Index({
         e.preventDefault();
 
         post(route("list-master.durasi_kerjasama_store"), {
+            onSuccess: () => {
+                Swal.fire({
+                    title: "Success!",
+                    text: "Data berhasil disimpan",
+                    didOpen: () => setSwalShown(true),
+                    didClose: () => setSwalShown(false),
+                });
+            },
             onFinish: () => {
                 reset("durasi_kerjasama");
             },
-        });
-
-        Swal.fire({
-            title: "Success!",
-            text: "Data berhasil disimpan",
-            didOpen: () => setSwalShown(true),
-            didClose: () => setSwalShown(false),
         });
     };
 
@@ -202,16 +205,17 @@ export default function Index({
         e.preventDefault();
 
         post(route("list-master.jenis_kerjasama_store"), {
+            onSuccess: () => {
+                Swal.fire({
+                    title: "Success!",
+                    text: "Data berhasil disimpan",
+                    didOpen: () => setSwalShown(true),
+                    didClose: () => setSwalShown(false),
+                });
+            },
             onFinish: () => {
                 reset("jenis_kerjasama");
             },
-        });
-
-        Swal.fire({
-            title: "Success!",
-            text: "Data berhasil disimpan",
-            didOpen: () => setSwalShown(true),
-            didClose: () => setSwalShown(false),
         });
     };
 
