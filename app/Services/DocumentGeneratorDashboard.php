@@ -88,15 +88,12 @@ class DocumentGeneratorDashboard
             $totalIa = 0;
             $mitraByKriteria = Mitra::where('kriteria_mitra', $kriteria->kriteria_mitra)->count();
             $mitraByKriteriaCollection = Mitra::where('kriteria_mitra', $kriteria->kriteria_mitra)->get();
-            foreach ($mitraByKriteriaCollection as $ia) {
-                $totalIa += $ia->agreementArchives()->count();
-            }
 
             $tableKriteriaMitra[] = [
                 'no_kriteria_mitra' => $key + 1,
                 'kriteria_mitra' => $kriteria->kriteria_mitra,
                 'jumlah' => $mitraByKriteria,
-                'total_ia' => $totalIa,
+                'total_ia' => $mitraByKriteriaCollection->count(),
             ];
         }
 
