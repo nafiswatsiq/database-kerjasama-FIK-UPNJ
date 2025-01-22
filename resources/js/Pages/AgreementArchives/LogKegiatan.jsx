@@ -308,12 +308,7 @@ export default function LogKegiatan({ mitra, agreementArchive, logKegiatans }) {
                             <p className="font-bold text-base">
                                 1. INPUT LAPORAN{" "}
                             </p>
-                            {logKegiatans.laporan != null ? (
-                                <Link className="flex gap-2 text-green-500 text-base items-center">
-                                    <CheckIcon className="w-8 h-8 text-green-500" />
-                                    Sudah Terlaksana
-                                </Link>
-                            ) : (
+                            {logKegiatans == null || logKegiatans.laporan == null ? (
                                 <Link
                                     className="flex gap-2 text-red-500 text-base items-center"
                                     href={route(
@@ -323,6 +318,11 @@ export default function LogKegiatan({ mitra, agreementArchive, logKegiatans }) {
                                 >
                                     <IoAlertCircleOutline className="w-8 flex h-8 text-red-500" />
                                     Belum Terlaksana
+                                </Link>
+                            ) : (
+                                <Link className="flex gap-2 text-green-500 text-base items-center">
+                                    <CheckIcon className="w-8 h-8 text-green-500" />
+                                    Sudah Terlaksana
                                 </Link>
                             )}
                         </div>
