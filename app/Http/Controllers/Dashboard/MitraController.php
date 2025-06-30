@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Models\AsalKerjasama;
 use App\Services\DocumentGenerator;
 use App\Traits\FormatNumberToText;
 use Carbon\Carbon;
@@ -32,12 +33,14 @@ class MitraController extends Controller
         $kriteria_mitra = KriteriaMitra::all();
         $jenis_kegiatan = JenisKegiatan::all();
         $durasi_kerjasama = DurasiKerjasamas::all();
+        $asal_kerjasama = AsalKerjasama::all();
 
         return Inertia::render('Mitra/Create', [
             'jenis_kerjasama' => $jenis_kerjasama,
             'kriteria_mitra' => $kriteria_mitra,
             'jenis_kegiatan' => $jenis_kegiatan,
-            'durasi_kerjasama' => $durasi_kerjasama
+            'durasi_kerjasama' => $durasi_kerjasama,
+            'asal_kerjasama' => $asal_kerjasama
         ]);
     }
 
@@ -49,6 +52,7 @@ class MitraController extends Controller
             'tentang_mitra' => 'required',
             'bidang_kerjasama' => 'required',
             'jenis_kerjasama' => 'required',
+            'asal_kerjasama' => 'required',
             'no_pks_fik' => 'required',
             'no_pks_mitra' => 'required',
             'kriteria_mitra' => 'required',
@@ -81,6 +85,7 @@ class MitraController extends Controller
             'tentang_mitra' => $request->tentang_mitra,
             'bidang_kerjasama' => $request->bidang_kerjasama,
             'jenis_kerjasama' => $request->jenis_kerjasama,
+            'asal_kerjasama' => $request->asal_kerjasama,
             'no_pks_fik' => $request->no_pks_fik,
             'no_pks_mitra' => $request->no_pks_mitra,
             'kriteria_mitra' => $request->kriteria_mitra,

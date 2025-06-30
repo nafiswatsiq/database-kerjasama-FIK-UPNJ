@@ -102,6 +102,14 @@ Route::middleware('auth')->group(function () {
         Route::patch('/list-master/jenis_kerjasama/update/{id}', [ListMasterController::class, 'jenis_kerjasama_update'])
             ->name('list-master.jenis_kerjasama_update');
 
+        // Asal Kerjasama
+        Route::post('/list-master/asal_kerjasama/store', [ListMasterController::class, 'asal_kerjasama_store'])->name('list-master.asal_kerjasama_store');
+        Route::post('/list-master/asal_kerjasama/{id}', [ListMasterController::class, 'asal_kerjasama_destroy'])->name('list-master.asal_kerjasama_destroy');
+        Route::get('/list-master/asal_kerjasama/edit/{id}', [ListMasterController::class, 'asal_kerjasama_edit'])
+            ->name('list-master.asal_kerjasama_edit');
+        Route::patch('/list-master/asal_kerjasama/update/{id}', [ListMasterController::class, 'asal_kerjasama_update'])
+            ->name('list-master.asal_kerjasama_update');
+
         Route::get('download-draft-pks/{id}', [MitraController::class, 'draftDocumentPks'])->name('download-draft-pks');
         Route::get('download-laporan-mitra/{id}', [MitraController::class, 'downloadLaporanMitra'])->name('download-laporan-mitra');
         Route::get('download-draft-ia/{id}', [AgreementArchivesController::class, 'draftDocumentIa'])->name('download-draft-ia');

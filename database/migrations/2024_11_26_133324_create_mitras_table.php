@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('tentang_mitra');
             $table->text('bidang_kerjasama');
             $table->string('jenis_kerjasama');
+            $table->string('asal_kerjasama');
             $table->string('no_pks_fik');
             $table->string('no_pks_mitra');
             $table->string('kriteria_mitra');
