@@ -274,6 +274,16 @@ export default function Index({
                                 </p>
                             </div>
                         </div>
+                        <div className="mb-5">
+                            <h2 className="font-bold text-xl border-b border-black pb-2">
+                                Asal Kerjasama
+                            </h2>
+                            <div className="ml-4 mt-1">
+                                <p className="font-normal text-base">
+                                    {mitra.asal_kerjasama}
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
                     {/* Section Button */}

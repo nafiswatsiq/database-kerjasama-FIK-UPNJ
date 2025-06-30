@@ -18,6 +18,7 @@ class Mitra extends Model
         'tentang_mitra',
         'bidang_kerjasama',
         'jenis_kerjasama',
+        'asal_kerjasama',
         'no_pks_fik',
         'no_pks_mitra',
         'kriteria_mitra',

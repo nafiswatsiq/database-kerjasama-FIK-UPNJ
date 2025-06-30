@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\AsalKerjasama;
 use App\Models\DurasiKegiatan;
 use App\Models\DurasiKerjasamas;
 use App\Models\JenisKegiatan;
@@ -20,12 +21,14 @@ class ListMasterController extends Controller
         $jenis_kegiatan = JenisKegiatan::all();
         $durasi_kerjasama = DurasiKerjasamas::all();
         $jenis_kerjasama = JenisKerjasama::all();
+        $asal_kerjasama = AsalKerjasama::all();
 
         return Inertia::render('ListMaster/Index', [
             'kriteria_mitra' => $kriteria_mitra,
             'jenis_kegiatan' => $jenis_kegiatan,
             'durasi_kerjasama' => $durasi_kerjasama,
-            'jenis_kerjasama' => $jenis_kerjasama
+            'jenis_kerjasama' => $jenis_kerjasama,
+            'asal_kerjasama' => $asal_kerjasama,
         ]);
     }
 
@@ -198,6 +201,46 @@ class ListMasterController extends Controller
         $jenisKerjasama = JenisKerjasama::findOrFail($id);
         $data = $jenisKerjasama->update([
             'jenis_kerjasama' => $request->jenis_kerjasama
+        ]);
+
+        return redirect()->route('list-master.index');
+    }
+
+    // Asal Kerjasama
+    public function asal_kerjasama_store(Request $request)
+    {
+        $request->validate([
+            'asal_kerjasama' => 'required',
+        ]);
+
+        $asal_kerjasama = AsalKerjasama::create([
+            'asal_kerjasama' => $request->asal_kerjasama,
+        ]);
+
+        return redirect()->back();
+    }
+
+    public function asal_kerjasama_destroy($id)
+    {
+        $asal_kerjasama = AsalKerjasama::findOrFail($id);
+        $asal_kerjasama->delete();
+
+        return redirect()->back();
+    }
+
+    public function asal_kerjasama_edit($id)
+    {
+        $datas = DB::table('asal_kerjasamas')->where('id', $id)->first();
+        return Inertia::render('ListMaster/EditAsalKerjasama', [
+            'datas' => $datas
+        ]);
+    }
+
+    public function asal_kerjasama_update(Request $request, $id)
+    {
+        $jenisKerjasama = AsalKerjasama::findOrFail($id);
+        $data = $jenisKerjasama->update([
+            'asal_kerjasama' => $request->asal_kerjasama
         ]);
 
         return redirect()->route('list-master.index');

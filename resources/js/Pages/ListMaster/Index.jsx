@@ -16,12 +16,14 @@ export default function Index({
     jenis_kegiatan,
     durasi_kerjasama,
     jenis_kerjasama,
+    asal_kerjasama
 }) {
     const { data, setData, post, processing, patch, errors, reset } = useForm({
         kriteria_mitra: "",
         jenis_kegiatan: "",
         durasi_kerjasama: "",
         jenis_kerjasama: "",
+        asal_kerjasama: ""
     });
     const [swalShown, setSwalShown] = useState(false);
 
@@ -30,6 +32,7 @@ export default function Index({
         "jenis_kegiatan",
         "durasi_kerjasama",
         "jenis_kerjasama",
+        "asal_kerjasama"
     ];
 
     const [showInput, setShowInput] = useState(null);
@@ -231,6 +234,49 @@ export default function Index({
         }).then((result) => {
             if (result.isConfirmed) {
                 post(route("list-master.jenis_kerjasama_destroy", id), {
+                    onSuccess: () => {
+                        Swal.fire(
+                            "Dihapus!",
+                            "Data berhasil dihapus.",
+                            "success"
+                        );
+                    },
+                });
+            }
+        });
+    };
+
+    // Jenis Kerjasama
+    const submitAsalKerjasama = (e) => {
+        e.preventDefault();
+
+        post(route("list-master.asal_kerjasama_store"), {
+            onSuccess: () => {
+                Swal.fire({
+                    title: "Success!",
+                    text: "Data berhasil disimpan",
+                    didOpen: () => setSwalShown(true),
+                    didClose: () => setSwalShown(false),
+                });
+            },
+            onFinish: () => {
+                reset("asal_kerjasama");
+            },
+        });
+    };
+
+    const handleDeleteAsalKerjasama = (id) => {
+        Swal.fire({
+            title: "Apakah Anda yakin?",
+            text: "Data yang dihapus tidak dapat dikembalikan!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Ya, hapus!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                post(route("list-master.asal_kerjasama_destroy", id), {
                     onSuccess: () => {
                         Swal.fire(
                             "Dihapus!",
@@ -604,6 +650,87 @@ export default function Index({
                                             className="text-3xl text-red-500 cursor-pointer"
                                             onClick={() =>
                                                 handleDeleteJenisKerjasama(
+                                                    data.id
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Asal Kerjasama */}
+                        <div className="flex items-center gap-4">
+                            <h1 className="font-bold text-2xl">
+                                Asal Kerjasama
+                            </h1>
+                            <CiCirclePlus
+                                className="text-3xl text-green-500 cursor-pointer"
+                                onClick={() =>
+                                    handleShowInput("asal_kerjasama")
+                                }
+                            />
+                        </div>
+                        {showInput === "asal_kerjasama" && (
+                            <div className="shadow-lg border-2 ml-4 border-gray-400 w-1/2 px-10 py-4 h-fit rounded-lg mt-4">
+                                <form
+                                    onSubmit={submitAsalKerjasama}
+                                    className="flex items-center gap-2 justify-center"
+                                >
+                                    <div className="flex flex-col gap-2">
+                                        <label htmlFor="Nama">Nama</label>
+                                        <input
+                                            type="text"
+                                            name="asal_kerjasama"
+                                            value={data.asal_kerjasama}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "asal_kerjasama",
+                                                    e.target.value
+                                                )
+                                            }
+                                            className="w-96 border-2 p-2 rounded-lg"
+                                        />
+
+                                        {errors.asal_kerjasama && (
+                                            <div className="text-red-500 text-sm">
+                                                {errors.asal_kerjasama}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <button
+                                        type="submit"
+                                        className="bg-green-500 h-fit mt-[1.7rem] text-white px-4 py-2 rounded-lg"
+                                        disabled={processing}
+                                    >
+                                        Konfirmasi
+                                    </button>
+                                </form>
+                            </div>
+                        )}
+                        <div className="flex ml-4 mt-2 flex-col gap-4 w-full">
+                            {asal_kerjasama.map((data, index) => (
+                                <div
+                                    key={index}
+                                    className="flex flex-col gap-4"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <h1 className="border-2 w-1/2 shadow-md border-gray-400 p-2 rounded-lg">
+                                            {data.asal_kerjasama}
+                                        </h1>
+                                        <Link
+                                            href={route(
+                                                "list-master.asal_kerjasama_edit",
+                                                data.id
+                                            )}
+                                        >
+                                            <FiEdit className="text-3xl text-blue-400 cursor-pointer" />
+                                        </Link>
+
+                                        <FaRegTrashAlt
+                                            className="text-3xl text-red-500 cursor-pointer"
+                                            onClick={() =>
+                                                handleDeleteAsalKerjasama(
                                                     data.id
                                                 )
                                             }

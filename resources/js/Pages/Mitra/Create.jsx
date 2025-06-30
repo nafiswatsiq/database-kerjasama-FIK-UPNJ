@@ -17,6 +17,7 @@ export default function Create({
     kriteria_mitra,
     jenis_kegiatan,
     durasi_kerjasama,
+    asal_kerjasama
 }) {
     const { data, setData, post, processing, errors, reset, progress } =
         useForm({
@@ -25,6 +26,7 @@ export default function Create({
             tentang_mitra: "",
             bidang_kerjasama: "",
             jenis_kerjasama: "",
+            asal_kerjasama: "",
             no_pks_fik: "",
             no_pks_mitra: "",
             kriteria_mitra: "",
@@ -383,6 +385,48 @@ export default function Create({
                                                 <InputError
                                                     message={
                                                         errors.jenis_kerjasama
+                                                    }
+                                                    className="mt-2"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center mt-3">
+                                            <InputLabel
+                                                htmlFor="asal_kerjasama"
+                                                value="Asal Kerjasama"
+                                                className="w-44 text-lg"
+                                            />
+                                            <div className="flex-auto">
+                                                <SelectInput
+                                                    id="asal_kerjasama"
+                                                    name="asal_kerjasama"
+                                                    value={data.asal_kerjasama}
+                                                    className="mt-1 block w-full"
+                                                    autoComplete="off"
+                                                    onChange={(e) =>
+                                                        setData(
+                                                            "asal_kerjasama",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    options={[
+                                                        {
+                                                            value: "",
+                                                            label: "Pilih Asal Kerjasama",
+                                                        },
+                                                        ...asal_kerjasama.map(
+                                                            (item) => ({
+                                                                value: item.asal_kerjasama,
+                                                                label: item.asal_kerjasama,
+                                                            })
+                                                        ),
+                                                    ]}
+                                                />
+
+                                                <InputError
+                                                    message={
+                                                        errors.asal_kerjasama
                                                     }
                                                     className="mt-2"
                                                 />
