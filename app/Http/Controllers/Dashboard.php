@@ -123,11 +123,11 @@ class Dashboard extends Controller
         $kriteriaMitra = KriteriaMitra::get()->pluck('kriteria_mitra')->toArray();
         $jenisKerjasama = JenisKerjasama::get()->pluck('jenis_kerjasama')->toArray();
 
-        $years = Mitra::get()->map(
+        $years = Mitra::orderBy('hari_tanggal', 'ASC')->get()->map(
             function($item) {
-                return Carbon::parse($item->hari_tanggal)->year;
+            return Carbon::parse($item->hari_tanggal)->year;
             }
-        )->unique()->sort()->toArray();
+        )->unique()->values()->sort()->toArray();
 
         $countYears = Mitra::select(DB::raw('YEAR(hari_tanggal) as year'), DB::raw('count(*) as total'))
             ->groupBy('year')
